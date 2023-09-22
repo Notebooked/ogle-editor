@@ -1,0 +1,19 @@
+{
+	"root": {
+		"name": "Root",
+		"className": "Transform",
+		"children": [
+			{
+				"name": "Child1",
+				"className": "Transform",
+				"children": [
+					{
+						"name": "Child2",
+						"className": "Transform",
+						"children": []
+					}
+				]
+			}
+		]
+	}
+}
