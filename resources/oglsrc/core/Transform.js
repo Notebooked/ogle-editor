@@ -386,4 +386,4 @@ export class Transform extends Node {
     }
 }
 
-Transform.prpoerptu = "im going to say";
+Transform.editorProperties = Node.editorProperties;

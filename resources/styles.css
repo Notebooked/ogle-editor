@@ -296,15 +296,18 @@ button:hover {
     display: none;
 }
 
-.property-list {
+.property-container {
+    padding-top: 5px;
+    padding-bottom: 5px;
     display: flex;
     flex-direction: row;
 }
 
-#property-list-dragbar {
-    width: 2px;
+.property-name {
+    margin-left: 5px;
 }
 
-.property-value-list {
-    flex-grow: 1;
+.property-value {
+    margin-right: 5px;
+    margin-left: auto;
 }
