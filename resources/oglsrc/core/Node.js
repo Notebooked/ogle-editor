@@ -153,4 +153,4 @@ export class Node {
     }
 }
 
-Node.editorProperties = [["name",true,"string"], ["parent",false,"Node"]];
+Node.editorProperties = [["name",true,"string"], ["parent",false,"string"]];

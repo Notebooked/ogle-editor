@@ -3,7 +3,7 @@ const propertyList = document.getElementById("property-list");
 async function propertiesUpdateSelectedNode() {
     propertyList.innerHTML = "";
 
-    const nodeClass = await getClassFromSource(selectedNodePreinit.className);
+    const nodeClass = getSelectedNodePreinit().class;
 
     nodeClass.editorProperties.forEach((editorProperty) => {
         createEditorPropertyContainer(editorProperty);
@@ -18,12 +18,12 @@ function createEditorPropertyString(propertyName, propertyValue, canEdit, proper
 
     const propertyValueElement = document.createElement("input");
     propertyValueElement.type = "text";
+    propertyValueElement.name = "property-input";
     propertyValueElement.classList.add("property-value","property-value-string");
     propertyValueElement.value = propertyValue;
     if (!canEdit) propertyValueElement.disabled = true;
 
-    const currentSelectedPreinitID = selectedNodePreinit.id;
-    if (canEdit) propertyValueElement.onchange = () => propertyValueElementChangedString(propertyName, propertyValueElement, currentSelectedPreinitID);
+    if (canEdit) propertyValueElement.onchange = () => propertyValueElementChangedString(propertyName, propertyValueElement, selectedNodePreinitID);
     propertyContainer.appendChild(propertyValueElement);
 }
 
@@ -32,16 +32,24 @@ function createEditorPropertyContainer(editorProperty) {
     propertyContainer.classList.add("property-container");
 
     if (editorProperty[2] === "string") {
-        createEditorPropertyString(editorProperty[0], selectedNodePreinit[editorProperty[0]], editorProperty[1], propertyContainer);
+        createEditorPropertyString(editorProperty[0], getSelectedNodePreinit()[editorProperty[0]], editorProperty[1], propertyContainer);
     }
 
     propertyList.appendChild(propertyContainer);
 }
 
 function propertyValueElementChangedString(propertyName, propertyValueElement, nodePreinitID) {
-    const nodePreinit = preinitIDTable[nodePreinitID];
+    const newValue = propertyValueElement.value;
 
-    nodePreinit[propertyName] = propertyValueElement.value;
+    if (propertyName === "name" && newValue.trim() === "") {
+        propertyValueElement.focus();
+    } else {
+        propertyValueElement.blur(); //deselect entry
 
-    if (propertyName === "name") propertiesChangedName(nodePreinit);
+        const nodePreinit = preinitIDTable[nodePreinitID];
+
+        nodePreinit[propertyName] = propertyValueElement.value;
+
+        if (propertyName === "name") propertiesChangedName(nodePreinitID);
+    }
 }

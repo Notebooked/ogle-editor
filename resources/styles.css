@@ -41,6 +41,10 @@ button:hover {
     height: 100%;
 }
 
+.editor-pane {
+    overflow: hidden;
+}
+
 .toolbar {
     height: 70px;
     padding: 20px;

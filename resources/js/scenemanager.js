@@ -1,37 +1,47 @@
 let sceneJSON = null;
-let selectedNodePreinit = null;
 
+let selectedNodePreinitID = null; //id of currently selected preinit
 let rootPreinit = null;
 
 const preinitIDTable = {};
-let currentPreinitID = 0;
+let currentPreinitID = 0; //variable for initializing id
+
+function getSelectedNodePreinit() {
+    if (selectedNodePreinitID === null) return null;
+    return preinitIDTable[selectedNodePreinitID];
+}
 
 async function openSceneFile(path) {
     const sceneFile = await Neutralino.filesystem.readFile(path);
 
     sceneJSON = JSON.parse(sceneFile);
 
-    initializeNode(sceneJSON.root, null);
+    await initializeNode(sceneJSON.root, null);
 
     reloadScene();
 }
 
-function initializeNode(nodeJSON, parentPreinit) {
-    console.log(nodeJSON, parentPreinit)
-
-    const nodePreinit = createPreinitObject(nodeJSON, parentPreinit);
+async function initializeNode(nodeJSON, parentPreinit) {
+    const nodePreinit = await createPreinitObject(nodeJSON, parentPreinit);
     if (parentPreinit !== null) parentPreinit.children.push(nodePreinit);
     else rootPreinit = nodePreinit;
     preinitIDTable[currentPreinitID] = nodePreinit;
     currentPreinitID++;
 
-    nodeJSON.children.forEach((childJSON) => initializeNode(childJSON, nodePreinit));
+    for (var i = 0; i < nodeJSON.children.length; i++) {
+        const childJSON = nodeJSON.children[i];
+
+        await initializeNode(childJSON, nodePreinit)
+    }
 }
 
-function createPreinitObject(nodeJSON, parentPreinit) {
+async function createPreinitObject(nodeJSON, parentPreinit) {
+    const preinitClass = await getClassFromSource(nodeJSON.className)
+
     return {
         id: currentPreinitID,
         name: nodeJSON.name,
+        class: preinitClass,
         parent: parentPreinit,
         children: [] //ADD PROPERTY OF CLASS
     }
@@ -45,16 +55,16 @@ function reloadScene() {
     updateHierarchy();
 }
 
-function hierarchySelectedNode(nodePreinit) {
-    selectedNodePreinit = nodePreinit;
+function hierarchySelectedNode(nodePreinitID) {
+    selectedNodePreinitID = nodePreinitID;
 
     propertiesUpdateSelectedNode();
 }
 
 function hierarchyDeselected() {
-    selectedNodePreinit = null;
+    selectedNodePreinitID = null;
 }
 
-function propertiesChangedName(nodePreinit) {
-    hierarchyUpdateNodeName(nodePreinit);
+function propertiesChangedName(nodePreinitID) {
+    hierarchyUpdateNodeName(nodePreinitID);
 }

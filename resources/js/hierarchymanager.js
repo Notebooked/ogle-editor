@@ -2,6 +2,8 @@ const hierarchyContainer = document.getElementById("hierarchy-list");
 
 let selectedNodeLabelContainer = null;
 
+const idHierarchyContainerTable = {};
+
 function updateHierarchy() {
     addNodeToHierarchy(rootPreinit, hierarchyContainer);
 }
@@ -41,6 +43,8 @@ function addNodeToHierarchy(nodePreinit, parentContainer) {
         addNodeToHierarchy(child, childrenContainer);
     })
 
+    idHierarchyContainerTable[nodePreinit.id] = nodeContainer;
+
     parentContainer.appendChild(nodeContainer);
 }
 
@@ -52,10 +56,10 @@ function deselectNodeContainer() {
 
 document.addEventListener("mousedown", (e) => {
     if (e.target.classList.contains("hierarchy-node-label")) {
-        nodeLabelContainerMouseDown(e.target.parentElement, preinitIDTable[e.target.parentElement.preinitID]);
+        nodeLabelContainerMouseDown(e.target.parentElement, e.target.parentElement.preinitID);
     }
     else if (e.target.classList.contains("hierarchy-node-label-container")) {
-        nodeLabelContainerMouseDown(e.target, preinitIDTable[e.target.preinitID]);
+        nodeLabelContainerMouseDown(e.target, e.target.preinitID);
     }
     else if (e.target.classList.contains("hierarchy-arrow-drop")) {
         hierarchyArrowDropMouseDown(e.target.nodeContainer);
@@ -69,10 +73,10 @@ function hierarchyArrowDropMouseDown(nodeContainer) {
     nodeContainer.classList.toggle("hierarchy-hide-children");
 }
 
-function nodeLabelContainerMouseDown(nodeLabelContainer, nodePreinit) {
+function nodeLabelContainerMouseDown(nodeLabelContainer, nodePreinitID) {
     deselectNodeContainer();
 
-    hierarchySelectedNode(nodePreinit);
+    hierarchySelectedNode(nodePreinitID);
 
     selectedNodeLabelContainer = nodeLabelContainer;
 
@@ -83,9 +87,12 @@ function updateHierarchySelected() {
     //SELECTED FROM CANVAS
 }
 
-function hierarchyUpdateNodeName(nodePreinit) {
+function hierarchyUpdateNodeName(nodePreinitID) {
+    const nodePreinit = preinitIDTable[nodePreinitID];
 
-    const nodeContainer = JSONObjectToHierarchy[nodePreinit];
+    const nodeContainer = idHierarchyContainerTable[nodePreinitID];
 
-    console.log(nodeContainer,nodeContainer.querySelector('.hierarchy-node-label'));
+    const hierarchyLabel = nodeContainer.querySelector('.hierarchy-node-label');
+
+    hierarchyLabel.innerHTML = nodePreinit.name;
 }
