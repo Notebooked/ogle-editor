@@ -45,24 +45,6 @@ button:hover {
     overflow: hidden;
 }
 
-.toolbar {
-    height: 70px;
-    padding: 20px;
-    display: flex;
-}
-
-.toolbar img {
-    height: 100%;
-    border: 1px solid rgb(0, 0, 0);
-    border-radius: 15%;
-    margin-right: 20px;
-    filter: invert(100%) brightness(80%);
-}
-
-.toolbar img:hover {
-    background-color: #DDD;
-}
-
 .menu-dropdown {
     margin-left: auto;
     margin-right: 0;
@@ -135,16 +117,6 @@ button:hover {
     cursor: ns-resize;
     height: 3px;
     background-color: white;
-}
-
-#stage-container {
-    flex-grow: 1;
-    z-index: -9;
-}
-
-#stage {
-    width: 100%;
-    height: 100%;
 }
 
 #dialog-container {
@@ -323,4 +295,59 @@ button:hover {
     background-color: rgb(52, 47, 57);
     border: 1px black solid;
     font-size: 20px;
+}
+
+.toolbar {
+    height: 40px;
+    padding: 5px;
+    display: flex;
+}
+
+.toolbar img {
+    height: 100%;
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 15%;
+    margin-right: 5px;
+    filter: invert(100%) brightness(80%);
+}
+
+.mode-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 5px;
+}
+
+.mode {
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.mode:hover {
+    background-color: rgba(0,0,0,0.1);
+    border-radius: 5px;
+}
+
+.active-mode {
+    background-color: rgba(0,0,0,0.5);
+}
+
+.toolbar img:hover {
+    background-color: #DDD;
+}
+
+#stage-container {
+    flex-grow: 1;
+    display: grid;
+}
+
+#canvas-2d, #canvas-3d {
+    grid-column: 1;
+    grid-row: 2;
+    width: 100%;
+    height: 100%;
 }

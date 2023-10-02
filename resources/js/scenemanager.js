@@ -6,6 +6,8 @@ let rootPreinit = null;
 const preinitIDTable = {};
 let currentPreinitID = 0; //variable for initializing id
 
+let mode = "2D";
+
 function getSelectedNodePreinit() {
     if (selectedNodePreinitID === null) return null;
     return preinitIDTable[selectedNodePreinitID];
@@ -67,4 +69,11 @@ function hierarchyDeselected() {
 
 function propertiesChangedName(nodePreinitID) {
     hierarchyUpdateNodeName(nodePreinitID);
+}
+
+function setMode2D(modeElement) {
+    mode = "2D";
+
+    modeElement.parentElement.chilclassList.add("active");
+    modeElement.classList.add("active");
 }
