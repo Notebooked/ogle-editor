@@ -311,6 +311,12 @@ button:hover {
     filter: invert(100%) brightness(80%);
 }
 
+.top-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
 .mode-list {
     display: flex;
     flex-direction: row;

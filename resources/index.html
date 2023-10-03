@@ -9,9 +9,20 @@
 
 <body>
     <div class="editor">
-        <div class="mode-list">
-            <span onclick="setMode2D();" class="mode">2D</span>
-            <span onclick="setMode3D();" class="mode">3D</span>
+        <div class="top-bar">
+            <div class="mode-list">
+                <span onclick="setMode2D();" class="mode">2D</span>
+                <span onclick="setMode3D();" class="mode">3D</span>
+            </div>
+
+            <div class="menu-dropdown">
+                <img id="menu" src="editorimg/menu.png" alt="">
+                <div id="menu-content">
+                    <a class="menu-option" onclick="newProject();">New Project</a>
+                    <a class="menu-option" onclick="saveProject();">Save Project</a>
+                    <a class="menu-option" onclick="openProjectFolder();">Open Project Folder</a>
+                </div>
+            </div>
         </div>
         <div class="middle-section">
             <div class="hierarchy" id="hierarchy" style="width: 300px">
@@ -22,14 +33,6 @@
                 <div class="toolbar">
                     <img src="editorimg/translate.png" alt="">
                     <img src="editorimg/rotate.png" alt="">
-                    <div class="menu-dropdown">
-                        <img id="menu" src="editorimg/menu.png" alt="">
-                        <div id="menu-content">
-                            <a class="menu-option" onclick="newProject();">New Project</a>
-                            <a class="menu-option" onclick="saveProject();">Save Project</a>
-                            <a class="menu-option" onclick="openProjectFolder();">Open Project Folder</a>
-                        </div>
-                    </div>
                 </div>
                 <canvas id="canvas-2d"></canvas>
                 <canvas id="canvas-3d"></canvas>
