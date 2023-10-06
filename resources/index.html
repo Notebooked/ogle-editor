@@ -5,13 +5,14 @@
     <meta charset="UTF-8">
     <title>OGL Editor</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/matter-js@0.19.0/build/matter.min.js"></script>
 </head>
 
 <body>
     <div class="editor">
         <div class="top-bar">
             <div class="mode-list">
-                <span onclick="setMode2D();" class="mode">2D</span>
+                <span onclick="setMode2D(this);" class="mode">2D</span>
                 <span onclick="setMode3D();" class="mode">3D</span>
             </div>
 
@@ -34,8 +35,7 @@
                     <img src="editorimg/translate.png" alt="">
                     <img src="editorimg/rotate.png" alt="">
                 </div>
-                <canvas id="canvas-2d"></canvas>
-                <canvas id="canvas-3d"></canvas>
+                <canvas id="game-canvas"></canvas>
             </div>
             <div class="properties" id="properties" style="width: 300px">
                 <div class="vert-dragbar" id="properties-dragbar"></div>
@@ -137,14 +137,15 @@
         -->
     <script src="js/neutralino.js"></script>
     <!-- Your app's source files -->
+    <script src="js/classloader.js"></script>
     <script src="js/main.js"></script>
     <script src="js/projectloader.js"></script>
     <script src="js/assetmanager.js"></script>
     <script src="js/hierarchymanager.js"></script>
     <script src="js/propertiesmanager.js"></script>
+    <script src="js/stagemanager.js"></script>
     <script src="js/scenemanager.js"></script>
     <script src="js/contextmenu.js"></script>
-    <script src="js/classloader.js"></script>
 </body>
 
 </html>

@@ -3,9 +3,9 @@ const propertyList = document.getElementById("property-list");
 async function propertiesUpdateSelectedNode() {
     propertyList.innerHTML = "";
 
-    const nodeClass = getSelectedNodePreinit().class;
+    const node = getSelectedNode();
 
-    nodeClass.editorProperties.forEach((editorProperty) => {
+    node.editorProperties.forEach((editorProperty) => {
         createEditorPropertyContainer(editorProperty);
     })
 }
@@ -23,7 +23,7 @@ function createEditorPropertyString(propertyName, propertyValue, canEdit, proper
     propertyValueElement.value = propertyValue;
     if (!canEdit) propertyValueElement.disabled = true;
 
-    if (canEdit) propertyValueElement.onchange = () => propertyValueElementChangedString(propertyName, propertyValueElement, selectedNodePreinitID);
+    if (canEdit) propertyValueElement.onchange = () => propertyValueElementChangedString(propertyName, propertyValueElement, selectedNodeID);
     propertyContainer.appendChild(propertyValueElement);
 }
 
@@ -32,13 +32,13 @@ function createEditorPropertyContainer(editorProperty) {
     propertyContainer.classList.add("property-container");
 
     if (editorProperty[2] === "string") {
-        createEditorPropertyString(editorProperty[0], getSelectedNodePreinit()[editorProperty[0]], editorProperty[1], propertyContainer);
+        createEditorPropertyString(editorProperty[0], getSelectedNode()[editorProperty[0]], editorProperty[1], propertyContainer);
     }
 
     propertyList.appendChild(propertyContainer);
 }
 
-function propertyValueElementChangedString(propertyName, propertyValueElement, nodePreinitID) {
+function propertyValueElementChangedString(propertyName, propertyValueElement, nodeID) {
     const newValue = propertyValueElement.value;
 
     if (propertyName === "name" && newValue.trim() === "") {
@@ -46,10 +46,10 @@ function propertyValueElementChangedString(propertyName, propertyValueElement, n
     } else {
         propertyValueElement.blur(); //deselect entry
 
-        const nodePreinit = preinitIDTable[nodePreinitID];
+        const node = nodeIDTable[nodeID];
 
-        nodePreinit[propertyName] = propertyValueElement.value;
+        node[propertyName] = propertyValueElement.value;
 
-        if (propertyName === "name") propertiesChangedName(nodePreinitID);
+        if (propertyName === "name") propertiesChangedName(nodeID);
     }
 }

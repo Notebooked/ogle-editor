@@ -1,6 +1,8 @@
 import { Signal } from '../core/Signal.js';
 
 export class Node {
+    editorProperties = [["name",true,"string"], ["parent",false,"string"]];
+
     constructor(name, parent = null) {
         this.name = name;
 
@@ -27,7 +29,6 @@ export class Node {
     }
     setParent(parent, notifyParent = true) {
         if (this._parent !== parent) {
-            console.log(this._parent, parent);
             var oldParent = this._parent;
 
             if (this._parent) this._parent.removeChild(this, false);
@@ -152,5 +153,3 @@ export class Node {
         });
     }
 }
-
-Node.editorProperties = [["name",true,"string"], ["parent",false,"string"]];

@@ -1,7 +1,5 @@
 // interaction with HTML page happens HERE
 
-import { Node } from "./Node.js";
-
 let gl = null;
 let _isWebgl2 = null;
 
@@ -28,23 +26,4 @@ export function createCanvas(renderer, { webgl, attributes }) {
 
     // Attach renderer to gl so that all classes have access to internal state functions
     gl.renderer = renderer;
-}
-
-
-export class PageElement extends Node {
-    #element = null;
-    constructor(name, parent = null, { type = "" } = {}) {
-        super(name, parent)
-
-        this.type = type;
-    }
-    enteredHierarchy() {
-        this.#element = document.createElement(this.type);
-    }
-    exitedHierarchy() {
-        this.#element.remove();
-    }
-    setStyleAttribute(property,value) {
-        this.#element.style[property] = value;
-    }
 }

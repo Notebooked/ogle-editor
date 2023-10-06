@@ -7,8 +7,6 @@ import { Euler } from '../math/Euler.js';
 //TODO: add directions, clean up visible, naming of functions and variables
 
 export class Transform extends Node {
-    skillIssue = "w";
-
     constructor(name, parent = null) {
         super(name, parent)
 
@@ -385,5 +383,3 @@ export class Transform extends Node {
         return up;
     }
 }
-
-Transform.editorProperties = Node.editorProperties;

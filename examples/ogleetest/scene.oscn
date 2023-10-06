@@ -2,17 +2,17 @@
 	"root": {
 		"name": "Root",
 		"className": "Transform",
+		"initProperties": {},
+		"initFunctionCalls": [],
 		"children": [
 			{
 				"name": "Child1",
-				"className": "Transform",
-				"children": [
-					{
-						"name": "Child2",
-						"className": "Transform",
-						"children": []
-					}
-				]
+				"className": "Sprite",
+				"initProperties": {},
+				"initFunctionCalls": [
+					"setTexture(TextureLoader.load({src: 'grimacing-face.png'}))"
+				],
+				"children": []
 			}
 		]
 	}

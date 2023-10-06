@@ -46,7 +46,7 @@ export class Renderer {
         this.gl = getGlContext();
 
         // initialise size values
-        this.setSize(width, height);
+        //this.setSize(width, height);
 
         // gl state stores to avoid redundant calls on methods used internally
         this.state = {};
@@ -111,15 +111,13 @@ export class Renderer {
         this.clearColor = new Color(1,1,1,1);
     }
 
-    resizeSceneCamera(width, height) {
+    resizeSceneCamera(width, height, resize = true) {
         const gl = this.gl;
 
-        var camera = this.game.scene.findFirstDescendant(null,Camera);
-        if (camera === null) {
-            throw new Error("There is no Camera in the scene");
-        }
+        var camera = this.game.activeCamera;
 
-        this.setSize(width, height);
+        if (resize) this.setSize(width, height);
+        else this.setCanvasSizeAuto();
         var aspect = gl.canvas.width / gl.canvas.height;
         if (camera.type === "perspective") {
             camera.perspective({ aspect });
@@ -134,30 +132,33 @@ export class Renderer {
     }
 
     renderSceneCamera() {
-        var camera = this.game.scene.findFirstDescendant(null,Camera);
-        if (camera === null) {
-            throw new Error("There is no Camera in the scene");
-        }
+        var camera = this.game.activeCamera;
 
         this.resizeHandler();
 
         this.render({ scene: this.game.scene, camera });
     }
 
-    setSize(width, height) {
+    setSize(width, height, setStyle = true) {
         this.width = width;
         this.height = height;
 
         this.gl.canvas.width = width * this.dpr;
         this.gl.canvas.height = height * this.dpr;
 
-        if (!this.gl.canvas.style) return;
-        Object.assign(this.gl.canvas.style, {
-            width: width + 'px',
-            height: height + 'px',
-        });
+        if (setStyle) {
+            if (!this.gl.canvas.style) return;
+            Object.assign(this.gl.canvas.style, {
+                width: width + 'px',
+                height: height + 'px',
+            });
+        }
     }
-
+    
+    setCanvasSizeAuto() {
+        this.setSize(this.gl.canvas.clientWidth,this.gl.canvas.clientHeight, false);
+    }
+    
     setViewport(width, height, x = 0, y = 0) {
         if (this.state.viewport.width === width && this.state.viewport.height === height) return;
         this.state.viewport.width = width;

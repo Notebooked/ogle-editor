@@ -3,3 +3,30 @@ async function getClassFromSource(name) {
 
     return res[name];
 }
+
+async function loadClassesDirectory(dir) {
+    const files = await Neutralino.filesystem.readDirectory("resources/oglsrc/" + dir);
+
+    for (var i = 0; i < files.length; i++) {
+        const file = files[i];
+        const fileName = file.entry;
+
+        if (file.type === "FILE") {
+            const className = fileName.replace(".js", "");
+
+            window[className] = (await import("../oglsrc/" + dir + "/" + fileName))[className];
+        }
+    }
+}
+
+async function loadAllClasses() {
+    console.log("Loading core classes");
+
+    await loadClassesDirectory("core");
+
+    console.log("Loading math classes");
+    
+    await loadClassesDirectory("math");
+
+    console.log("Done loading classes");
+}

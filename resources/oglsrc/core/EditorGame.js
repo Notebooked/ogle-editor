@@ -8,7 +8,7 @@ import { InputManager } from './InputManager.js';
 var then = 0;
 var dt = 0;
 
-export class Game {
+export class EditorGame {
     #time = 0.0;
     #scene = null;
     #activeCamera = null;
@@ -17,12 +17,18 @@ export class Game {
         this.setScene(scene);
 
         this.renderer = new Renderer(this);
-        this.physicsEngine2D = new PhysicsEngine2D(this);
-        this.inputManager = new InputManager();
     }
 
     get time() {
         return this.#time;
+    }
+
+    editorloop(now) {
+        this.scene.broadcast('editorLoop');
+
+        this.renderer.renderSceneCamera();
+
+        requestAnimationFrame((now) => {this.editorloop(now);});
     }
 
     mainloop() {
@@ -40,11 +46,9 @@ export class Game {
 
         this.scene.broadcast('update',dt);
 
-        this.physicsEngine2D._update(dt);
-
         this.renderer.renderSceneCamera();
         
-        requestAnimationFrame((now) => {this.loop(now);})
+        requestAnimationFrame((now) => {this.loop(now);});
     }
 
     get scene() {

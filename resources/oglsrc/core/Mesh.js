@@ -14,7 +14,6 @@ export class Mesh extends Transform {
         this.id = ID++;
         this.geometry = geometry;
         this.program = program;
-        console.log(this.program)
         this.mode = mode;
 
         // Used to skip frustum culling

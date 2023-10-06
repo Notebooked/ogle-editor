@@ -5,25 +5,25 @@ let selectedNodeLabelContainer = null;
 const idHierarchyContainerTable = {};
 
 function updateHierarchy() {
-    addNodeToHierarchy(rootPreinit, hierarchyContainer);
+    addNodeToHierarchy(rootNode, hierarchyContainer);
 }
 
 function clearHierarchy() {
     hierarchyContainer.innerHTML = "";
 }
 
-function addNodeToHierarchy(nodePreinit, parentContainer) {
-    const nodeName = nodePreinit.name;
+function addNodeToHierarchy(newNode, parentContainer) {
+    const nodeName = newNode.name;
 
     const nodeContainer = document.createElement("div");
     nodeContainer.classList.add("hierarchy-node-container");
 
     const nodeLabelContainer = document.createElement("div");
     nodeLabelContainer.classList.add("hierarchy-node-label-container");
-    nodeLabelContainer.preinitID = nodePreinit.id;
+    nodeLabelContainer.nodeID = newNode.id;
     nodeContainer.appendChild(nodeLabelContainer);
 
-    if (nodePreinit.children.length > 0) {
+    if (newNode.children.length > 0) {
         const arrowDrop = document.createElement("img");
         arrowDrop.src = "editorimg/dropdown.png";
         arrowDrop.classList.add("hierarchy-arrow-drop");
@@ -39,11 +39,11 @@ function addNodeToHierarchy(nodePreinit, parentContainer) {
     const childrenContainer = document.createElement("div");
     childrenContainer.classList.add("hierarchy-children-container");
     nodeContainer.appendChild(childrenContainer);
-    nodePreinit.children.forEach((child) => {
+    newNode.children.forEach((child) => {
         addNodeToHierarchy(child, childrenContainer);
     })
 
-    idHierarchyContainerTable[nodePreinit.id] = nodeContainer;
+    idHierarchyContainerTable[newNode.id] = nodeContainer;
 
     parentContainer.appendChild(nodeContainer);
 }
@@ -56,10 +56,10 @@ function deselectNodeContainer() {
 
 document.addEventListener("mousedown", (e) => {
     if (e.target.classList.contains("hierarchy-node-label")) {
-        nodeLabelContainerMouseDown(e.target.parentElement, e.target.parentElement.preinitID);
+        nodeLabelContainerMouseDown(e.target.parentElement, e.target.parentElement.nodeID);
     }
     else if (e.target.classList.contains("hierarchy-node-label-container")) {
-        nodeLabelContainerMouseDown(e.target, e.target.preinitID);
+        nodeLabelContainerMouseDown(e.target, e.target.nodeID);
     }
     else if (e.target.classList.contains("hierarchy-arrow-drop")) {
         hierarchyArrowDropMouseDown(e.target.nodeContainer);
@@ -73,10 +73,10 @@ function hierarchyArrowDropMouseDown(nodeContainer) {
     nodeContainer.classList.toggle("hierarchy-hide-children");
 }
 
-function nodeLabelContainerMouseDown(nodeLabelContainer, nodePreinitID) {
+function nodeLabelContainerMouseDown(nodeLabelContainer, nodeID) {
     deselectNodeContainer();
 
-    hierarchySelectedNode(nodePreinitID);
+    hierarchySelectedNode(nodeID);
 
     selectedNodeLabelContainer = nodeLabelContainer;
 
@@ -87,12 +87,12 @@ function updateHierarchySelected() {
     //SELECTED FROM CANVAS
 }
 
-function hierarchyUpdateNodeName(nodePreinitID) {
-    const nodePreinit = preinitIDTable[nodePreinitID];
+function hierarchyUpdateNodeName(nodeID) {
+    const node = nodeIDTable[nodeID];
 
-    const nodeContainer = idHierarchyContainerTable[nodePreinitID];
+    const nodeContainer = idHierarchyContainerTable[nodeID];
 
     const hierarchyLabel = nodeContainer.querySelector('.hierarchy-node-label');
 
-    hierarchyLabel.innerHTML = nodePreinit.name;
+    hierarchyLabel.innerHTML = node.name;
 }

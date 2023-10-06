@@ -1,16 +1,29 @@
 let sceneJSON = null;
 
-let selectedNodePreinitID = null; //id of currently selected preinit
-let rootPreinit = null;
+let selectedNodeID = null; //id of currently selected node
+let rootNode = null;
 
-const preinitIDTable = {};
-let currentPreinitID = 0; //variable for initializing id
+const nodeIDTable = {};
+let currentNodeID = 0; //variable for initializing id
 
 let mode = "2D";
 
-function getSelectedNodePreinit() {
-    if (selectedNodePreinitID === null) return null;
-    return preinitIDTable[selectedNodePreinitID];
+let game = null;
+let renderer = null;
+
+async function initialize() {
+    await loadAllClasses();
+
+    game = new EditorGame();
+    renderer = game.renderer;
+
+    initializeRenderer();
+}
+initialize();
+
+function getSelectedNode() {
+    if (selectedNodeID === null) return null;
+    return nodeIDTable[selectedNodeID];
 }
 
 async function openSceneFile(path) {
@@ -23,30 +36,39 @@ async function openSceneFile(path) {
     reloadScene();
 }
 
-async function initializeNode(nodeJSON, parentPreinit) {
-    const nodePreinit = await createPreinitObject(nodeJSON, parentPreinit);
-    if (parentPreinit !== null) parentPreinit.children.push(nodePreinit);
-    else rootPreinit = nodePreinit;
-    preinitIDTable[currentPreinitID] = nodePreinit;
-    currentPreinitID++;
+async function initializeNode(nodeJSON, parentNode) {
+    const newNode = await initializeNodeJSON(nodeJSON, parentNode);
+    if (parentNode === null) {
+        rootNode = newNode;
+        game.setScene(rootNode);
+    }
+    nodeIDTable[currentNodeID] = newNode;
+    currentNodeID++;
 
     for (var i = 0; i < nodeJSON.children.length; i++) {
         const childJSON = nodeJSON.children[i];
 
-        await initializeNode(childJSON, nodePreinit)
+        await initializeNode(childJSON, newNode);
     }
 }
 
-async function createPreinitObject(nodeJSON, parentPreinit) {
-    const preinitClass = await getClassFromSource(nodeJSON.className)
+async function initializeNodeJSON(nodeJSON, parentNode) {
+    const nodeClass = await getClassFromSource(nodeJSON.className);
 
-    return {
-        id: currentPreinitID,
-        name: nodeJSON.name,
-        class: preinitClass,
-        parent: parentPreinit,
-        children: [] //ADD PROPERTY OF CLASS
-    }
+    const newNode = new nodeClass();
+    
+    newNode.id = currentNodeID;
+    newNode.name = nodeJSON.name;
+    newNode.parent = parentNode;
+    
+    Object.keys(nodeJSON.initProperties).forEach((initProperty) => {
+        newNode[initProperty] = eval(nodeClass.initProperties[initProperty]);
+    })
+    nodeJSON.initFunctionCalls.forEach((initFunctionCall) => {
+        eval("newNode." + initFunctionCall);
+    })
+
+    return newNode;
 }
 
 function clearScene() {
@@ -57,23 +79,22 @@ function reloadScene() {
     updateHierarchy();
 }
 
-function hierarchySelectedNode(nodePreinitID) {
-    selectedNodePreinitID = nodePreinitID;
+function hierarchySelectedNode(nodeID) {
+    selectedNodeID = nodeID;
 
     propertiesUpdateSelectedNode();
 }
 
 function hierarchyDeselected() {
-    selectedNodePreinitID = null;
+    selectedNodeID = null;
 }
 
-function propertiesChangedName(nodePreinitID) {
-    hierarchyUpdateNodeName(nodePreinitID);
+function propertiesChangedName(nodeID) {
+    hierarchyUpdateNodeName(nodeID);
 }
 
 function setMode2D(modeElement) {
     mode = "2D";
 
-    modeElement.parentElement.chilclassList.add("active");
-    modeElement.classList.add("active");
+    modeElement.classList.add("active-mode");
 }

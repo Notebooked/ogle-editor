@@ -1,6 +1,7 @@
 import { Plane } from '../extras/Plane.js';
 import { Mesh } from './Mesh.js';
 import { Program } from './Program.js';
+import { TextureLoader } from '../extras/TextureLoader.js';
 
 const vertex = /* glsl */ `
     attribute vec2 uv;
@@ -30,21 +31,38 @@ const fragment = /* glsl */ `
 `;
 
 export class Sprite extends Mesh {
-    constructor({
-            texture,
-            program = new Program({
-                vertex,
-                fragment,
-                uniforms: {
-                    tMap: { value: texture },
-                },
-                cullFace: null,
-                transparent: true,
-            }),
-            geometry = new Plane({width:1,height:1})
-        } = {}) {
-        super({ geometry, program });
-    }   
+    #texture = null;
+
+    constructor(name, parent = null) {
+        //super({ geometry: new Plane({width:1,height:1}), program:null });
+        super({ geometry: new Plane({width:1,height:1}), program:new Program({
+            vertex,
+            fragment,
+            uniforms: {
+                tMap: { value: TextureLoader.load({src: 'grimacing-face.png'})},
+            },
+            cullFace: null,
+            transparent: true,
+        }) });
+    }
+    get texture() {
+        return this.#texture;
+    }
+    set texture(value) {
+        this.setTexture(value);
+    }
+    setTexture(value) {
+        this.#texture = value;
+        this.program = new Program({
+            vertex,
+            fragment,
+            uniforms: {
+                tMap: { value: this.#texture },
+            },
+            cullFace: null,
+            transparent: true,
+        });
+    }
 }
 
 /*
