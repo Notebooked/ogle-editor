@@ -317,6 +317,12 @@ button:hover {
     flex-direction: column;
 }
 
+#canvas-container {
+    width: 100%;
+    flex-grow: 1;
+    z-index: 0;
+}
+
 #game-canvas {
     width: 100%;
     height: 100%;

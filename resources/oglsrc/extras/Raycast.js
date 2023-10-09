@@ -34,8 +34,8 @@ export class Raycast {
         if (camera.type === 'orthographic') {
             // Set origin
             // Since camera is orthographic, origin is not the camera position
-            const { left, right, bottom, top, zoom } = camera;
-            const x = left / zoom + ((right - left) / zoom) * (mouse[0] * 0.5 + 0.5);
+            const { leftBound, rightBound, bottom, top, zoom } = camera;
+            const x = leftBound / zoom + ((rightBound - leftBound) / zoom) * (mouse[0] * 0.5 + 0.5);
             const y = bottom / zoom + ((top - bottom) / zoom) * (mouse[1] * 0.5 + 0.5);
             this.origin.set(x, y, 0);
             this.origin.applyMatrix4(camera.worldMatrix);

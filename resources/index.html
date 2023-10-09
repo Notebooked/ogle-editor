@@ -35,7 +35,7 @@
                     <img src="editorimg/translate.png" alt="">
                     <img src="editorimg/rotate.png" alt="">
                 </div>
-                <canvas id="game-canvas"></canvas>
+                <iframe id="canvas-container" frameBorder="0" src="canvas-content.html" scrolling="no"></iframe>
             </div>
             <div class="properties" id="properties" style="width: 300px">
                 <div class="vert-dragbar" id="properties-dragbar"></div>
@@ -79,6 +79,8 @@
         const propertiesDragbar = document.getElementById("properties-dragbar");
         const assetsDragbar = document.getElementById("assets-dragbar");
 
+        const stageContainer = document.getElementById("stage-container");
+
         let hierarchyWidth = 300;
         let propertiesWidth = 300;
         let assetsHeight = 400;
@@ -89,12 +91,18 @@
 
         hierarchyDragbar.onmousedown = () => {
             hierarchyDragging = true;
+
+            stageContainer.style.zIndex = -100;
         };
         propertiesDragbar.onmousedown = () => {
             propertiesDragging = true;
+
+            stageContainer.style.zIndex = -100;
         };
         assetsDragbar.onmousedown = () => {
             assetsDragging = true;
+
+            stageContainer.style.zIndex = -100;
         };
         document.addEventListener("mousemove", (e) => {
             if (hierarchyDragging === true) {
@@ -115,6 +123,8 @@
             hierarchyDragging = false;
             propertiesDragging = false;
             assetsDragging = false;
+
+            stageContainer.style.zIndex = 100;
         });
     </script>
 

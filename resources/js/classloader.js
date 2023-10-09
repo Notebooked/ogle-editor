@@ -28,5 +28,9 @@ async function loadAllClasses() {
     
     await loadClassesDirectory("math");
 
+    console.log("Loading extra classes");
+    
+    await loadClassesDirectory("extras");
+
     console.log("Done loading classes");
 }
