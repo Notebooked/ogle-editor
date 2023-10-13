@@ -7,6 +7,7 @@ const nodeIDTable = {};
 let currentNodeID = 0; //variable for initializing id
 
 let mode = "2D";
+let modeElements = document.getElementsByClassName("mode");
 
 let game = null;
 let renderer = null;
@@ -57,7 +58,8 @@ async function initializeNodeJSON(nodeJSON, parentNode) {
 
     const newNode = new nodeClass();
     
-    newNode.id = currentNodeID;
+    newNode.nodeID = currentNodeID;
+    newNode.nodeClass = nodeClass;
     newNode.name = nodeJSON.name;
     newNode.parent = parentNode;
     
@@ -76,7 +78,7 @@ function clearScene() {
 }
 
 function reloadScene() {
-    updateHierarchy();
+    initializeHierarchy();
 }
 
 function hierarchySelectedNode(nodeID) {
@@ -87,14 +89,30 @@ function hierarchySelectedNode(nodeID) {
 
 function hierarchyDeselected() {
     selectedNodeID = null;
+    propertiesUpdateDeselected();
+}
+
+function canvasSelectedNode(nodeID) {
+    selectedNodeID = nodeID;
+
+    hierarchyUpdateSelectedNode();
+    propertiesUpdateSelectedNode();
+}
+
+function canvasDeselected() {
+    selectedNodeID = null;
+
+    hierarchyUpdateDeselected();
+    propertiesUpdateDeselected();
 }
 
 function propertiesChangedName(nodeID) {
     hierarchyUpdateNodeName(nodeID);
 }
 
-function setMode2D(modeElement) {
-    mode = "2D";
+function setMode(modeIndex, modeName) {
+    mode = modeName;
 
-    modeElement.classList.add("active-mode");
+    modeElements[1 - modeIndex].classList.remove("active-mode");
+    modeElements[modeIndex].classList.add("active-mode");
 }

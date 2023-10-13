@@ -260,6 +260,11 @@ button:hover {
     font-size: 20px;
 }
 
+.property-value-vector3 {
+    display: flex;
+    flex-direction: row;
+}
+
 .toolbar {
     height: 40px;
     padding: 5px;
@@ -296,11 +301,11 @@ button:hover {
     padding-bottom: 5px;
     margin-left: 15px;
     margin-right: 15px;
+    border-radius: 5px;
 }
 
 .mode:hover {
     background-color: rgba(0,0,0,0.1);
-    border-radius: 5px;
 }
 
 .active-mode {

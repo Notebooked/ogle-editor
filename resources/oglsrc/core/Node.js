@@ -1,7 +1,7 @@
 import { Signal } from '../core/Signal.js';
 
 export class Node {
-    editorProperties = [["name",true,"string"], ["parent",false,"string"]];
+    static editorProperties = [["name",true,"string"], ["parent",false,"string"]];
 
     constructor(name, parent = null) {
         this.name = name;

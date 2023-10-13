@@ -14,7 +14,7 @@ async function createProjectFolderWatcher() {
 async function loadProject() {
     //loadProjectName();
 
-    createProjectFolderWatcher();
+    //createProjectFolderWatcher();
 
     loadProjectAssetsContainer();
 }

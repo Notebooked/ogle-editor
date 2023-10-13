@@ -7,6 +7,8 @@ import { Euler } from '../math/Euler.js';
 //TODO: add directions, clean up visible, naming of functions and variables
 
 export class Transform extends Node {
+    static editorProperties = [["visible",true,"boolean"],["position",true,"vector3"]];
+
     constructor(name, parent = null) {
         super(name, parent)
 
