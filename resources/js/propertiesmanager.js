@@ -93,17 +93,42 @@ function propertyValueElementChangedBoolean(propertyName, propertyValueElement, 
     node[propertyName] = newValue;
 }
 
-function createEditorPropertyVectorEntry(vectorComponent, propertyValue, canEdit, propertyValueContainer) {
+function createEditorPropertyVectorEntry(vectorComponent, propertyName, propertyValue, canEdit, propertyValueContainer) {
     const propertyValueElement = document.createElement("input");
-    propertyValueElement.type = "entry";
+    propertyValueElement.type = "number";
     propertyValueElement.name = "property-input";
-    propertyValueElement.classList.add("property-value","property-value-boolean");
-    propertyValueElement.value = propertyValue[vectorComponent];
+    propertyValueElement.classList.add("property-value","property-value-number");
+    propertyValueElement.value = "" + propertyValue[vectorComponent];
 
     if (!canEdit) propertyValueElement.disabled = true;
-    if (canEdit) propertyValueElement.onchange = () => propertyValueElementChangedVector3(propertyName, propertyValueElement, selectedNodeID, "x");
+    if (canEdit) propertyValueElement.onchange = () => propertyValueElementChangedVector3(propertyName, propertyValueElement, selectedNodeID, vectorComponent);
 
     propertyValueContainer.appendChild(propertyValueElement);
+}
+
+function createEditorPropertyVector2(propertyName, propertyValue, canEdit, propertyContainer) {
+    const propertyNameSpan = document.createElement("span");
+    propertyNameSpan.classList.add("property-name");
+    propertyNameSpan.innerHTML = propertyName;
+    propertyContainer.appendChild(propertyNameSpan);
+
+    const propertyValueContainer = document.createElement("div");
+    propertyValueContainer.classList.add("property-value", "property-value-vector");
+
+    createEditorPropertyVectorEntry("x", propertyName, propertyValue, canEdit, propertyValueContainer);
+    createEditorPropertyVectorEntry("y", propertyName, propertyValue, canEdit, propertyValueContainer);
+
+    propertyContainer.appendChild(propertyValueContainer);
+}
+
+function propertyValueElementChangedVector2(propertyName, propertyValueElement, nodeID, vectorComponent) {
+    const newValue = parseFloat(propertyValueElement.value);
+
+    propertyValueElement.blur(); //deselect entry
+
+    const node = nodeIDTable[nodeID];
+
+    node[propertyName][vectorComponent] = newValue;
 }
 
 function createEditorPropertyVector3(propertyName, propertyValue, canEdit, propertyContainer) {
@@ -113,23 +138,23 @@ function createEditorPropertyVector3(propertyName, propertyValue, canEdit, prope
     propertyContainer.appendChild(propertyNameSpan);
 
     const propertyValueContainer = document.createElement("div");
-    propertyValueContainer.classList.add("property-value", "property-value-vector3");
+    propertyValueContainer.classList.add("property-value", "property-value-vector");
 
-    createEditorPropertyVectorEntry("x", propertyValue, canEdit, propertyValueContainer);
-    createEditorPropertyVectorEntry("y", propertyValue, canEdit, propertyValueContainer);
-    createEditorPropertyVectorEntry("z", propertyValue, canEdit, propertyValueContainer);
+    createEditorPropertyVectorEntry("x", propertyName, propertyValue, canEdit, propertyValueContainer);
+    createEditorPropertyVectorEntry("y", propertyName, propertyValue, canEdit, propertyValueContainer);
+    createEditorPropertyVectorEntry("z", propertyName, propertyValue, canEdit, propertyValueContainer);
 
     propertyContainer.appendChild(propertyValueContainer);
 }
 
-function propertyValueElementChangedBoolean(propertyName, propertyValueElement, nodeID) {
-    const newValue = propertyValueElement.checked;
+function propertyValueElementChangedVector3(propertyName, propertyValueElement, nodeID, vectorComponent) {
+    const newValue = parseFloat(propertyValueElement.value);
 
     propertyValueElement.blur(); //deselect entry
 
     const node = nodeIDTable[nodeID];
 
-    node[propertyName] = newValue;
+    node[propertyName][vectorComponent] = newValue;
 }
 
 function createEditorPropertyContainer(editorProperty) {
@@ -140,6 +165,8 @@ function createEditorPropertyContainer(editorProperty) {
         createEditorPropertyString(editorProperty[0], getSelectedNode()[editorProperty[0]], editorProperty[1], propertyContainer);
     } else if (editorProperty[2] === "boolean") {
         createEditorPropertyBoolean(editorProperty[0], getSelectedNode()[editorProperty[0]], editorProperty[1], propertyContainer);
+    } else if (editorProperty[2] === "vector2") {
+        createEditorPropertyVector2(editorProperty[0], getSelectedNode()[editorProperty[0]], editorProperty[1], propertyContainer);
     } else if (editorProperty[2] === "vector3") {
         createEditorPropertyVector3(editorProperty[0], getSelectedNode()[editorProperty[0]], editorProperty[1], propertyContainer);
     }

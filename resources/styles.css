@@ -246,12 +246,12 @@ button:hover {
 .property-name {
     margin-left: 5px;
     font-size: 20px;
-    width: 50%;
+    width: 30%;
 }
 
 .property-value {
     margin-right: 5px;
-    width: 50%;
+    width: 70%;
 }
 
 .property-value-string {
@@ -260,7 +260,13 @@ button:hover {
     font-size: 20px;
 }
 
-.property-value-vector3 {
+.property-value-number {
+    background-color: rgb(52, 47, 57);
+    border: 1px black solid;
+    font-size: 20px;
+}
+
+.property-value-vector {
     display: flex;
     flex-direction: row;
 }

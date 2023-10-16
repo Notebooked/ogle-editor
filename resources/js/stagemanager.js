@@ -2,10 +2,17 @@ let editorCamera = null;
 const canvasDocument = document.getElementById("canvas-container").contentWindow.document;
 const gameCanvas = canvasDocument.getElementById("game-canvas");
 
+let k = 1000;
+
 //MODE2D
 let draggingCanvas = false;
 
-let scrollZoomIncrement = 25;
+let scrollZoomMultiplier = 1.25; //scrollZoomMarkiplier
+//add scroll max and min
+
+function normalizeCanvasCoordinates(x, y) {
+    return [(x / gameCanvas.clientWidth - 0.5) * 2, ((1 - y / gameCanvas.clientHeight) - 0.5)*2];
+}
 
 canvasDocument.addEventListener('mousedown', (e) => {
     checkMousecastObject(e);
@@ -14,6 +21,9 @@ canvasDocument.addEventListener('mousedown', (e) => {
 });
 
 canvasDocument.addEventListener('mousemove', (e) => {
+    mouseX = (e.clientX / gameCanvas.clientWidth - 0.5) * 2;
+    mouseY = ((1 - e.clientY / gameCanvas.clientHeight) - 0.5) * 2;
+
     if (draggingCanvas) {
         dragCanvas(e);
     }
@@ -24,13 +34,31 @@ canvasDocument.addEventListener('mouseup', (e) => {
 });
 
 canvasDocument.addEventListener('wheel', (e) => {
-    editorCamera.zoom += -(e.deltaY / Math.abs(e.deltaY)) * scrollZoomIncrement;
+    const [mouseX, mouseY] = normalizeCanvasCoordinates(e.clientX, e.clientY);
+
+    const beforeRightBound = editorCamera.rightBound / editorCamera.zoom;
+    const beforeTopBound = editorCamera.top / editorCamera.zoom;
+
+    if (e.deltaY > 0) {
+        editorCamera.zoom /= scrollZoomMultiplier;
+    } else {
+        editorCamera.zoom *= scrollZoomMultiplier;
+    }
+
+    const afterRightBound = editorCamera.rightBound / editorCamera.zoom;
+    const afterTopBound = editorCamera.top / editorCamera.zoom;
+
+    const difX = beforeRightBound - afterRightBound;
+    const difY = beforeTopBound - afterTopBound;
+
+    editorCamera.position.x += difX * mouseX;
+    editorCamera.position.y += difY * mouseY;
 });
 
 function checkMousecastObject(e) {
     let raycast = new Raycast();
 
-    raycast.castMouse(editorCamera, [(e.clientX / gameCanvas.clientWidth - 0.5) * 2, ((1 - e.clientY / gameCanvas.clientHeight) - 0.5)*2]);
+    raycast.castMouse(editorCamera, normalizeCanvasCoordinates(e.clientX, e.clientY));
 
     let meshes = [];
     function rec(o) {
