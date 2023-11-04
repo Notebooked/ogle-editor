@@ -16,7 +16,9 @@ export class EditorGame {
     constructor(scene = new Transform()) {
         this.setScene(scene);
 
-        this.renderer = new Renderer(this);
+        this.editorDrawTool = () => {};
+
+        this.renderer = new Renderer(this, {alpha: false, premultipliedAlpha: false});
     }
 
     get time() {
@@ -27,6 +29,8 @@ export class EditorGame {
         this.scene.broadcast('editorLoop');
 
         this.renderer.renderSceneCamera();
+
+        this.editorDrawTool();
 
         requestAnimationFrame((now) => {this.editorloop(now);});
     }

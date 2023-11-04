@@ -6,12 +6,17 @@ function hideContextMenu() {
 
 document.addEventListener("click", () => hideContextMenu());
 
-function showContextMenu(e, options) {
+function showContextMenu(e, options, position = null) {
     e.preventDefault();
 
     contextMenuDiv.classList.add("context-menu-show");
-    contextMenuDiv.style.left = e.x + "px";
-    contextMenuDiv.style.top = e.y + "px";
+    if (position) {
+        contextMenuDiv.style.left = position[0] + "px";
+        contextMenuDiv.style.top = position[1] + "px";
+    } else {
+        contextMenuDiv.style.left = e.x + "px";
+        contextMenuDiv.style.top = e.y + "px";
+    }
 
     contextMenuDiv.innerHTML = "";
 

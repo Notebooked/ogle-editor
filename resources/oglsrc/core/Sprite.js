@@ -27,6 +27,7 @@ const fragment = /* glsl */ `
 
     void main() {
         gl_FragColor = texture2D(tMap, vUv);
+        gl_FragColor = vec4(0, 0, 0, 1);
     }
 `;
 
