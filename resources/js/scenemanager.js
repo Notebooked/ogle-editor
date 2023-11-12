@@ -1,6 +1,6 @@
 let sceneJSON = null;
 
-let selectedNodeID = null; //id of currently selected node
+let selectedNodeIDList = []; //id of currently selected node
 let rootNode = null;
 
 const nodeIDTable = {};
@@ -22,9 +22,12 @@ async function initialize() {
 }
 initialize();
 
-function getSelectedNode() {
-    if (selectedNodeID === null) return null;
-    return nodeIDTable[selectedNodeID];
+function getSelectedNodes() {
+    const res = [];
+
+    selectedNodeIDList.forEach(nodeID => res.push(nodeIDTable[nodeID]));
+
+    return res;
 }
 
 async function openSceneFile(path) {
@@ -81,26 +84,26 @@ function reloadScene() {
     initializeHierarchy();
 }
 
-function hierarchySelectedNode(nodeID) {
-    selectedNodeID = nodeID;
+function hierarchySelectedNode(nodeIDList) {
+    selectedNodeIDList = nodeIDList;
 
     propertiesUpdateSelectedNode();
 }
 
 function hierarchyDeselected() {
-    selectedNodeID = null;
+    selectedNodeIDList = [];
     propertiesUpdateDeselected();
 }
 
-function canvasSelectedNode(nodeID) {
-    selectedNodeID = nodeID;
+function canvasSelectedNode(nodeIDList) {
+    selectedNodeIDList = nodeIDList;
 
     hierarchyUpdateSelectedNode();
     propertiesUpdateSelectedNode();
 }
 
 function canvasDeselected() {
-    selectedNodeID = null;
+    selectedNodeIDList = [];
 
     hierarchyUpdateDeselected();
     propertiesUpdateDeselected();

@@ -30,34 +30,6 @@ canvasDocument.addEventListener("contextmenu", (e) => {
     showContextMenu(e, canvas2dContextOptions, position);
 });
 
-const testVert = `
-attribute vec2 uv;
-attribute vec3 position;
-
-uniform mat4 modelViewMatrix;
-uniform mat4 projectionMatrix;
-
-varying vec2 vUv;
-
-void main() {
-    vUv = uv;
-    
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-}
-`;
-
-const testFrag = `
-precision highp float;
-
-uniform vec4 color;
-
-varying vec2 vUv;
-
-void main() {
-    gl_FragColor = vec4(color.rgb, 0.5);
-}
-`
-
 async function initializeRenderer() {
     editorCamera = new Camera();
 

@@ -14,7 +14,7 @@ function pointerEvent(e) {
             if (e.button === 0) {
                 checkMousecastObject(e);
 
-                if (selectedNodeID === null) {
+                if (selectedNodeIDList.length === 0) {
                     selectingCanvas = true;
 
                     selectionStartNormalized = normalizeCanvasCoordinates(e.clientX, e.clientY);
@@ -110,7 +110,7 @@ function checkSelectionRect() {
     }
     if (rootNode) rec(rootNode);
 
-    let res = null; //TODO: ADD mukltiple selections object
+    let res = []; //TODO: ADD mukltiple selections object
     let position = [];
     let vertices = [];
 
@@ -120,6 +120,8 @@ function checkSelectionRect() {
 
             if (position.length === 3) {
                 let vertexPosition = new Vec3(...position);
+
+                vertexPosition.applyMatrix4(mesh.worldMatrix);
     
                 editorCamera.project(vertexPosition);
 
@@ -136,12 +138,12 @@ function checkSelectionRect() {
             Math.min(selectionStartNormalized[1], mouseY) >= vertex.y || vertex.y >= Math.max(selectionStartNormalized[1], mouseY)) valid = false;
         });
 
-        if (valid) res = mesh;
+        if (valid) res.push(mesh.nodeID);
 
         vertices = [];
     });
 
-    selectedNodeID = res ? res.id : null;
+    canvasSelectedNode(res);
 }
 
 function checkMousecastObject(e) {
@@ -160,7 +162,7 @@ function checkMousecastObject(e) {
 
     if (hits.length === 0) canvasDeselected();
     else {
-        canvasSelectedNode(hits[0].nodeID);
+        canvasSelectedNode([hits[0].nodeID]);
     }
 }
 

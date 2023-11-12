@@ -1,11 +1,15 @@
 const hierarchyContainer = document.getElementById("hierarchy-list");
 
-let selectedNodeLabelContainer = null;
+let selectedNodeContainers = [];
 
 const idHierarchyContainerTable = {};
 
 function hierarchyUpdateSelectedNode() {
-    selectNodeHierarchy(idHierarchyContainerTable[selectedNodeID]);
+    deselectHierarchy();
+
+    selectedNodeContainers = [];
+
+    selectedNodeIDList.forEach(nodeID => selectNodeHierarchy(idHierarchyContainerTable[nodeID]));
 }
 
 function hierarchyUpdateDeselected() {
@@ -69,9 +73,9 @@ function addNodeToHierarchy(newNode, parentContainer) {
 }
 
 function deselectHierarchy() {
-    if (selectedNodeLabelContainer !== null) selectedNodeLabelContainer.classList.remove("hierarchy-node-label-container-selected");
+    selectedNodeContainers.forEach(container => container.querySelector(".hierarchy-node-label-container").classList.remove("hierarchy-node-label-container-selected"));
 
-    selectedNodeLabelContainer = null;
+    selectedNodeContainers = [];
 }
 
 function deselectNodeContainer() {
@@ -82,13 +86,13 @@ function deselectNodeContainer() {
 
 document.addEventListener("mousedown", (e) => {
     if (e.target.classList.contains("hierarchy-node-label")) {
-        nodeLabelContainerMouseDown(e.target.parentElement, e.target.parentElement.nodeID);
+        nodeLabelContainerMouseDown(e.target.parentElement.nodeID, e.ctrlKey);
     }
     else if (e.target.classList.contains("hierarchy-node-label-container")) {
-        nodeLabelContainerMouseDown(e.target, e.target.nodeID);
+        nodeLabelContainerMouseDown(e.target.nodeID, e.ctrlKey);
     }
     else if (e.target.classList.contains("hierarchy-arrow-drop")) {
-        hierarchyArrowDropMouseDown(e.target.nodeContainer);
+        hierarchyArrowDropMouseDown(e.target.nodeContainer, e.ctrlKey);
     }
     else if (e.target.id === "hierarchy-list") {
         deselectNodeContainer();
@@ -100,15 +104,20 @@ function hierarchyArrowDropMouseDown(nodeContainer) {
 }
 
 function selectNodeHierarchy(nodeLabelContainer) {
-    selectedNodeLabelContainer = nodeLabelContainer;
+    selectedNodeContainers.push(nodeLabelContainer);
 
-    nodeLabelContainer.classList.add("hierarchy-node-label-container-selected");
+    nodeLabelContainer.querySelector(".hierarchy-node-label-container").classList.add("hierarchy-node-label-container-selected");
 }
 
-function nodeLabelContainerMouseDown(nodeLabelContainer, nodeID) {
-    deselectNodeContainer();
+function nodeLabelContainerMouseDown(nodeID, ctrlKey, shiftKey) { //TODO: IMPLEMENT SHIFTKEY
+    const nodeList = ctrlKey ? selectedNodeIDList : [];
 
-    hierarchySelectedNode(nodeID);
+    if (ctrlKey) {
+        if (nodeList.includes(nodeID)) delete nodeList[nodeList.indexOf(nodeID)];
+        else nodeList.push(nodeID);
+    } else nodeList.push(nodeID);
 
-    selectNodeHierarchy(nodeLabelContainer);
+    hierarchySelectedNode(nodeList);
+
+    hierarchyUpdateSelectedNode();
 }

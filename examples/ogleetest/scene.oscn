@@ -13,6 +13,15 @@
 					"setTexture(TextureLoader.load({src: 'grimacing-face.png'}))"
 				],
 				"children": []
+			},
+			{
+				"name": "Child2",
+				"className": "Sprite",
+				"initProperties": {},
+				"initFunctionCalls": [
+					"setTexture(TextureLoader.load({src: 'grimacing-face.png'}))"
+				],
+				"children": []
 			}
 		]
 	}
