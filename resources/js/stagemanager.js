@@ -7,7 +7,19 @@ const gameCanvas = canvasDocument.getElementById("game-canvas");
 const scrollZoomMultiplier = 1.15; //scrollZoomMarkiplier
 const scrollZoomMax = 4000, scrollZoomMin = 100;
 
+let editorGuiLayer = null;
+
 let selectedTool = "pointer";
+let selectedToolElement = document.getElementsByClassName("tool-img")[0];
+
+function setTool(element, toolName) {
+    selectedToolElement.classList.remove("tool-active");
+
+    selectedToolElement = element;
+    selectedTool = toolName;
+
+    selectedToolElement.classList.add("tool-active");
+}
 
 const toolEventList = ["mousedown", "mousemove", "mouseup", "wheel"];
 
@@ -31,9 +43,12 @@ canvasDocument.addEventListener("contextmenu", (e) => {
 });
 
 async function initializeRenderer() {
+    editorGuiLayer = new Layer()
+
     editorCamera = new Camera();
 
     editorCamera.position.z = 10;
+    editorCamera.type = "orthographic";
 
     game.activeCamera = editorCamera;
 

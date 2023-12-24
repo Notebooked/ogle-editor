@@ -33,9 +33,10 @@ const fragment = /* glsl */ `
 export class Sprite extends Mesh {
     #texture = null;
 
+    static editorProperties = [["setTexture",false,"function",["goming"]]];
+
     constructor(name, parent = null) {
-        //super({ geometry: new Plane({width:1,height:1}), program:null });
-        super({ geometry: new Plane({width:1,height:1}), program:new Program({
+        super({ geometry: new Plane({width:1, height:1}), program: new Program({
             vertex,
             fragment,
             uniforms: {

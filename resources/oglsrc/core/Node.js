@@ -29,7 +29,7 @@ export class Node {
     }
     setParent(parent, notifyParent = true) {
         if (this._parent !== parent) {
-            var oldParent = this._parent;
+            let oldParent = this._parent;
 
             if (this._parent) this._parent.removeChild(this, false);
 
@@ -41,7 +41,7 @@ export class Node {
             if (this._parent instanceof Node) { //check if we have a new game:
                 if (this._game !== this._parent.game) { //we have a new game
                     this.gameTreeChanging.fire();
-                    var oldGame = this._game;
+                    let oldGame = this._game;
                     this._game = parent.game;
                     this.gameTreeChanged.fire(oldGame);
                 }
@@ -70,7 +70,7 @@ export class Node {
     }
 
     get root() {
-        var current = this;
+        let current = this;
         while (current.parent !== null) {
             current = current.parent;
         }
@@ -78,9 +78,9 @@ export class Node {
     }
 
     getNode(name = null, type = null) {
-        var res = null;
+        let res = null;
         this.traverse((child) => {
-            var isChild = true;
+            let isChild = true;
             if (name !== null && child.name !== name) {
                 isChild = false;
             }
@@ -94,9 +94,9 @@ export class Node {
     }
 
     findFirstDescendant(name = null, type = null) {
-        var res = null;
+        let res = null;
         this.traverse((child) => {
-            var isChild = true;
+            let isChild = true;
             if (name !== null && child.name !== name) {
                 isChild = false;
             }
@@ -108,7 +108,7 @@ export class Node {
         })
         if (res !== null) { return res; }
         this._children.forEach((child) => { //THIS CODE SUCKS YOU SHOULD K
-            var res = child.findFirstDescendant(name, type);
+            let res = child.findFirstDescendant(name, type);
             if (res !== null) {
                 return res;
             }
@@ -117,9 +117,9 @@ export class Node {
     }
 
     findDescendants(name = null, type = null) {
-        var res = [];
+        let res = [];
         this.traverse((child) => {
-            var isChild = true;
+            let isChild = true;
             if (name !== null && child.name !== name) {
                 isChild = false;
             }
@@ -130,10 +130,20 @@ export class Node {
             return false;
         })
         this._children.forEach((child) => {
-            var childRes = child.findDescendants(name, type);
+            let childRes = child.findDescendants(name, type);
             res.push(...childRes);
         })
         return res;
+    }
+    
+    findClosestAncestor(name = null, type = null) {
+        let currentNode = this;
+        while (currentNode !== null) {
+            currentNode = currentNode.parent;
+
+            if ((name === null || currentNode.name === name) && (type === null || currentNode instanceof type))
+                return currentNode;
+        }
     }
 
     traverse(callback) {

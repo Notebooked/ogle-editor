@@ -285,15 +285,19 @@ button:hover {
     display: flex;
 }
 
-.toolbar img {
+.tool-img {
     height: 100%;
     padding: 2px;
     margin-right: 5px;
     filter: invert(100%) brightness(80%);
 }
 
-.toolbar img:hover {
+.tool-img:hover {
     filter: invert(100%) brightness(100%);
+}
+
+.tool-active {
+    filter: invert() brightness(50%) sepia(100) saturate(100) hue-rotate(215deg) brightness(240%) !important;
 }
 
 .top-bar {

@@ -32,8 +32,9 @@
             </div>
             <div id="stage-container">
                 <div class="toolbar">
-                    <img src="editorimg/translate.png" alt="">
-                    <img src="editorimg/rotate.png" alt="">
+                    <img src="editorimg/select.png" class="tool-img tool-active" onclick="setTool(this, 'pointer')" alt="">
+                    <img src="editorimg/translate.png" class="tool-img" onclick="setTool(this, 'translate')" alt="">
+                    <img src="editorimg/rotate.png" class="tool-img" onclick="setTool(this, 'rotate')" alt="">
                 </div>
                 <iframe id="canvas-container" frameBorder="0" src="canvas-content.html" scrolling="no"></iframe>
             </div>
@@ -147,6 +148,7 @@
         -->
     <script src="js/neutralino.js"></script>
     <!-- Your app's source files -->
+    <script src="js/keyboardshortcuts.js"></script>
     <script src="js/classloader.js"></script>
     <script src="js/main.js"></script>
     <script src="js/projectloader.js"></script>

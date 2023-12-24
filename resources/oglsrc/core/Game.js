@@ -5,8 +5,8 @@ import { getGlContext } from './Canvas.js';
 import { PhysicsEngine2D } from '../physics2d/PhysicsEngine2D.js';
 import { InputManager } from './InputManager.js';
 
-var then = 0;
-var dt = 0;
+let then = 0;
+let dt = 0;
 
 export class Game {
     #time = 0.0;

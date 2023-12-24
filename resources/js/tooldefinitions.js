@@ -55,8 +55,6 @@ function pointerEvent(e) {
                 editorCamera.zoom *= scrollZoomMultiplier;
             }
         
-            editorCamera.zoom = Math.max(Math.min(editorCamera.zoom, scrollZoomMax), scrollZoomMin);
-        
             const afterRightBound = editorCamera.rightBound / editorCamera.zoom;
             const afterTopBound = editorCamera.top / editorCamera.zoom;
         
@@ -65,6 +63,8 @@ function pointerEvent(e) {
         
             editorCamera.position.x += difX * mouseX;
             editorCamera.position.y += difY * mouseY;
+
+            editorCamera.zoom = Math.max(Math.min(editorCamera.zoom, scrollZoomMax), scrollZoomMin);
 
             break;
     }
@@ -131,7 +131,7 @@ function checkSelectionRect() {
             };
         });
 
-        var valid = true;
+        let valid = true;
 
         vertices.forEach(vertex => {
             if (Math.min(selectionStartNormalized[0], mouseX) >= vertex.x || vertex.x >= Math.max(selectionStartNormalized[0], mouseX) ||
@@ -170,3 +170,24 @@ function dragCanvas(e) {
     editorCamera.position.x -= e.movementX / (editorCamera.zoom / 4);
     editorCamera.position.y += e.movementY / (editorCamera.zoom / 4);
 }
+
+function translateEvent(e) {
+
+}
+
+function translateDraw() {
+    if (selectedNodeIDList.length === 1) {
+        const node = getSelectedNodes()[0];
+
+        const nodePos = new Vec3();
+        nodePos.copy(node.globalPosition);
+
+        const theoriginquestionmark = nodePos;
+        editorCamera.unproject(theoriginquestionmark);
+        console.log(theoriginquestionmark);
+        const thefreakingrightvector = new Vec3(0.1,0,0);
+        editorCamera.unproject(thefreakingrightvector);
+
+        drawLine(editorCamera, {start: new Vec2(theoriginquestionmark.x, theoriginquestionmark.y), end: new Vec2(thefreakingrightvector.x, thefreakingrightvector.y)});
+    }
+}//TODO MAKE STOP MAKE CAMERA DRAW DRAW NOT RELATIVE ON THE CAMERA

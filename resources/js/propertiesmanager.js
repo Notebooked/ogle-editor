@@ -163,6 +163,36 @@ function propertyValueElementChangedVector3(propertyName, propertyValueElement, 
     });
 }
 
+function createEditorPropertyFunctionEntry(argumentName, current) {
+
+}
+
+function createEditorPropertyFunction(propertyName, propertyValue, canEdit, propertyContainer, argumentList) {
+    const propertyNameSpan = document.createElement("span");
+    propertyNameSpan.classList.add("property-name");
+    propertyNameSpan.innerHTML = propertyName;
+    propertyContainer.appendChild(propertyNameSpan);
+
+    const propertyValueContainer = document.createElement("div");
+    propertyValueContainer.classList.add("property-value", "property-value-vector");
+
+    argumentList.forEach(argumentName => createEditorPropertyFunctionEntry(argumentName))
+
+    propertyContainer.appendChild(propertyValueContainer);
+}
+
+function propertyValueElementChangedFunction(propertyName, propertyValueElement, nodeIDList, vectorComponent) {
+    const newValue = parseFloat(propertyValueElement.value);
+
+    propertyValueElement.blur(); //deselect entry
+
+    nodeIDList.forEach(nodeID => {
+        const node = nodeIDTable[nodeID];
+
+        node[propertyName][vectorComponent] = newValue;
+    });
+}
+
 function createEditorPropertyContainer(editorProperty) {
     const propertyContainer = document.createElement("div");
     propertyContainer.classList.add("property-container");
@@ -177,6 +207,8 @@ function createEditorPropertyContainer(editorProperty) {
         createEditorPropertyVector2(editorProperty[0], firstSelectedNode[editorProperty[0]], editorProperty[1], propertyContainer);
     } else if (editorProperty[2] === "vector3") {
         createEditorPropertyVector3(editorProperty[0], firstSelectedNode[editorProperty[0]], editorProperty[1], propertyContainer);
+    } else if (editorProperty[2] === "function") {
+        createEditorPropertyFunction(editorProperty[0], firstSelectedNode[editorProperty[0]], editorProperty[1], propertyContainer, editorProperty[2]);
     }
 
     propertyList.appendChild(propertyContainer);

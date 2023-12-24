@@ -3,6 +3,7 @@ import { Mat3 } from '../math/Mat3.js';
 import { Mat4 } from '../math/Mat4.js';
 
 import { getGlContext } from './Canvas.js';
+import { Layer } from './Layer.js';
 
 let ID = 0;
 
@@ -48,6 +49,7 @@ export class Mesh extends Transform {
                     normalMatrix: { value: null },
                     projectionMatrix: { value: null },
                     cameraPosition: { value: null },
+                    useCameraTransform: { value: null },
                 });
             }
 
@@ -60,6 +62,8 @@ export class Mesh extends Transform {
             this.program.uniforms.modelMatrix.value = this.worldMatrix;
             this.program.uniforms.modelViewMatrix.value = this.modelViewMatrix;
             this.program.uniforms.normalMatrix.value = this.normalMatrix;
+            const nodeLayer = this.findClosestAncestor(null, Layer);
+            this.program.uniforms.useCameraTransform.value = nodeLayer ? nodeLayer.useCameraTransform : true;
         }
         this.beforeRenderCallbacks.forEach((f) => f && f({ mesh: this, camera }));
 
