@@ -1,7 +1,7 @@
 import { Signal } from '../core/Signal.js';
 
 export class Node {
-    static editorProperties = [["name",true,"string"], ["parent",false,"string"]];
+    static editorProperties = [["name",true,"string"], ["parent",false,"string"], ["bn",true,"boolean"]];
 
     constructor(name, parent = null) {
         this.name = name;
@@ -56,7 +56,8 @@ export class Node {
             this.parentChanged.fire(oldParent);
         }
     }
-
+    get bn() {return 3}
+    set bn(v) {console.log("icd")}
     get children() {
         return this._children;
     }

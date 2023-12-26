@@ -65,13 +65,14 @@ async function initializeNodeJSON(nodeJSON, parentNode) {
     newNode.nodeClass = nodeClass;
     newNode.name = nodeJSON.name;
     newNode.parent = parentNode;
-    
-    Object.keys(nodeJSON.initProperties).forEach((initProperty) => {
-        newNode[initProperty] = eval(nodeClass.initProperties[initProperty]);
-    })
+
+    Object.keys(nodeJSON.initProperties).forEach(initProperty => {
+        newNode[initProperty] = eval(nodeJSON.initProperties[initProperty]);
+    });
+
     nodeJSON.initFunctionCalls.forEach((initFunctionCall) => {
         eval("newNode." + initFunctionCall);
-    })
+    });
 
     return newNode;
 }

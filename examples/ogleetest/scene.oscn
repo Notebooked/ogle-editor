@@ -2,7 +2,7 @@
 	"root": {
 		"name": "Root",
 		"className": "Transform",
-		"initProperties": {},
+		"initProperties": {"bn": "3"},
 		"initFunctionCalls": [],
 		"children": [
 			{

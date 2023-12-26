@@ -176,7 +176,7 @@ function createEditorPropertyFunction(propertyName, propertyValue, canEdit, prop
     const propertyValueContainer = document.createElement("div");
     propertyValueContainer.classList.add("property-value", "property-value-vector");
 
-    argumentList.forEach(argumentName => createEditorPropertyFunctionEntry(argumentName))
+    argumentList.forEach(argumentName => createEditorPropertyFunctionEntry(argumentName));
 
     propertyContainer.appendChild(propertyValueContainer);
 }
