@@ -500,3 +500,72 @@ export function multiplyScalar(out, a, b) {
     out[8] = a[8] * b;
     return out;
 }
+
+//had to add this one myself because OGL DOESNT CARE ABOUT MAT3 APPARENTLY
+/**
+ * Creates a 3x3 matrix from the given position, rotation, and scale.
+ *
+ * @param {mat3} out the receiving matrix
+ * @param {vec2} position the translation vector
+ * @param {Number} rotation the rotation angle in radians
+ * @param {vec2} scale the scaling vector
+ * @returns {mat3} out
+ */
+export function fromPositionRotationScale(out, position, rotation, scale) {
+    let x = position[0],
+        y = position[1];
+    let s = Math.sin(rotation),
+        c = Math.cos(rotation);
+    let sx = scale[0],
+        sy = scale[1];
+
+    out[0] = c * sx;
+    out[1] = -s * sy;
+    out[2] = 0;
+
+    out[3] = s * sx;
+    out[4] = c * sy;
+    out[5] = 0;
+
+    out[6] = x;
+    out[7] = y;
+    out[8] = 1;
+
+    return out;
+}
+
+/**
+ * Extracts the position from a 3x3 matrix and stores it in the out vector.
+ *
+ * @param {vec2} out the receiving vector
+ * @param {mat3} mat the source matrix
+ * @returns {vec2} out
+ */
+export function getTranslation(out, mat) {
+    out[0] = mat[6];
+    out[1] = mat[7];
+    return out;
+}
+
+/**
+ * Extracts the rotation in radians from a 3x3 matrix.
+ *
+ * @param {mat3} mat the source matrix
+ * @returns {Number} rotation in radians
+ */
+export function getRotation(mat) {
+    return Math.atan2(mat[1], mat[4]);
+}
+
+/**
+ * Extracts the scale from a 3x3 matrix and stores it in the out vector.
+ *
+ * @param {vec2} out the receiving vector
+ * @param {mat3} mat the source matrix
+ * @returns {vec2} out
+ */
+export function getScaling(out, mat) {
+    out[0] = Math.sqrt(mat[0] * mat[0] + mat[3] * mat[3]);
+    out[1] = Math.sqrt(mat[1] * mat[1] + mat[4] * mat[4]);
+    return out;
+}

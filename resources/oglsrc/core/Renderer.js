@@ -3,6 +3,7 @@ import { Color } from '../math/Color.js';
 import { getGlContext, createCanvas, isWebgl2 } from './Canvas.js';
 import { Camera } from './Camera.js';
 import { Layer } from './Layer.js';
+import { Drawable2D } from './Drawable2D.js';
 // TODO: Handle context loss https://www.khronos.org/webgl/wiki/HandlingContextLost
 
 // Not automatic - devs to use these methods manually
@@ -416,7 +417,10 @@ export class Renderer {
 
         renderList.forEach(layerList => {
             layerList.nodes.forEach(node => {
+                if (node instanceof Transform)
                 node.draw({ camera: layerList.camera });
+                else if (node instanceof Drawable2D)
+                node.draw({camera: editorCamera2D})
 
                 this.gl.clear(this.gl.DEPTH_BUFFER_BIT);
             });

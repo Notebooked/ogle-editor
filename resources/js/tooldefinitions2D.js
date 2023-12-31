@@ -1,24 +1,12 @@
-// TODO: MAKE TOOLDEFINITIONS FOR 3D LATER!!!! haha
-
 let mouseX, mouseY = 0; 
 
 function normalizeCanvasCoordinates(x, y) {
     return [(x / gameCanvas.clientWidth - 0.5) * 2, ((1 - y / gameCanvas.clientHeight) - 0.5) * 2];
 }
 
-function canvasTo2DWorld(x, y) {
-    const v = new Vec2(x - gameCanvas.clientWidth / 2, (gameCanvas.clientHeight - y) - gameCanvas.clientHeight / 2); //putting in center
-    console.log(x, y, x - gameCanvas.clientWidth / 2, (gameCanvas.clientHeight - y) - gameCanvas.clientHeight / 2);
-    v.applyMatrix3(editorCamera2D.matrix);
-
-    return v;
-}
-
-let draggingCanvas, selectingCanvas, draggingNode;
-draggingCanvas = selectingCanvas = draggingNode = false;
+let draggingCanvas, selectingCanvas, draggingNode = false;
 
 let selectionStartNormalized = [0, 0];
-let selectionStart = [0, 0];
 
 function pointerEvent(e) {
     switch (e.type) {
@@ -158,30 +146,23 @@ function checkSelectionRect() {
     canvasSelectedNode(res);
 }
 
-//checkMouseoverObject grr
 function checkMousecastObject(e) {
-    const coords = canvasTo2DWorld(e.clientX, e.clientY);
+    let raycast = new Raycast();
 
-    console.log(coords);
-    return;
+    raycast.castMouse(editorCamera, normalizeCanvasCoordinates(e.clientX, e.clientY));
 
-    let nodes = [];
+    let meshes = [];
     function rec(o) {
-        if (o instanceof Drawable2D) nodes.push(o);
+        if (o instanceof Mesh) meshes.push(o);
         o.children.forEach(rec);
     }
     if (rootNode) rec(rootNode);
 
-    let res = null;
-    nodes.forEach(drawable => {
-        if (drawable.containsPoint(coords)) res = drawable;
-    });
+    let hits = raycast.intersectMeshes(meshes);
 
-    console.log(coords, res)
-
-    if (res === null) canvasDeselected();
+    if (hits.length === 0) canvasDeselected();
     else {
-        canvasSelectedNode([res]);
+        canvasSelectedNode([hits[0].nodeID]);
     }
 }
 
