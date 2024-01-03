@@ -1,12 +1,23 @@
-let mouseX, mouseY = 0; 
+// TODO: MAKE TOOLDEFINITIONS FOR 3D LATER!!!! haha
+
+let [mouseX, mouseY] = [0, 0];
+let mousePos = null;
 
 function normalizeCanvasCoordinates(x, y) {
     return [(x / gameCanvas.clientWidth - 0.5) * 2, ((1 - y / gameCanvas.clientHeight) - 0.5) * 2];
 }
 
-let draggingCanvas, selectingCanvas, draggingNode = false;
+function canvasTo2DWorld(x, y) { //TODO: FIX THIS 
+    const v = new Vec2(x - gameCanvas.clientWidth / 2, (gameCanvas.clientHeight - y) - gameCanvas.clientHeight / 2); //putting in center
+    v.applyMatrix3(editorCamera2D.worldMatrix);
+    return v;
+}
+
+let draggingCanvas, selectingCanvas, draggingNode;
+draggingCanvas = selectingCanvas = draggingNode = false;
 
 let selectionStartNormalized = [0, 0];
+let selectionStart = null; // in game world
 
 function pointerEvent(e) {
     switch (e.type) {
@@ -18,6 +29,7 @@ function pointerEvent(e) {
                     selectingCanvas = true;
 
                     selectionStartNormalized = normalizeCanvasCoordinates(e.clientX, e.clientY);
+                    selectionStart = canvasTo2DWorld(e.clientX, e.clientY);
                 } else {
                     draggingNode = true;
                 }
@@ -27,7 +39,10 @@ function pointerEvent(e) {
 
             break;
         case "mousemove":
-            [mouseX, mouseY] = normalizeCanvasCoordinates(e.clientX, e.clientY);
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            [mouseX, mouseY] = canvasTo2DWorld(e.clientX, e.clientY);
+            mousePos = canvasTo2DWorld(e.clientX, e.clientY);
 
             if (draggingCanvas) {
                 dragCanvas(e);
@@ -70,105 +85,61 @@ function pointerEvent(e) {
     }
 }
 
+let pointerRect = null;
 function pointerDraw() {
-    const startX = selectionStartNormalized[0] * (editorCamera.rightBound / editorCamera.zoom);
-    const startY = selectionStartNormalized[1] * (editorCamera.top / editorCamera.zoom);
+    //if (pointerRect === null) pointerRect = new Rectangle2D();
 
-    const endX = mouseX * (editorCamera.rightBound / editorCamera.zoom);
-    const endY = mouseY * (editorCamera.top / editorCamera.zoom);
-
-    const width = endX - startX;
-    const height = endY - startY;
-
-    const posX = startX + width / 2 + editorCamera.position.x;
-    const posY = startY + height / 2 + editorCamera.position.y;
-
-    if (selectingCanvas) {
-        drawSquare(editorCamera, {
-            position: new Vec2(posX, posY),
-            size: new Vec2(Math.abs(width),
-            Math.abs(height)),
-            color: new Color(0.5, 0.5, 1, 0.4),
-            fill: true
-        });
-        drawSquare(editorCamera, {
-            position: new Vec2(posX, posY),
-            size: new Vec2(Math.abs(width),
-            Math.abs(height)),
-            color: new Color(0.5, 0.5, 1, 1),
-            fill: false,
-            strokeWidth: 0.01
-        });
-    }
+    //if (selectingCanvas) {
+    //    pointerRect.rect = new Rect({start: selectionStart, end: mousePos});
+//
+//        pointerRect.draw({camera: editorCamera2D});
+//    }
 }
 
 function checkSelectionRect() {
-    let meshes = [];
+    let nodes = [];
     function rec(o) {
-        if (o instanceof Mesh) meshes.push(o);
+        if (o instanceof Drawable2D) nodes.push(o);
         o.children.forEach(rec);
     }
     if (rootNode) rec(rootNode);
 
-    let res = []; //TODO: ADD mukltiple selections object
-    let position = [];
-    let vertices = [];
+    let res = [];
 
-    meshes.forEach(mesh => {
-        mesh.geometry.attributes.position.data.forEach(n => {
-            position.push(n);
-
-            if (position.length === 3) {
-                let vertexPosition = new Vec3(...position);
-
-                vertexPosition.applyMatrix4(mesh.worldMatrix);
-    
-                editorCamera.project(vertexPosition);
-
-                vertices.push(vertexPosition);
-    
-                position = [];
-            };
-        });
-
-        let valid = true;
-
-        vertices.forEach(vertex => {
-            if (Math.min(selectionStartNormalized[0], mouseX) >= vertex.x || vertex.x >= Math.max(selectionStartNormalized[0], mouseX) ||
-            Math.min(selectionStartNormalized[1], mouseY) >= vertex.y || vertex.y >= Math.max(selectionStartNormalized[1], mouseY)) valid = false;
-        });
-
-        if (valid) res.push(mesh.nodeID);
-
-        vertices = [];
+    const selectionRect = new Rect({start: selectionStart, end: mousePos});
+    selectionRect.fix();
+    nodes.forEach(node => {
+        if (selectionRect.containsRect(node.getGlobalBounds())) res.push(node.nodeID);
     });
 
     canvasSelectedNode(res);
 }
 
+//checkMouseoverObject grr
 function checkMousecastObject(e) {
-    let raycast = new Raycast();
+    const coords = canvasTo2DWorld(e.clientX, e.clientY);
 
-    raycast.castMouse(editorCamera, normalizeCanvasCoordinates(e.clientX, e.clientY));
-
-    let meshes = [];
+    let nodes = [];
     function rec(o) {
-        if (o instanceof Mesh) meshes.push(o);
+        if (o instanceof Drawable2D) nodes.push(o);
         o.children.forEach(rec);
     }
     if (rootNode) rec(rootNode);
 
-    let hits = raycast.intersectMeshes(meshes);
+    let res = null;
+    nodes.forEach(drawable => {
+        if (drawable.containsPoint(coords)) res = drawable;
+    });
 
-    if (hits.length === 0) canvasDeselected();
+    if (res === null) canvasDeselected();
     else {
-        canvasSelectedNode([hits[0].nodeID]);
+        canvasSelectedNode([res.nodeID]);
     }
 }
 
 function dragCanvas(e) {
-    editorCamera.position.x -= e.movementX / (editorCamera.zoom / 4);
-    editorCamera.position.y += e.movementY / (editorCamera.zoom / 4);
+    editorCamera2D.position.x -= e.movementX / (editorCamera2D.zoom);
+    editorCamera2D.position.y += e.movementY / (editorCamera2D.zoom);
 }
 
 function translateEvent(e) {

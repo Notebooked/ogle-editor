@@ -6,36 +6,12 @@
 		"initFunctionCalls": [],
 		"children": [
 			{
-				"name": "TestLayer",
-				"className": "Layer",
-				"initProperties": {},
-				"initFunctionCalls": ["layerIdx = 3"],
-				"children": [
-					{
-						"name": "Child1",
-						"className": "Sprite",
-						"initProperties": {},
-						"initFunctionCalls": [
-							"setTexture(TextureLoader.load({src: 'grimacing-face.png'}))"
-						],
-						"children": []
-					},
-					{
-						"name": "ChildCamera",
-						"className": "Camera",
-						"initProperties": {},
-						"initFunctionCalls": [],
-						"children": []
-					}
-				]
-			},
-			{
-				"name": "Child2",
-				"className": "Sprite",
-				"initProperties": {},
-				"initFunctionCalls": [
-					"setTexture(TextureLoader.load({src: 'grimacing-face.png'}))"
-				],
+				"name": "Child1",
+				"className": "Rectangle2D",
+				"initProperties": {
+					"rect": "new Rect({x: 0, y: 0, width: 100, height: 100})"
+				},
+				"initFunctionCalls": [],
 				"children": []
 			}
 		]

@@ -1,4 +1,5 @@
 let editorCamera = null;
+let editorCamera2D = null;
 const canvasContainer = document.getElementById("canvas-container");
 const canvasDocument = canvasContainer.contentWindow.document;
 const gameCanvas = canvasDocument.getElementById("game-canvas");
@@ -46,6 +47,7 @@ async function initializeRenderer() {
     editorGuiLayer = new Layer()
 
     editorCamera = new Camera();
+    editorCamera2D = new Camera2D();
 
     editorCamera.position.z = 10;
     editorCamera.type = "orthographic";
@@ -56,6 +58,8 @@ async function initializeRenderer() {
 
     renderer.resizeHandler = () => {
         renderer.resizeSceneCamera(0,0,false);
+
+        editorCamera2D.generateViewMatrix();
     }
     renderer.resizeHandler();
 
