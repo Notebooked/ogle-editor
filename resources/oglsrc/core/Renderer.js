@@ -343,9 +343,9 @@ export class Renderer {
     }
 
     getRenderList({ scene, camera, frustumCull, sort }) {
-        if (camera && frustumCull) camera.updateFrustum();
+        let renderList = [];
 
-        let layers = {};
+        if (camera && frustumCull) camera.updateFrustum();
 
         // Get visible
         scene.traverse((node) => {
@@ -356,33 +356,99 @@ export class Renderer {
                 if (!camera.frustumIntersectsMesh(node)) return;
             }
 
-            const layer = node.findClosestAncestor(null, Layer);
-            const layerIdx = layer ? layer.layerIdx : 0;
-            const layerCamera = layer?.useOwnCamera ? layer.findFirstDescendant(null, Camera) : camera;
-            if (!(Object.keys(layers).includes(layerIdx.toString()))) layers[layerIdx] = {nodes: [], camera: layerCamera};
-            layers[layerIdx].nodes.push(node);
+            renderList.push(node);
         });
 
-        //layers is a dictionary whose keys are layer indexes that map to a list of nodes in the layer
-        //layers[0] is also the default layer index for nodes outside of layers
-
         if (sort) {
-            Object.keys(layers).forEach(layerIdx => {
-                layers[layerIdx].nodes = this.sortLayer(layers[layerIdx].nodes, layers[layerIdx].camera);
+            const opaque = [];
+            const transparent = []; // depthTest true
+            const ui = []; // depthTest false
+
+            renderList.forEach((node) => {
+                // Split into the 3 render groups
+                if (!node.program.transparent) {
+                    opaque.push(node);
+                } else if (node.program.depthTest) {
+                    transparent.push(node);
+                } else {
+                    ui.push(node);
+                }
+
+                node.zDepth = 0;
+
+                // Only calculate z-depth if renderOrder unset and depthTest is true
+                if (node.renderOrder !== 0 || !node.program.depthTest || !camera) return;
+
+                // update z-depth
+                node.worldMatrix.getTranslation(tempVec3);
+                tempVec3.applyMatrix4(camera.projectionViewMatrix);
+                node.zDepth = tempVec3.z;
             });
+
+            opaque.sort(this.sortOpaque);
+            transparent.sort(this.sortTransparent);
+            ui.sort(this.sortUI);
+
+            renderList = opaque.concat(transparent, ui);
         }
 
+        return renderList;
+    }
+
+    getRenderList2D({ scene, camera2D, frustumCull, sort }) {
         let renderList = [];
 
-        const layerIdxSorted = Object.keys(layers);
-        layerIdxSorted.sort((a, b) => a - b);
-        layerIdxSorted.forEach(layerIdx => renderList.push({nodes: layers[layerIdx].nodes, camera: layers[layerIdx].camera}));
+        if (camera2D && frustumCull) camera2D.updateFrustum();
+
+        // Get visible
+        scene.traverse((node) => {
+            if (!node.visible) return true;
+            if (!node.draw) return;
+
+            if (frustumCull && node.frustumCulled && camera) {
+                if (!camera.frustumIntersectsMesh(node)) return;
+            }
+
+            renderList.push(node);
+        });
+
+        if (sort) {
+            const opaque = [];
+            const transparent = []; // depthTest true
+            const ui = []; // depthTest false
+
+            renderList.forEach((node) => {
+                // Split into the 3 render groups
+                if (!node.program.transparent) {
+                    opaque.push(node);
+                } else if (node.program.depthTest) {
+                    transparent.push(node);
+                } else {
+                    ui.push(node);
+                }
+
+                node.zDepth = 0;
+
+                // Only calculate z-depth if renderOrder unset and depthTest is true
+                if (node.renderOrder !== 0 || !node.program.depthTest || !camera) return;
+
+                // update z-depth
+                node.worldMatrix.getTranslation(tempVec3);
+                tempVec3.applyMatrix4(camera.projectionViewMatrix);
+                node.zDepth = tempVec3.z;
+            });
+
+            opaque.sort(this.sortOpaque);
+            transparent.sort(this.sortTransparent);
+            ui.sort(this.sortUI);
+
+            renderList = opaque.concat(transparent, ui);
+        }
 
         return renderList;
     }
 
     render({ scene, camera, target = null, update = true, sort = true, frustumCull = true, clear }) {
-        //camera.type = 'orthographic' //TODO: get rid of this stupid
         if (target === null) {
             // make sure no render target bound so draws to canvas
             this.bindFramebuffer();
@@ -406,24 +472,17 @@ export class Renderer {
             );
         }
 
-        // updates all scene graph matrices TURNED OFF FOR GETTER AND SETTER TRANSFORM TESTING
+        // updates all scene graph matrices
         //if (update) scene.updateMatrixWorld();
 
         // Update camera separately, in case not in scene graph
-        if (camera) camera.updateWorldMatrix();
+        //if (camera) camera.updateMatrixWorld();
 
         // Get render list - entails culling and sorting
         const renderList = this.getRenderList({ scene, camera, frustumCull, sort });
 
-        renderList.forEach(layerList => {
-            layerList.nodes.forEach(node => {
-                if (node instanceof Transform)
-                node.draw({ camera: layerList.camera });
-                else if (node instanceof Drawable2D)
-                node.draw({camera: editorCamera2D})
-
-                this.gl.clear(this.gl.DEPTH_BUFFER_BIT);
-            });
+        renderList.forEach((node) => {
+            node.draw({ camera });
         });
     }
 }

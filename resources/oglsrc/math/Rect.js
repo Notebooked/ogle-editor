@@ -52,4 +52,9 @@ export class Rect {
     containsRect(r) {
         return (this.position.x <= r.position.x && r.end.x <= this.end.x && this.position.y <= r.position.y && r.end.y <= this.end.y);
     }
+
+    intersectsRect(r) {
+        return (Math.min(this.end.x, r.end.x) - Math.max(this.position.x, r.position.x) > 0 &&
+        Math.min(this.end.y, r.end.y) - Math.max(this.position.y, r.position.y) > 0)
+    }
 }
