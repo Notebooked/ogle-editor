@@ -3,7 +3,9 @@ import { Color } from '../math/Color.js';
 import { getGlContext, createCanvas, isWebgl2 } from './Canvas.js';
 import { Camera } from './Camera.js';
 import { Layer } from './Layer.js';
-import { Drawable2D } from './Drawable2D.js';
+import { Drawable2D } from '../2d/Drawable2D.js';
+import { Transform } from './Transform.js';
+import { Transform2D } from '../2d/Transform2D.js';
 // TODO: Handle context loss https://www.khronos.org/webgl/wiki/HandlingContextLost
 
 // Not automatic - devs to use these methods manually
@@ -135,10 +137,11 @@ export class Renderer {
 
     renderSceneCamera() {
         let camera = this.game.activeCamera;
+        let camera2D = this.game.activeCamera2D;
 
         this.resizeHandler();
 
-        this.render({ scene: this.game.scene, camera });
+        this.render({ scene: this.game.scene, camera, camera2D });
     }
 
     setSize(width, height, setStyle = true) {
@@ -349,6 +352,8 @@ export class Renderer {
 
         // Get visible
         scene.traverse((node) => {
+            if (!(node instanceof Transform)) return;
+
             if (!node.visible) return true;
             if (!node.draw) return;
 
@@ -398,15 +403,17 @@ export class Renderer {
     getRenderList2D({ scene, camera2D, frustumCull, sort }) {
         let renderList = [];
 
-        if (camera2D && frustumCull) camera2D.updateFrustum();
+        //if (camera2D && frustumCull) camera2D.updateFrustum();
 
         // Get visible
         scene.traverse((node) => {
+            if (!(node instanceof Transform2D)) return;
             if (!node.visible) return true;
             if (!node.draw) return;
 
-            if (frustumCull && node.frustumCulled && camera) {
-                if (!camera.frustumIntersectsMesh(node)) return;
+            if (frustumCull && node.frustumCulled && camera2D) {
+                console.log(camera2D.frustumIntersectsDrawable(node));
+                if (!camera2D.frustumIntersectsDrawable(node)) return;
             }
 
             renderList.push(node);
@@ -419,6 +426,7 @@ export class Renderer {
 
             renderList.forEach((node) => {
                 // Split into the 3 render groups
+                /*
                 if (!node.program.transparent) {
                     opaque.push(node);
                 } else if (node.program.depthTest) {
@@ -426,21 +434,24 @@ export class Renderer {
                 } else {
                     ui.push(node);
                 }
+                TODO: fix later hahaha
+                */
+                opaque.push(node);
 
-                node.zDepth = 0;
+                node.zDepth = node.zPosition;
 
                 // Only calculate z-depth if renderOrder unset and depthTest is true
-                if (node.renderOrder !== 0 || !node.program.depthTest || !camera) return;
+                //if (node.renderOrder !== 0 || !node.program.depthTest || !camera) return;
 
                 // update z-depth
-                node.worldMatrix.getTranslation(tempVec3);
-                tempVec3.applyMatrix4(camera.projectionViewMatrix);
-                node.zDepth = tempVec3.z;
+                //node.worldMatrix.getTranslation(tempVec3);
+                //tempVec3.applyMatrix4(camera.projectionViewMatrix);
+                //node.zDepth = tempVec3.z;
             });
 
-            opaque.sort(this.sortOpaque);
-            transparent.sort(this.sortTransparent);
-            ui.sort(this.sortUI);
+            //opaque.sort(this.sortOpaque);
+            //transparent.sort(this.sortTransparent);
+            //ui.sort(this.sortUI);
 
             renderList = opaque.concat(transparent, ui);
         }
@@ -448,7 +459,7 @@ export class Renderer {
         return renderList;
     }
 
-    render({ scene, camera, target = null, update = true, sort = true, frustumCull = true, clear }) {
+    render({ scene, camera, camera2D, target = null, update = true, sort = true, frustumCull = true, clear }) {
         if (target === null) {
             // make sure no render target bound so draws to canvas
             this.bindFramebuffer();
@@ -484,5 +495,11 @@ export class Renderer {
         renderList.forEach((node) => {
             node.draw({ camera });
         });
+
+        const renderList2D = this.getRenderList2D({ scene, camera2D, frustumCull, sort });
+
+        renderList2D.forEach(node => {
+            node.draw({ camera2D });
+        })
     }
 }

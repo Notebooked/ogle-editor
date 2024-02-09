@@ -11,7 +11,8 @@ let dt = 0;
 export class EditorGame {
     #time = 0.0;
     #scene = null;
-    #activeCamera = null;
+    activeCamera = null;
+    activeCamera2D = null;
 
     constructor(scene = new Transform()) {
         this.setScene(scene);
@@ -61,12 +62,5 @@ export class EditorGame {
     setScene(scene) {
         this.#scene = scene;
         this.#scene._game = this;
-    }
-
-    get activeCamera() {
-        return this.#activeCamera;
-    }
-    set activeCamera(value) {
-        this.#activeCamera = value;
     }
 }

@@ -12,15 +12,17 @@ export class Camera2D extends Transform2D {
         this.viewMatrix = new Mat3();
 
         this.projectionMatrix = new Mat3();
+
+        this.projectionViewMatrix = new Mat3();
     }
 
     generateViewMatrix() {
         //WHY???? WHY 4???? TODO: FIX THIS IODIOT
         this.viewMatrix.inverse(this.worldMatrix);
 
-        this.projectionMatrix.set(4 / gameCanvas.width,0,0,0,4 / gameCanvas.height,0,0,0,1);
+        this.projectionMatrix.set(4 / gameCanvas.width * this.zoom,0,0,0,4 / gameCanvas.height * this.zoom,0,0,0,1);
 
-        console.log(this.getFrustumBounds());
+        this.projectionViewMatrix.multiply(this.projectionMatrix, this.viewMatrix);
     }
 
     getFrustumBounds() {
@@ -33,8 +35,8 @@ export class Camera2D extends Transform2D {
         return new Rect({start, end});
     }
 
-    drawableInBounds(node) {
-
+    frustumIntersectsDrawable(node) {
+        return this.getFrustumBounds().intersectsRect(node.getGlobalBounds());
     }
 }
 

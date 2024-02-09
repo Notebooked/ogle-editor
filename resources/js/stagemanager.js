@@ -4,10 +4,7 @@ const canvasContainer = document.getElementById("canvas-container");
 const canvasDocument = canvasContainer.contentWindow.document;
 const gameCanvas = canvasDocument.getElementById("game-canvas");
 
-//MODE2D
-const scrollZoomMultiplier = 1.15; //scrollZoomMarkiplier
-const scrollZoomMax = 4000, scrollZoomMin = 100;
-
+//TODO: implement this !!
 let editorGuiLayer = null;
 
 let selectedTool = "pointer";
@@ -53,6 +50,7 @@ async function initializeRenderer() {
     editorCamera.type = "orthographic";
 
     game.activeCamera = editorCamera;
+    game.activeCamera2D = editorCamera2D;
 
     game.editorDrawTool = () => window[selectedTool + "Draw"]();
 

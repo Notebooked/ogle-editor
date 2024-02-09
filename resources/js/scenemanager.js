@@ -57,7 +57,7 @@ async function initializeNode(nodeJSON, parentNode) {
 }
 
 async function initializeNodeJSON(nodeJSON, parentNode) {
-    const nodeClass = await getClassFromSource(nodeJSON.className);
+    const nodeClass = window[nodeJSON.className];
 
     const newNode = new nodeClass();
     

@@ -36,7 +36,9 @@ export class Mat3 extends Array {
     }
 
     multiply(ma, mb) {
-        if (mb) {
+        if (!ma.length) {
+            Mat3Func.multiplyScalar(this, this, ma);
+        } else if (mb) {
             Mat3Func.multiply(this, ma, mb);
         } else {
             Mat3Func.multiply(this, this, ma);

@@ -3,14 +3,15 @@ import { Geometry } from '../core/Geometry.js';
 // TODO: fix geometry not getting gl context
 
 export class Plane2D extends Geometry {
-    constructor({ rect, attributes = {} } = {}) {
+    constructor({ rect, outline = false, attributes = {} } = {}) {
         // Generate empty arrays once
         const position = new Float32Array(8);
         //const normal = new Float32Array(num * 2);
         //const uv = new Float32Array(num * 2);
-        const index = new Uint16Array(6);
+        const iSize = outline ? 4 : 6;
+        const index = new Uint16Array(iSize);
 
-        Plane2D.buildPlane(position, index, rect);
+        Plane2D.buildPlane(position, index, rect, outline);
 
         Object.assign(attributes, {
             position: { size: 2, data: position },
@@ -22,7 +23,7 @@ export class Plane2D extends Geometry {
         super(attributes);
     }
 
-    static buildPlane(position, index, rect) {
+    static buildPlane(position, index, rect, outline) {
         position[0] = rect.position.x;
         position[1] = rect.position.y;
         
@@ -35,11 +36,17 @@ export class Plane2D extends Geometry {
         position[6] = rect.end.x;
         position[7] = rect.position.y;
 
-        index[0] = 0;
-        index[1] = 1;
-        index[2] = 2;
-        index[3] = 0;
-        index[4] = 3;
-        index[5] = 2;
+        if (!outline) {
+            index[0] = 0;
+            index[1] = 1;
+            index[2] = 2;
+            index[3] = 0;
+            index[4] = 3;
+            index[5] = 2;
+        } else {
+            for (let i = 0; i < 4; i++) {
+                index[i] = i;
+            }
+        }
     }
 }

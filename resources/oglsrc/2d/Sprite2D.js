@@ -1,5 +1,5 @@
 import { Plane } from '../extras/Plane.js';
-import { Program } from './Program.js';
+import { Program } from '../core/Program.js';
 import { TextureLoader } from '../extras/TextureLoader.js';
 import { Drawable2D } from './Drawable2D.js';
 

@@ -2,7 +2,7 @@ import { Plane2D } from "../extras/Plane2D.js";
 import { Rect } from "../math/Rect.js";
 import { Vec2 } from "../math/Vec2.js";
 import { DrawShape2D } from "./DrawShape2D.js";
-import { Program } from "./Program.js";
+import { Program } from "../core/Program.js";
 
 const vertex1 = `
     //attribute vec2 uv;
@@ -37,7 +37,7 @@ void main() {
 `;
 
 export class RectangleDrawShape2D extends DrawShape2D {
-    constructor(rect, color) {
+    constructor(rect, color, drawable) {
         const geometry = new Plane2D({rect});
 
         const program = new Program({
@@ -50,13 +50,15 @@ export class RectangleDrawShape2D extends DrawShape2D {
         super(geometry, program, color);
 
         this._rect = rect;
+
+        this.drawable = drawable;
     }
 
     containsPoint(p) {
         const transformedPoint = new Vec2();
         transformedPoint.copy(p);
 
-        this.worldToLocal(transformedPoint);
+        this.drawable.worldToLocal(transformedPoint);
 
         return this._rect.containsPoint(transformedPoint);
     }

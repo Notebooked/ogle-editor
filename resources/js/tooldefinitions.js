@@ -1,22 +1,27 @@
 // TODO: MAKE TOOLDEFINITIONS FOR 3D LATER!!!! haha
 
-let [mouseX, mouseY] = [0, 0];
+//MODE2D
+const scrollZoomMultiplier = 1.05; //scrollZoomMarkiplier
+const scrollZoomMax = 2, scrollZoomMin = 0.5;
+
 let mousePos = null;
 
 function normalizeCanvasCoordinates(x, y) {
-    return [(x / gameCanvas.clientWidth - 0.5) * 2, ((1 - y / gameCanvas.clientHeight) - 0.5) * 2];
+    return new Vec2((x / gameCanvas.clientWidth - 0.5) * 2, ((1 - y / gameCanvas.clientHeight) - 0.5) * 2);
 }
 
 function canvasTo2DWorld(x, y) { //TODO: FIX THIS 
-    const v = new Vec2(x - gameCanvas.clientWidth / 2, (gameCanvas.clientHeight - y) - gameCanvas.clientHeight / 2); //putting in center
-    v.applyMatrix3(editorCamera2D.worldMatrix);
+    const v = normalizeCanvasCoordinates(x, y); //putting in center
+    const m = new Mat3();
+    m.copy(editorCamera2D.projectionViewMatrix);
+    m.inverse();
+    v.applyMatrix3(m);
     return v;
 }
 
 let draggingCanvas, selectingCanvas, draggingNode;
 draggingCanvas = selectingCanvas = draggingNode = false;
 
-let selectionStartNormalized = [0, 0];
 let selectionStart = null; // in game world
 
 function pointerEvent(e) {
@@ -28,7 +33,6 @@ function pointerEvent(e) {
                 if (selectedNodeIDList.length === 0) {
                     selectingCanvas = true;
 
-                    selectionStartNormalized = normalizeCanvasCoordinates(e.clientX, e.clientY);
                     selectionStart = canvasTo2DWorld(e.clientX, e.clientY);
                 } else {
                     draggingNode = true;
@@ -39,9 +43,6 @@ function pointerEvent(e) {
 
             break;
         case "mousemove":
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            [mouseX, mouseY] = canvasTo2DWorld(e.clientX, e.clientY);
             mousePos = canvasTo2DWorld(e.clientX, e.clientY);
 
             if (draggingCanvas) {
@@ -59,41 +60,33 @@ function pointerEvent(e) {
 
             break;
         case "wheel":
-            [mouseX, mouseY] = normalizeCanvasCoordinates(e.clientX, e.clientY);
-
-            const beforeRightBound = editorCamera.rightBound / editorCamera.zoom;
-            const beforeTopBound = editorCamera.top / editorCamera.zoom;
-        
             if (e.deltaY > 0) {
-                editorCamera.zoom /= scrollZoomMultiplier;
+                editorCamera2D.zoom /= scrollZoomMultiplier;
             } else {
-                editorCamera.zoom *= scrollZoomMultiplier;
+                editorCamera2D.zoom *= scrollZoomMultiplier;
             }
-        
-            const afterRightBound = editorCamera.rightBound / editorCamera.zoom;
-            const afterTopBound = editorCamera.top / editorCamera.zoom;
-        
-            const difX = beforeRightBound - afterRightBound;
-            const difY = beforeTopBound - afterTopBound;
-        
-            editorCamera.position.x += difX * mouseX;
-            editorCamera.position.y += difY * mouseY;
 
-            editorCamera.zoom = Math.max(Math.min(editorCamera.zoom, scrollZoomMax), scrollZoomMin);
+            editorCamera2D.zoom = Math.max(Math.min(editorCamera2D.zoom, scrollZoomMax), scrollZoomMin);
 
             break;
     }
 }
 
-let pointerRect = null;
+let pointerRect = null; //TODO: change to selectionRect or sometng
 function pointerDraw() {
-    //if (pointerRect === null) pointerRect = new Rectangle2D();
+    if (pointerRect === null){
+        pointerRect = new Rectangle2D();
+        pointerRect.color = new Color(0.3, 0.3, 1, 0.3);
+        pointerRect.zPosition = -1; //TODO: can be changed when editor gui layers
+    }
 
-    //if (selectingCanvas) {
-    //    pointerRect.rect = new Rect({start: selectionStart, end: mousePos});
-//
-//        pointerRect.draw({camera: editorCamera2D});
-//    }
+    if (selectingCanvas) {
+        const r = new Rect({start: mousePos, end: selectionStart});
+        r.fix();
+        pointerRect.setByRect(r);
+
+        pointerRect.draw({camera2D: editorCamera2D});
+    }
 }
 
 function checkSelectionRect() {

@@ -11,15 +11,16 @@ export class Drawable2D extends Transform2D { //2d version of mesh
         //storing draw function calls by saving their geometries in this list instead of creating new geometries every update
         this.drawShapes = [];
         this.zPosition = 0;
+        this.frustumCulled = true;
 
         this.setupDraw();
     }
 
     setupDraw() {}
 
-    draw({ camera } = {}) { //draw function called by the renderer
+    draw({ camera2D } = {}) { //draw function called by the renderer
         const c = new Mat3();
-        c.copy(camera.viewMatrix);
+        c.copy(camera2D.viewMatrix);
         c.multiply(this.worldMatrix);
 
         this.drawShapes.forEach(drawShape => {
@@ -27,13 +28,13 @@ export class Drawable2D extends Transform2D { //2d version of mesh
             const color = drawShape.color;
             const program = drawShape.program;
             // Set the matrix uniforms
-            program.uniforms.cameraMatrix = { value: camera.projectionMatrix };
+            program.uniforms.cameraMatrix = { value: camera2D.projectionMatrix };
             
             program.uniforms.drawableMatrix = { value: c };
     
             program.uniforms.zPosition = { value: this.zPosition };
     
-            program.uniforms.shapeColor = { value: color };
+            program.uniforms.color = { value: color };
     
             program.use({ flipFaces: false });
             geometry.draw({ program });
@@ -109,6 +110,6 @@ export class Drawable2D extends Transform2D { //2d version of mesh
     }
 
     drawRectangle(rect, color) {
-        this.drawShapes.push(new RectangleDrawShape2D(rect, color));
+        this.drawShapes.push(new RectangleDrawShape2D(rect, color, this));
     }
 }

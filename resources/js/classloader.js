@@ -24,6 +24,10 @@ async function loadAllClasses() {
 
     await loadClassesDirectory("core");
 
+    console.log("Loading 2d classes");
+    
+    await loadClassesDirectory("2d");
+
     console.log("Loading math classes");
     
     await loadClassesDirectory("math");

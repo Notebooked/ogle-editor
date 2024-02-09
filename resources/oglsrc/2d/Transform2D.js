@@ -1,4 +1,4 @@
-import { Node } from './Node.js';
+import { Node } from '../core/Node.js';
 import { Vec2 } from '../math/Vec2.js';
 import { Vec3 } from '../math/Vec3.js';
 import { Quat } from '../math/Quat.js';
