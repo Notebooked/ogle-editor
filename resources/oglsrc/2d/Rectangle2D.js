@@ -3,10 +3,8 @@ import { Rect } from "../math/Rect.js";
 import { Vec2 } from "../math/Vec2.js";
 import { Drawable2D } from "./Drawable2D.js";
 import { Program } from "../core/Program.js";
-import { Mat3 } from "../math/Mat3.js";
 
 const vertex1 = `
-    //attribute vec2 uv;
     attribute vec2 position;
 
     uniform vec2 rectSize;
@@ -15,11 +13,7 @@ const vertex1 = `
     uniform mat3 drawableMatrix;
     uniform float zPosition;
 
-    //varying vec2 vUv;
-
     void main() {
-        //vUv = uv;
-        
         vec2 p2 = vec2(position.x * rectSize.x, position.y * rectSize.y);
         p2 -= anchorPosition;
 
@@ -33,8 +27,6 @@ const vertex1 = `
 const fragment1 = `
 precision highp float;
 
-//varying vec2 vUv;
-
 uniform vec4 color;
 
 void main() {
@@ -43,6 +35,8 @@ void main() {
 `;
 
 export class Rectangle2D extends Drawable2D {
+    static editorProperties = [["rectSize",true,"vector2"]];
+
     constructor() {
         super();
 
@@ -77,7 +71,7 @@ export class Rectangle2D extends Drawable2D {
 
         this.worldToLocal(transformedPoint);
 
-        //return this._rect.containsPoint(transformedPoint);
+        return this._rect.containsPoint(transformedPoint);
     }
 
     updateGeometry() {

@@ -1,3 +1,5 @@
+//TODO: this whole file should be murdered once gui is made
+
 const propertyList = document.getElementById("property-list");
 
 function propertiesUpdateSelectedNode() {

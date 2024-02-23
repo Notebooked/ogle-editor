@@ -184,7 +184,6 @@ function translateDraw() {
 
         const theoriginquestionmark = nodePos;
         editorCamera.unproject(theoriginquestionmark);
-        console.log(theoriginquestionmark);
         const thefreakingrightvector = new Vec3(0.1,0,0);
         editorCamera.unproject(thefreakingrightvector);
 

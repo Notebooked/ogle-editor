@@ -20,7 +20,6 @@ export class Drawable2D extends Transform2D { //2d version of mesh
     }
 
     draw({ camera2D } = {}) { //draw function called by the renderer
-        console.log(camera2D);
         const c = new Mat3();
         c.copy(camera2D.viewMatrix);
         c.multiply(this.worldMatrix);
@@ -29,7 +28,7 @@ export class Drawable2D extends Transform2D { //2d version of mesh
         const color = this.color;
         const program = this.program;
         // Set the matrix uniforms
-        program.uniforms = Object.assign({}, this.drawableUniforms);
+        Object.assign(program.uniforms, this.drawableUniforms);
         program.uniforms.cameraMatrix = { value: camera2D.projectionMatrix };
         program.uniforms.drawableMatrix = { value: c };
         program.uniforms.zPosition = { value: this.zPosition };

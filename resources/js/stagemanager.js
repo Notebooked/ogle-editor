@@ -49,10 +49,14 @@ async function initializeRenderer() {
     editorCamera.position.z = 10;
     editorCamera.type = "orthographic";
 
+    editorGuiLayer = new Layer();
+    editorGuiLayer.layerIdx = 1024;
+
     game.activeCamera = editorCamera;
     game.activeCamera2D = editorCamera2D;
+    game.editorGuiLayer = editorGuiLayer;
 
-    game.editorDrawTool = () => window[selectedTool + "Draw"]();
+    game.editorUpdateGui = () => window[selectedTool + "Update"]();
 
     renderer.resizeHandler = () => {
         renderer.resizeSceneCamera(0,0,false);

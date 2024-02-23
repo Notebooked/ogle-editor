@@ -73,20 +73,19 @@ function pointerEvent(e) {
 }
 
 let pointerRect = null; //TODO: change to selectionRect or sometng
-function pointerDraw() {
+function pointerUpdate() {
     if (pointerRect === null){
         pointerRect = new Rectangle2D();
         pointerRect.color = new Color(0.3, 0.3, 1, 0.3);
-        pointerRect.zPosition = -1; //TODO: can be changed when editor gui layers
+        pointerRect.parent = editorGuiLayer;
     }
 
     if (selectingCanvas) {
         const r = new Rect({start: mousePos, end: selectionStart});
         r.fix();
         pointerRect.setByRect(r);
-
-        pointerRect.draw({camera2D: editorCamera2D});
-    }
+        pointerRect.visible = true;
+    } else pointerRect.visible = false;
 }
 
 function checkSelectionRect() {
@@ -148,7 +147,6 @@ function translateDraw() {
 
         const theoriginquestionmark = nodePos;
         editorCamera.unproject(theoriginquestionmark);
-        console.log(theoriginquestionmark);
         const thefreakingrightvector = new Vec3(0.1,0,0);
         editorCamera.unproject(thefreakingrightvector);
 

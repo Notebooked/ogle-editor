@@ -56,8 +56,7 @@ export class Node {
             this.parentChanged.fire(oldParent);
         }
     }
-    get bn() {return 3}
-    set bn(v) {console.log("icd")}
+
     get children() {
         return this._children;
     }
