@@ -2,7 +2,9 @@ import { Mat3 } from "../math/Mat3.js";
 import { Rect } from "../math/Rect.js";
 import { Vec2 } from "../math/Vec2.js";
 import { Transform2D } from "./Transform2D.js";
+import { getGlContext } from "../core/Canvas.js";
 
+//TODO: ZOOM DOESNT IMMEDIATELY UPDATE projectionMatrices
 export class Camera2D extends Transform2D {
     constructor() {
         super();
@@ -20,19 +22,24 @@ export class Camera2D extends Transform2D {
         //WHY???? WHY 4???? TODO: FIX THIS IODIOT
         this.viewMatrix.inverse(this.worldMatrix);
 
-        this.projectionMatrix.set(4 / gameCanvas.width * this.zoom,0,0,0,4 / gameCanvas.height * this.zoom,0,0,0,1);
+        const canvas = getGlContext().canvas;
+        this.projectionMatrix.set(4 / canvas.width * this.zoom,0,0,0,4 / canvas.height * this.zoom,0,0,0,1);
 
         this.projectionViewMatrix.multiply(this.projectionMatrix, this.viewMatrix);
     }
 
     getFrustumBounds() {
-        const start = new Vec2(-gameCanvas.clientWidth / 2, -gameCanvas.clientHeight / 2);
-        start.applyMatrix3(this.worldMatrix);
+        const m = new Mat3();
+        m.copy(this.projectionViewMatrix);
+        m.inverse();
 
-        const end = new Vec2(gameCanvas.clientWidth / 2, gameCanvas.clientHeight / 2);
-        end.applyMatrix3(this.worldMatrix);
+        const v1 = new Vec2(-1);
+        v1.applyMatrix3(m);
 
-        return new Rect({start, end});
+        const v2 = new Vec2(1);
+        v2.applyMatrix3(m);
+
+        return new Rect({start: v1, end: v2});
     }
 
     frustumIntersectsDrawable(node) {

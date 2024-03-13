@@ -19,9 +19,9 @@
             <div class="menu-dropdown">
                 <img id="menu" src="editorimg/menu.png" alt="">
                 <div id="menu-content">
-                    <a class="menu-option" onclick="newProject();">New Project</a>
-                    <a class="menu-option" onclick="saveProject();">Save Project</a>
-                    <a class="menu-option" onclick="openProjectFolder();">Open Project Folder</a>
+                    <a class="menu-option" id="new-project-button">New Project</a>
+                    <a class="menu-option" id="save-project-button">Save Project</a>
+                    <a class="menu-option" id="open-project-folder-button">Open Project Folder</a>
                 </div>
             </div>
         </div>
@@ -32,9 +32,9 @@
             </div>
             <div id="stage-container">
                 <div class="toolbar">
-                    <img src="editorimg/select.png" class="tool-img tool-active" onclick="setTool(this, 'pointer')" alt="">
-                    <img src="editorimg/translate.png" class="tool-img" onclick="setTool(this, 'translate')" alt="">
-                    <img src="editorimg/rotate.png" class="tool-img" onclick="setTool(this, 'rotate')" alt="">
+                    <img src="editorimg/select.png" class="tool-img tool-active" id="pointer-tool" alt="">
+                    <img src="editorimg/translate.png" class="tool-img" id="translate-tool" alt="">
+                    <img src="editorimg/rotate.png" class="tool-img" id="rotate-tool" alt="">
                 </div>
                 <iframe id="canvas-container" frameBorder="0" src="canvas-content.html" scrolling="no"></iframe>
             </div>
@@ -151,13 +151,27 @@
     <script src="js/keyboardshortcuts.js"></script>
     <script src="js/classloader.js"></script>
     <script src="js/main.js"></script>
-    <script src="js/projectloader.js"></script>
-    <script src="js/assetmanager.js"></script>
-    <script src="js/hierarchymanager.js"></script>
-    <script src="js/propertiesmanager.js"></script>
-    <script src="js/stagemanager.js"></script>
-    <script src="js/tooldefinitions.js"></script>
-    <script src="js/scenemanager.js"></script>
+
+    <script type="module">
+        import { newProject, openProjectFolder } from "./js-oo/main.js";
+
+        const newProjectButton = document.getElementById("new-project-button");
+        const saveProjectButton = document.getElementById("save-project-button");
+        const openProjectFolderButton = document.getElementById("open-project-folder-button");
+
+        newProjectButton.onclick = newProject;
+        openProjectFolderButton.onclick = openProjectFolder;
+
+        import { setTool } from "./js-oo/stagemanager.js";
+
+        const pointerTool = document.getElementById("pointer-tool");
+        const translateTool = document.getElementById("translate-tool");
+        const rotateTool = document.getElementById("rotate-tool");
+
+        pointerTool.onclick = () => setTool(pointerTool, "pointer");
+        translateTool.onclick = () => setTool(translateTool, "translate");
+        rotateTool.onclick = () => setTool(rotateTool, "rotate");
+    </script>
     <script src="js/contextmenu.js"></script>
 </body>
 

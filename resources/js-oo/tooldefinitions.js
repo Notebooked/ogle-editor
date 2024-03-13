@@ -1,5 +1,8 @@
 // TODO: MAKE TOOLDEFINITIONS FOR 3D LATER!!!! haha
 
+import { editorGuiLayer, gameCanvas, editorCamera2D } from "./stagemanager.js";
+import { rootNode, canvasSelectedNode, canvasDeselected, selectedNodeIDList } from "./scenemanager.js";
+
 //MODE2D
 const scrollZoomMultiplier = 1.05; //scrollZoomMarkiplier
 const scrollZoomMax = 2, scrollZoomMin = 0.5;
@@ -25,7 +28,7 @@ draggingCanvas = selectingCanvas = draggingNode = false;
 
 let selectionStart = null; // in game world
 let k = 1;
-function pointerEvent(e) {
+export function pointerEvent(e) {
     switch (e.type) {
         case "mousedown":
             if (e.button === 0) {
@@ -90,7 +93,7 @@ function pointerEvent(e) {
 }
 
 let pointerRect = null; //TODO: change to selectionRect or sometng
-function pointerUpdate() {
+export function pointerUpdate() {
     if (pointerRect === null){
         pointerRect = new Rectangle2D();
         pointerRect.color = new Color(0.3, 0.3, 1, 0.3);
@@ -151,11 +154,11 @@ function dragCanvas(e) {
     editorCamera2D.position.y += e.movementY / (editorCamera2D.zoom);
 }
 
-function translateEvent(e) {
+export function translateEvent(e) {
 
 }
 
-function translateDraw() {
+export function translateDraw() {
     if (selectedNodeIDList.length === 1) {
         const node = getSelectedNodes()[0];
 
@@ -170,3 +173,15 @@ function translateDraw() {
         drawLine(editorCamera, {start: new Vec2(theoriginquestionmark.x, theoriginquestionmark.y), end: new Vec2(thefreakingrightvector.x, thefreakingrightvector.y)});
     }
 }//TODO MAKE STOP MAKE CAMERA DRAW DRAW NOT RELATIVE ON THE CAMERA
+
+export function rotateEvent(e) {
+
+}
+
+export function rotateDraw() {
+
+}
+
+export function rotateUpdate() { 
+    
+}
