@@ -14,12 +14,11 @@ export class EditorGame {
     #scene = null;
     activeCamera = null;
     activeCamera2D = null;
-    editorGuiLayer = null;
 
     constructor(scene = new Transform()) {
         this.setScene(scene);
 
-        this.editorUpdateGui = () => {};
+        this.editorUpdate = () => {};
 
         this.renderer = new Renderer(this, {alpha: false, premultipliedAlpha: false});
     }
@@ -33,9 +32,7 @@ export class EditorGame {
 
         this.renderer.renderSceneCamera();
 
-        this.editorUpdateGui();
-        this.renderer.render({ scene: this.editorGuiLayer, camera2D: this.activeCamera2D, clear: false });
-        //TODO: funny the gui layers being rendered with editor camera
+        this.editorUpdate();
 
         requestAnimationFrame((now) => {this.editorloop(now);});
     }

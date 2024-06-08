@@ -1,5 +1,7 @@
 import { game, renderer } from "./scenemanager.js";
 import * as toolDefinitions from "./tooldefinitions.js";
+import { editorGuiLayers } from "./tooldefinitions.js";
+import { Layer, Camera, Camera2D, Color } from "../oglsrc/index.mjs";
 
 let editorCamera = null;
 export let editorCamera2D = null;
@@ -7,10 +9,7 @@ const canvasContainer = document.getElementById("canvas-container");
 const canvasDocument = canvasContainer.contentWindow.document;
 export const gameCanvas = canvasDocument.getElementById("game-canvas");
 
-//TODO: implement this !!
-export let editorGuiLayer = null;
-
-let selectedTool = "pointer";
+export let selectedTool = "pointer";
 let selectedToolElement = document.getElementsByClassName("tool-img")[0];
 
 export function setTool(element, toolName) {
@@ -44,23 +43,20 @@ canvasDocument.addEventListener("contextmenu", (e) => {
 });
 
 export async function initializeRenderer() {
-    editorGuiLayer = new Layer()
-
     editorCamera = new Camera();
     editorCamera2D = new Camera2D();
 
     editorCamera.position.z = 10;
     editorCamera.type = "orthographic";
 
-    editorGuiLayer = new Layer();
-    editorGuiLayer.layerIdx = 1024;
-
     game.activeCamera = editorCamera;
     game.activeCamera2D = editorCamera2D;
-    game.editorGuiLayer = editorGuiLayer;
 
-    console.log(selectedTool + "Update");
-    game.editorUpdateGui = () => toolDefinitions[selectedTool + "Update"]();
+    game.editorUpdate = () => {
+        toolDefinitions[selectedTool + "Update"]();
+        game.renderer.render({ scene: editorGuiLayers[selectedTool], camera2D: game.activeCamera2D, clear: false });
+        //TODO: funny the gui layers being rendered with editor camera
+    };
 
     renderer.resizeHandler = () => {
         renderer.resizeSceneCamera(0,0,false);

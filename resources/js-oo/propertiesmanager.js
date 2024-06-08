@@ -1,6 +1,7 @@
 //TODO: this whole file should be murdered once gui is made
 
 import { getSelectedNodes, selectedNodeIDList, nodeIDTable } from "./scenemanager.js";
+import { Node } from "../oglsrc/index.mjs";
 
 const propertyList = document.getElementById("property-list");
 
@@ -15,6 +16,7 @@ export function propertiesUpdateSelectedNode() {
         const classPropertyList = [];
     
         let currentClass = highestCommonClass;
+        //TODO: i hate html node
         while (currentClass !== Node && currentClass !== undefined) {
             if (currentClass.editorProperties) {  //DO MULTUIPLE SELECTED NODes
                 currentClass.editorProperties.forEach((editorProperty) => {

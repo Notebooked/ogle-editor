@@ -9,10 +9,17 @@ export { Mesh } from './core/Mesh.js';
 export { Texture } from './core/Texture.js';
 export { RenderTarget } from './core/RenderTarget.js';
 export { Game } from './core/Game.js';
+export { Layer } from './core/Layer.js';
 export { Sprite } from './core/Sprite.js';
 export { InputManager } from './core/InputManager.js';
 
 export { getGlContext } from './core/Canvas.js';
+
+export { Camera2D } from './2d/Camera2D.js';
+export { Drawable2D } from './2d/Drawable2D.js';
+export { Rectangle2D } from './2d/Rectangle2D.js';
+export { Sprite2D } from './2d/Sprite2D.js';
+export { Transform2D } from './2d/Transform2D.js';
 
 // Maths
 export { Color } from './math/Color.js';
@@ -23,6 +30,7 @@ export { Quat } from './math/Quat.js';
 export { Vec2 } from './math/Vec2.js';
 export { Vec3 } from './math/Vec3.js';
 export { Vec4 } from './math/Vec4.js';
+export { Rect } from './math/Rect.js';
 
 // Extras
 export { Plane } from './extras/Plane.js';

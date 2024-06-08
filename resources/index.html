@@ -148,9 +148,13 @@
         -->
     <script src="js/neutralino.js"></script>
     <!-- Your app's source files -->
-    <script src="js/keyboardshortcuts.js"></script>
-    <script src="js/classloader.js"></script>
-    <script src="js/main.js"></script>
+    <script src="js-oo/keyboardshortcuts.js"></script>
+
+    <script>
+        function iframe_clicked(event) {
+        console.log("wow, no kiddin!");
+        }
+    </script>
 
     <script type="module">
         import { newProject, openProjectFolder } from "./js-oo/main.js";

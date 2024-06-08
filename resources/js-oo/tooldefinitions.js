@@ -1,7 +1,17 @@
 // TODO: MAKE TOOLDEFINITIONS FOR 3D LATER!!!! haha
 
-import { editorGuiLayer, gameCanvas, editorCamera2D } from "./stagemanager.js";
-import { rootNode, canvasSelectedNode, canvasDeselected, selectedNodeIDList } from "./scenemanager.js";
+import { gameCanvas, editorCamera2D, selectedTool } from "./stagemanager.js";
+import { rootNode, canvasSelectedNode, canvasDeselected, selectedNodeIDList, getSelectedNodes } from "./scenemanager.js";
+import { Rectangle2D, Rect, Color, Vec2, Vec3, Layer, Mat3, Drawable2D, Transform2D } from "../oglsrc/index.mjs";
+
+export const editorGuiLayers = {};
+const EDITOR_GUI_LAYER_INDEX = 1024;
+let createEditorGuiLayer = id => {
+    const l = new Layer();
+    l.layerIdx = EDITOR_GUI_LAYER_INDEX;
+    editorGuiLayers[id] = l;
+    return l;
+}
 
 //MODE2D
 const scrollZoomMultiplier = 1.05; //scrollZoomMarkiplier
@@ -74,7 +84,7 @@ export function pointerEvent(e) {
                 editorCamera2D.zoom *= scrollZoomMultiplier;
             }
 
-            //TODO:make that jawn automattic
+            //TODO:make !!! automattic
             editorCamera2D.generateViewMatrix();
             mousePos = canvasTo2DWorld(e.clientX, e.clientY);
 
@@ -92,12 +102,13 @@ export function pointerEvent(e) {
     }
 }
 
+let pointerLayer = createEditorGuiLayer("pointer");
 let pointerRect = null; //TODO: change to selectionRect or sometng
 export function pointerUpdate() {
     if (pointerRect === null){
         pointerRect = new Rectangle2D();
         pointerRect.color = new Color(0.3, 0.3, 1, 0.3);
-        pointerRect.parent = editorGuiLayer;
+        pointerRect.parent = pointerLayer;
     }
 
     if (selectingCanvas) {
@@ -157,22 +168,32 @@ function dragCanvas(e) {
 export function translateEvent(e) {
 
 }
-
-export function translateDraw() {
-    if (selectedNodeIDList.length === 1) {
-        const node = getSelectedNodes()[0];
-
-        const nodePos = new Vec3();
-        nodePos.copy(node.globalPosition);
-
-        const theoriginquestionmark = nodePos;
-        editorCamera.unproject(theoriginquestionmark);
-        const thefreakingrightvector = new Vec3(0.1,0,0);
-        editorCamera.unproject(thefreakingrightvector);
-
-        drawLine(editorCamera, {start: new Vec2(theoriginquestionmark.x, theoriginquestionmark.y), end: new Vec2(thefreakingrightvector.x, thefreakingrightvector.y)});
+//make a canvas separate for each tool relative to the selected object 💯
+let translateLayer = createEditorGuiLayer("translate");
+let arrows = new Transform2D();
+arrows.parent = translateLayer;
+let translateArrowX = null; //TODO: change to selectionRect or sometng AND make clone function
+let translateArrowY = null;
+export function translateUpdate() {
+    if (translateArrowX === null){
+        translateArrowX = new Rectangle2D();//LINE2D NEXT!!!
+        translateArrowX.rectSize = new Vec2(80, 4);
+        translateArrowX.parent = arrows;//fix
+        translateArrowX.color = new Color(1,0,0,1);
+        translateArrowX.position.y -= 2;
+        translateArrowY = new Rectangle2D();//LINE2D NEXT!!!
+        translateArrowY.rectSize = new Vec2(4, 80);
+        translateArrowY.parent = arrows;
+        translateArrowY.color = new Color(0,1,0,1);
+        translateArrowY.position.x -= 2;
     }
-}//TODO MAKE STOP MAKE CAMERA DRAW DRAW NOT RELATIVE ON THE CAMERA
+    if (getSelectedNodes().length !== 0) {
+        arrows.visible = true;
+        arrows.position = getSelectedNodes()[0].position;
+    } else {
+        arrows.visible = false;
+    }
+}
 
 export function rotateEvent(e) {
 
@@ -180,8 +201,4 @@ export function rotateEvent(e) {
 
 export function rotateDraw() {
 
-}
-
-export function rotateUpdate() { 
-    
 }

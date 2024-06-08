@@ -2,12 +2,16 @@ import { initializeRenderer } from "./stagemanager.js";
 import { initializeHierarchy, hierarchyUpdateSelectedNode, hierarchyUpdateDeselected, hierarchyUpdateNodeName } from "./hierarchymanager.js";
 import { propertiesUpdateSelectedNode, propertiesUpdateDeselected } from "./propertiesmanager.js";
 
+import * as oglClasses from "../oglsrc/index.mjs";
+import { EditorGame } from "../oglsrc/core/EditorGame.js";
+
 export let sceneJSON = null;
 
 export let selectedNodeIDList = []; //id of currently selected node
 export let rootNode = null;
 
 export const nodeIDTable = {};
+
 let currentNodeID = 0; //variable for initializing id
 
 let mode = "2D";
@@ -17,7 +21,7 @@ export let game = null;
 export let renderer = null;
 
 async function initialize() {
-    await loadAllClasses();
+    //await loadAllClasses();
 
     game = new EditorGame();
     renderer = game.renderer;
@@ -61,7 +65,7 @@ async function initializeNode(nodeJSON, parentNode) {
 }
 
 async function initializeNodeJSON(nodeJSON, parentNode) {
-    const nodeClass = window[nodeJSON.className];
+    const nodeClass = oglClasses[nodeJSON.className];
 
     const newNode = new nodeClass();
     
@@ -71,7 +75,8 @@ async function initializeNodeJSON(nodeJSON, parentNode) {
     newNode.parent = parentNode;
 
     Object.keys(nodeJSON.initProperties).forEach(initProperty => {
-        newNode[initProperty] = eval(nodeJSON.initProperties[initProperty]);
+        //TODO: maybe make a function for this; also god forbid the object be not in the oglclasses
+        newNode[initProperty] = new oglClasses[nodeJSON.initProperties[initProperty].className](eval("("+nodeJSON.initProperties[initProperty].initProperties+")"));
     });
 
     nodeJSON.initFunctionCalls.forEach((initFunctionCall) => {

@@ -8,6 +8,17 @@
 
 <body>
     <canvas id="game-canvas"></canvas>
+    <script>
+        let events = ["keydown", "keyup", "copy", "paste", "cut"];
+        
+        for (let i in events) {
+            document.addEventListener(events[i], e => {
+                const newEvent = new e.constructor(e.type, e);
+                window.parent.document.dispatchEvent(newEvent);
+                e.preventDefault();
+            });
+        }
+    </script>
 </body>
 
 </html>

@@ -2,14 +2,17 @@
 	"root": {
 		"name": "Root",
 		"className": "Transform",
-		"initProperties": {"bn": "3"},
+		"initProperties": {},
 		"initFunctionCalls": [],
 		"children": [
 			{
 				"name": "Child1",
 				"className": "Rectangle2D",
 				"initProperties": {
-					"rect": "new Rect({x: 0, y: 0, width: 100, height: 100})"
+					"rect": {
+						"className": "Rectangle2D",
+						"initProperties": "{x: 0, y: 0, width: 100, height: 100}"
+					}
 				},
 				"initFunctionCalls": [],
 				"children": []
@@ -18,7 +21,10 @@
 				"name": "Child2",
 				"className": "Rectangle2D",
 				"initProperties": {
-					"position": "new Vec2(100,100)"
+					"position": {
+						"className": "Vec2",
+						"initProperties": "100, 100"
+					}
 				},
 				"initFunctionCalls": [],
 				"children": []
