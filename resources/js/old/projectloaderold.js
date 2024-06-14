@@ -1,5 +1,7 @@
-import { projectFolder } from "./main.js";
-import { loadProjectAssetsContainer } from "./assetmanager.js";
+import { projectFolder } from "../main.js";
+//import { loadProjectAssetsContainer } from "./assetmanagerold.js";
+//TODO: change this
+import { assetManager } from "../scenemanager.js";
 
 let projectName = null;
 let projectRoot = null;
@@ -8,7 +10,7 @@ async function createProjectFolderWatcher() {
     let watcherId = await Neutralino.filesystem.createWatcher(projectFolder);
     Neutralino.events.on('watchFile', (evt) => {
         if(watcherId == evt.detail.id) {
-            loadProjectAssetsContainer();
+            assetManager.loadProjectAssetsContainer();
         }
     });
 }
@@ -18,7 +20,7 @@ export async function loadProject() {
 
     //createProjectFolderWatcher();
 
-    loadProjectAssetsContainer();
+    assetManager.loadProjectAssetsContainer();
 }
 
 function changeProjectName(newName) {

@@ -1,6 +1,6 @@
 import { game, renderer } from "./scenemanager.js";
 import * as toolDefinitions from "./tooldefinitions.js";
-import { editorGuiLayers } from "./tooldefinitions.js";
+import { tools } from "./tooldefinitions.js";
 import { Layer, Camera, Camera2D, Color } from "../oglsrc/index.mjs";
 
 let editorCamera = null;
@@ -23,8 +23,10 @@ export function setTool(element, toolName) {
 
 const toolEventList = ["mousedown", "mousemove", "mouseup", "wheel"];
 console.log(toolDefinitions, toolDefinitions[selectedTool + "Event"])
-toolEventList.forEach((toolEvent) => {
-    canvasDocument.addEventListener(toolEvent, (e) => toolDefinitions[selectedTool + "Event"](e));
+toolEventList.forEach((eventName) => {
+    //canvasDocument.addEventListener(eventName, (e) => toolDefinitions[selectedTool + "Event"](e));
+    //DO:
+    //canvasDocument.addEventListener(eventName, (e) => tools[selectedTool].toolEvent(e));
 })
 
 const canvas2dContextOptions = [
@@ -53,8 +55,13 @@ export async function initializeRenderer() {
     game.activeCamera2D = editorCamera2D;
 
     game.editorUpdate = () => {
-        toolDefinitions[selectedTool + "Update"]();
-        game.renderer.render({ scene: editorGuiLayers[selectedTool], camera2D: game.activeCamera2D, clear: false });
+        //toolDefinitions[selectedTool + "Update"]();
+
+        //DO:
+        // tools[selectedTool].toolUpdate();
+        // tools[selectedTool].toolDraw();
+
+        //game.renderer.render({ scene: editorGuiLayers[selectedTool], camera2D: game.activeCamera2D, clear: false });
         //TODO: funny the gui layers being rendered with editor camera
     };
 

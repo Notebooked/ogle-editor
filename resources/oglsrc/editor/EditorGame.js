@@ -1,10 +1,5 @@
-import { Renderer } from './Renderer.js';
-import { Camera } from './Camera.js';
-import { Camera2D } from '../2d/Camera2D.js';
-import { Transform } from './Transform.js';
-import { getGlContext } from './Canvas.js';
-import { PhysicsEngine2D } from '../physics2d/PhysicsEngine2D.js';
-import { InputManager } from './InputManager.js';
+import { Renderer } from '../core/Renderer.js';
+import { Transform } from '../core/Transform.js';
 
 let then = 0;
 let dt = 0;

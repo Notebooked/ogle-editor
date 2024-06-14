@@ -1,71 +1,80 @@
-let editorCamera = null;
-let editorCamera2D = null;
+import { Layer, Camera, Camera2D, Color } from "../oglsrc/index.mjs";
+import { initTools } from "./initTools.js";
+
 const canvasContainer = document.getElementById("canvas-container");
 const canvasDocument = canvasContainer.contentWindow.document;
 const gameCanvas = canvasDocument.getElementById("game-canvas");
 
-//TODO: implement this !!
-let editorGuiLayer = null;
+export class StageManager {//TODO: why is this stuff in stagemanager
+    constructor(editor) {
+        this.editor = editor;
 
-let selectedTool = "pointer";
-let selectedToolElement = document.getElementsByClassName("tool-img")[0];
+        this.editorCamera = new Camera();
+        this.editorCamera2D = new Camera2D();
+    
+        this.editorCamera.position.z = 10;
+        this.editorCamera.type = "orthographic";
+        this.gameCanvas = gameCanvas;
 
-function setTool(element, toolName) {
-    selectedToolElement.classList.remove("tool-active");
+        this.tools = initTools(this.editor);
 
-    selectedToolElement = element;
-    selectedTool = toolName;
+        this.selectedTool = "pointer";
+        this.selectedToolElement = document.getElementsByClassName("tool-img")[0];
 
-    selectedToolElement.classList.add("tool-active");
-}
+        const toolEventList = ["mousedown", "mousemove", "mouseup", "wheel"];
 
-const toolEventList = ["mousedown", "mousemove", "mouseup", "wheel"];
+        toolEventList.forEach((eventName) => {
+            canvasDocument.addEventListener(eventName, (e) => {
+                this.tools["pan"].toolEvent(e);
+                this.tools[this.selectedTool].toolEvent(e);
+            });
+        })
 
-toolEventList.forEach((toolEvent) => {
-    canvasDocument.addEventListener(toolEvent, (e) => window[selectedTool + "Event"](e));
-})
-
-const canvas2dContextOptions = [
-    ["Create Node Here", (e) => {console.log(e);}]
-];
-
-canvasDocument.addEventListener("click", (e) => hideContextMenu());
-canvasDocument.addEventListener("mousedown", (e) => {
-    if (e.button === 1) e.preventDefault();
-});
-canvasDocument.addEventListener("contextmenu", (e) => {
-    const canvasContainerRect = canvasContainer.getBoundingClientRect();
-    const position = [e.x + canvasContainerRect.left, e.y + canvasContainerRect.top];
-
-    showContextMenu(e, canvas2dContextOptions, position);
-});
-
-async function initializeRenderer() {
-    editorGuiLayer = new Layer()
-
-    editorCamera = new Camera();
-    editorCamera2D = new Camera2D();
-
-    editorCamera.position.z = 10;
-    editorCamera.type = "orthographic";
-
-    editorGuiLayer = new Layer();
-    editorGuiLayer.layerIdx = 1024;
-
-    game.activeCamera = editorCamera;
-    game.activeCamera2D = editorCamera2D;
-    game.editorGuiLayer = editorGuiLayer;
-
-    game.editorUpdateGui = () => window[selectedTool + "Update"]();
-
-    renderer.resizeHandler = () => {
-        renderer.resizeSceneCamera(0,0,false);
-
-        editorCamera2D.generateViewMatrix();
+        const canvas2dContextOptions = [
+            ["Create Node Here", (e) => {console.log(e);}]
+        ];
+        
+        canvasDocument.addEventListener("click", (e) => hideContextMenu());
+        canvasDocument.addEventListener("mousedown", (e) => {
+            if (e.button === 1) e.preventDefault();
+        });
+        canvasDocument.addEventListener("contextmenu", (e) => {
+            const canvasContainerRect = canvasContainer.getBoundingClientRect();
+            const position = [e.x + canvasContainerRect.left, e.y + canvasContainerRect.top];
+        
+            showContextMenu(e, canvas2dContextOptions, position);
+        });
     }
-    renderer.resizeHandler();
 
-    renderer.clearColor = new Color(0.2,0.2,0.2,1);
+    setTool(element, toolName) {
+        this.selectedToolElement.classList.remove("tool-active");
+    
+        this.selectedToolElement = element;
+        this.selectedTool = toolName;
+    
+        this.selectedToolElement.classList.add("tool-active");
+    }
 
-    game.editorloop();
+    initializeRenderer() {    
+        this.editor.sceneManager.game.activeCamera = this.editorCamera;
+        this.editor.sceneManager.game.activeCamera2D = this.editorCamera2D;
+    
+        this.editor.sceneManager.game.editorUpdate = () => {
+            this.tools["pan"].toolUpdate(); //this isnt even needed
+            this.tools[this.selectedTool].toolUpdate();
+            this.tools[this.selectedTool].toolDraw();
+            //TODO: funny the gui layers being rendered with editor camera
+        };
+    
+        this.editor.sceneManager.game.renderer.resizeHandler = () => {
+            this.editor.sceneManager.game.renderer.resizeSceneCamera(0,0,false);
+    
+            this.editorCamera2D.generateViewMatrix();
+        }
+        this.editor.sceneManager.game.renderer.resizeHandler();
+        
+        this.editor.sceneManager.game.renderer.clearColor = new Color(0.2,0.2,0.2,1);
+    
+        this.editor.sceneManager.game.editorloop();
+    }
 }

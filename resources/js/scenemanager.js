@@ -1,122 +1,124 @@
-let sceneJSON = null;
+import * as oglClasses from "../oglsrc/index.mjs";
+import { EditorGame } from "../oglsrc/editor/EditorGame.js";
 
-let selectedNodeIDList = []; //id of currently selected node
-let rootNode = null;
+const modeElements = document.getElementsByClassName("mode");
 
-const nodeIDTable = {};
-let currentNodeID = 0; //variable for initializing id
+export class SceneManager {
+    constructor(editor) {
+        this.editor = editor;
 
-let mode = "2D";
-let modeElements = document.getElementsByClassName("mode");
+        this.sceneJSON = null;
 
-let game = null;
-let renderer = null;
+        this.selectedNodeIDList = []; //id of currently selected node
+        this.rootNode = null;
 
-async function initialize() {
-    await loadAllClasses();
+        this.nodeIDTable = {};
 
-    game = new EditorGame();
-    renderer = game.renderer;
+        this.currentNodeID = 0; //variable for initializing id
 
-    initializeRenderer();
-}
-initialize();
+        this.mode = "2D";
 
-function getSelectedNodes() {
-    const res = [];
-
-    selectedNodeIDList.forEach(nodeID => res.push(nodeIDTable[nodeID]));
-
-    return res;
-}
-
-async function openSceneFile(path) {
-    const sceneFile = await Neutralino.filesystem.readFile(path);
-
-    sceneJSON = JSON.parse(sceneFile);
-
-    await initializeNode(sceneJSON.root, null);
-
-    reloadScene();
-}
-
-async function initializeNode(nodeJSON, parentNode) {
-    const newNode = await initializeNodeJSON(nodeJSON, parentNode);
-    if (parentNode === null) {
-        rootNode = newNode;
-        game.setScene(rootNode);
+        this.game = new EditorGame();
+        this.renderer = this.game.renderer;
     }
-    nodeIDTable[currentNodeID] = newNode;
-    currentNodeID++;
 
-    for (var i = 0; i < nodeJSON.children.length; i++) {
-        const childJSON = nodeJSON.children[i];
-
-        await initializeNode(childJSON, newNode);
-    }
-}
-
-async function initializeNodeJSON(nodeJSON, parentNode) {
-    const nodeClass = window[nodeJSON.className];
-
-    const newNode = new nodeClass();
+    getSelectedNodes() {
+        const res = [];
     
-    newNode.nodeID = currentNodeID;
-    newNode.nodeClass = nodeClass;
-    newNode.name = nodeJSON.name;
-    newNode.parent = parentNode;
+        this.selectedNodeIDList.forEach(nodeID => res.push(this.nodeIDTable[nodeID]));
+    
+        return res;
+    }
 
-    Object.keys(nodeJSON.initProperties).forEach(initProperty => {
-        newNode[initProperty] = eval(nodeJSON.initProperties[initProperty]);
-    });
+    async openSceneFile(path) {
+        const sceneFile = await Neutralino.filesystem.readFile(path);
+    
+        this.sceneJSON = JSON.parse(sceneFile);
+    
+        await this.initializeNode(this.sceneJSON.root, null);
+    
+        this.reloadScene();
+    }
 
-    nodeJSON.initFunctionCalls.forEach((initFunctionCall) => {
-        eval("newNode." + initFunctionCall);
-    });
+    async initializeNode(nodeJSON, parentNode) {
+        const newNode = await this.initializeNodeJSON(nodeJSON, parentNode);
+        if (parentNode === null) {
+            this.rootNode = newNode;
+            this.game.setScene(this.rootNode);
+        }
+        this.nodeIDTable[this.currentNodeID] = newNode;
+        this.currentNodeID++;
+    
+        for (var i = 0; i < nodeJSON.children.length; i++) {
+            const childJSON = nodeJSON.children[i];
+    
+            await this.initializeNode(childJSON, newNode);
+        }
+    }
 
-    return newNode;
-}
+    async initializeNodeJSON(nodeJSON, parentNode) {
+        const nodeClass = oglClasses[nodeJSON.className];
+    
+        const newNode = new nodeClass();
+        
+        newNode.nodeID = this.currentNodeID;
+        newNode.nodeClass = nodeClass;
+        newNode.name = nodeJSON.name;
+        newNode.parent = parentNode;
+    
+        Object.keys(nodeJSON.initProperties).forEach(initProperty => {
+            //TODO: maybe make a function for this; also god forbid the object be not in the oglclasses
+            newNode[initProperty] = new oglClasses[nodeJSON.initProperties[initProperty].className](eval("("+nodeJSON.initProperties[initProperty].initProperties+")"));
+        });
+    
+        nodeJSON.initFunctionCalls.forEach((initFunctionCall) => {
+            eval("newNode." + initFunctionCall);
+        });
+    
+        return newNode;
+    }
 
-function clearScene() {
-    //make this
-}
+    clearScene() {
+        //TODO: make this
+    }
 
-function reloadScene() {
-    initializeHierarchy();
-}
+    reloadScene() {
+        this.editor.hierarchyManager.initializeHierarchy();
+    }
 
-function hierarchySelectedNode(nodeIDList) {
-    selectedNodeIDList = nodeIDList;
+    hierarchySelectedNode(nodeIDList) {
+        this.selectedNodeIDList = nodeIDList;
+    
+        this.editor.propertiesManager.propertiesUpdateSelectedNode();
+    }
 
-    propertiesUpdateSelectedNode();
-}
+    hierarchyDeselected() {
+        this.selectedNodeIDList = [];
+        this.editor.propertiesManager.propertiesUpdateDeselected();
+    }
 
-function hierarchyDeselected() {
-    selectedNodeIDList = [];
-    propertiesUpdateDeselected();
-}
+    canvasSelectedNode(nodeIDList) {
+        this.selectedNodeIDList = nodeIDList;
+    
+        this.editor.hierarchyManager.hierarchyUpdateSelectedNode();
+        this.editor.propertiesManager.propertiesUpdateSelectedNode();
+    }
 
-function canvasSelectedNode(nodeIDList) {
-    selectedNodeIDList = nodeIDList;
+    canvasDeselected() {
+        this.selectedNodeIDList = [];
+    
+        this.editor.hierarchyManager.hierarchyUpdateDeselected();
+        this.editor.propertiesManager.propertiesUpdateDeselected();
+    }
 
-    hierarchyUpdateSelectedNode();
-    propertiesUpdateSelectedNode();
-}
+    propertiesChangedName(nodeID) {
+        this.editor.hierarchyManager.hierarchyUpdateNodeName(nodeID);
+    }
 
-function canvasDeselected() {
-    selectedNodeIDList = [];
-
-    hierarchyUpdateDeselected();
-    propertiesUpdateDeselected();
-}
-
-function propertiesChangedName(nodeID) {
-    hierarchyUpdateNodeName(nodeID);
-}
-
-function setMode(modeIndex, modeName) {
-    mode = modeName;
-
-    modeElements[1 - modeIndex].classList.remove("active-mode");
-    modeElements[modeIndex].classList.add("active-mode");
+    setMode(modeIndex, modeName) {
+        this.mode = modeName;
+    
+        modeElements[1 - modeIndex].classList.remove("active-mode");
+        modeElements[modeIndex].classList.add("active-mode");
+    }
 }

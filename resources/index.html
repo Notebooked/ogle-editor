@@ -12,8 +12,8 @@
     <div class="editor">
         <div class="top-bar">
             <div class="mode-list">
-                <span onclick="setMode(0, '2D');" class="mode">2D</span>
-                <span onclick="setMode(1, '3D');" class="mode">3D</span>
+                <span id="mode0" class="mode">2D</span>
+                <span id="mode1" class="mode">3D</span>
             </div>
 
             <div class="menu-dropdown">
@@ -148,33 +148,38 @@
         -->
     <script src="js/neutralino.js"></script>
     <!-- Your app's source files -->
-    <script src="js-oo/keyboardshortcuts.js"></script>
+    <script src="js/keyboardshortcuts.js"></script>
 
-    <script>
-        function iframe_clicked(event) {
-        console.log("wow, no kiddin!");
-        }
-    </script>
+    <script src="js/main.js"></script>
 
-    <script type="module">
-        import { newProject, openProjectFolder } from "./js-oo/main.js";
+    <script type="module" defer>
+        import { Editor } from "./js/Editor.js";
+        const editor = new Editor();
 
         const newProjectButton = document.getElementById("new-project-button");
         const saveProjectButton = document.getElementById("save-project-button");
         const openProjectFolderButton = document.getElementById("open-project-folder-button");
 
-        newProjectButton.onclick = newProject;
-        openProjectFolderButton.onclick = openProjectFolder;
-
-        import { setTool } from "./js-oo/stagemanager.js";
+        newProjectButton.onclick = () => editor.projectManager.newProject();
+        openProjectFolderButton.onclick = () => editor.projectManager.openProjectFolder();
 
         const pointerTool = document.getElementById("pointer-tool");
         const translateTool = document.getElementById("translate-tool");
         const rotateTool = document.getElementById("rotate-tool");
 
-        pointerTool.onclick = () => setTool(pointerTool, "pointer");
-        translateTool.onclick = () => setTool(translateTool, "translate");
-        rotateTool.onclick = () => setTool(rotateTool, "rotate");
+        pointerTool.onclick = () => editor.stageManager.setTool(pointerTool, "pointer");
+        translateTool.onclick = () => editor.stageManager.setTool(translateTool, "translate");
+        rotateTool.onclick = () => editor.stageManager.setTool(rotateTool, "rotate");
+
+        for (let i = 0; i < 2; i++) {
+            const modeButton = document.getElementById("mode" + i);
+            modeButton.onclick = () => editor.sceneManager.setMode(i, modeButton.innerText);
+        }
+
+        //expose for console debugging
+        window["editor"] = editor;
+
+        editor.start();
     </script>
     <script src="js/contextmenu.js"></script>
 </body>

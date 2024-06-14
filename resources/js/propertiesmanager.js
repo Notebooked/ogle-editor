@@ -1,221 +1,234 @@
-//TODO: this whole file should be murdered once gui is made
+//TO not DO: this whole file should be murdered once gui is made
+//note: i am not reimplementing the editor with gui components; the html version will be kept
+import { Node } from "../oglsrc/index.mjs";
 
 const propertyList = document.getElementById("property-list");
 
-function propertiesUpdateSelectedNode() {
-    propertyList.innerHTML = "";
-
-    if (getSelectedNodes().length > 0) {
-        const classList = [];
-        getSelectedNodes().forEach(node => classList.push(node.nodeClass));
-        const highestCommonClass = findCommonPrototype(classList);
-    
-        const classPropertyList = [];
-    
-        let currentClass = highestCommonClass;
-        while (currentClass !== Node && currentClass !== undefined) {
-            if (currentClass.editorProperties) {  //DO MULTUIPLE SELECTED NODes
-                currentClass.editorProperties.forEach((editorProperty) => {
-                    if (!classPropertyList.includes(editorProperty)) {
-                        classPropertyList.push(editorProperty);
-                    }
-                })
-            }
-    
-            currentClass = Object.getPrototypeOf(currentClass);
-        }
-    
-        classPropertyList.forEach(editorProperty => createEditorPropertyContainer(editorProperty));
+export class PropertiesManager {
+    constructor(editor) {
+        this.editor = editor;
     }
-}
 
-function propertiesUpdateDeselected() {
-    propertyList.innerHTML = "";
-}
+    propertiesUpdateSelectedNode() {
+        propertyList.innerHTML = "";
+        //TODO: it gets updated every mousedrag for selection tool
+        //console.log("properties cleared");
+    
+        if (this.editor.sceneManager.getSelectedNodes().length > 0) {
+            const classList = [];
+            this.editor.sceneManager.getSelectedNodes().forEach(node => classList.push(node.nodeClass));
+            const highestCommonClass = findCommonPrototype(classList);
+        
+            const classPropertyList = [];
+        
+            let currentClass = highestCommonClass;
+            //TODO: i hate html node
+            while (currentClass !== Node && currentClass !== undefined) {
+                if (currentClass.editorProperties) {  //DO MULTUIPLE SELECTED NODes
+                    currentClass.editorProperties.forEach((editorProperty) => {
+                        if (!classPropertyList.includes(editorProperty)) {
+                            classPropertyList.push(editorProperty);
+                        }
+                    })
+                }
+        
+                currentClass = Object.getPrototypeOf(currentClass);
+            }
+        
+            classPropertyList.forEach(editorProperty => this.createEditorPropertyContainer(editorProperty));
+        }
+    }
 
-function createEditorPropertyString(propertyName, propertyValue, canEdit, propertyContainer) {
-    const propertyNameSpan = document.createElement("span");
-    propertyNameSpan.classList.add("property-name");
-    propertyNameSpan.innerHTML = propertyName;
-    propertyContainer.appendChild(propertyNameSpan);
+    propertiesUpdateDeselected() {
+        propertyList.innerHTML = "";
+    }
 
-    const propertyValueElement = document.createElement("input");
-    propertyValueElement.type = "text";
-    propertyValueElement.name = "property-input";
-    propertyValueElement.classList.add("property-value", "property-value-string");
-    propertyValueElement.value = propertyValue;
-    if (!canEdit) propertyValueElement.disabled = true;
+    createEditorPropertyString(propertyName, propertyValue, canEdit, propertyContainer) {
+        const propertyNameSpan = document.createElement("span");
+        propertyNameSpan.classList.add("property-name");
+        propertyNameSpan.innerHTML = propertyName;
+        propertyContainer.appendChild(propertyNameSpan);
+    
+        const propertyValueElement = document.createElement("input");
+        propertyValueElement.type = "text";
+        propertyValueElement.name = "property-input";
+        propertyValueElement.classList.add("property-value", "property-value-string");
+        propertyValueElement.value = propertyValue;
+        if (!canEdit) propertyValueElement.disabled = true;
+    
+        if (canEdit) propertyValueElement.onchange = () => this.propertyValueElementChangedString(propertyName, propertyValueElement, this.editor.sceneManager.selectedNodeIDList);
+        propertyContainer.appendChild(propertyValueElement);
+    }
 
-    if (canEdit) propertyValueElement.onchange = () => propertyValueElementChangedString(propertyName, propertyValueElement, selectedNodeIDList);
-    propertyContainer.appendChild(propertyValueElement);
-}
+    propertyValueElementChangedString(propertyName, propertyValueElement, nodeIDList) {
+        const newValue = propertyValueElement.value;
+    
+        if (propertyName === "name" && newValue.trim() === "") {
+            propertyValueElement.focus();
+        } else {
+            propertyValueElement.blur(); //deselect entry
+    
+            nodeIDList.forEach(nodeID => {
+                const node = this.editor.sceneManager.nodeIDTable[nodeID];
+    
+                node[propertyName] = propertyValueElement.value;
+    
+                if (propertyName === "name") this.editor.sceneManager.propertiesChangedName(nodeID);
+            });
+        }
+    }
 
-function propertyValueElementChangedString(propertyName, propertyValueElement, nodeIDList) {
-    const newValue = propertyValueElement.value;
+    createEditorPropertyBoolean(propertyName, propertyValue, canEdit, propertyContainer) {
+        const propertyNameSpan = document.createElement("span");
+        propertyNameSpan.classList.add("property-name");
+        propertyNameSpan.innerHTML = propertyName;
+        propertyContainer.appendChild(propertyNameSpan);
+    
+        const propertyValueElement = document.createElement("input");
+        propertyValueElement.type = "checkbox";
+        propertyValueElement.name = "property-input";
+        propertyValueElement.classList.add("property-value", "property-value-boolean");
+        propertyValueElement.checked = propertyValue;
+        if (!canEdit) propertyValueElement.disabled = true;
+    
+        if (canEdit) propertyValueElement.onchange = () => this.propertyValueElementChangedBoolean(propertyName, propertyValueElement, this.editor.sceneManager.selectedNodeIDList);
+        propertyContainer.appendChild(propertyValueElement);
+    }
 
-    if (propertyName === "name" && newValue.trim() === "") {
-        propertyValueElement.focus();
-    } else {
+    propertyValueElementChangedBoolean(propertyName, propertyValueElement, nodeIDList) {
+        const newValue = propertyValueElement.checked;
+    
         propertyValueElement.blur(); //deselect entry
-
+    
         nodeIDList.forEach(nodeID => {
-            const node = nodeIDTable[nodeID];
-
-            node[propertyName] = propertyValueElement.value;
-
-            if (propertyName === "name") propertiesChangedName(nodeID);
+            const node = this.editor.sceneManager.nodeIDTable[nodeID];
+    
+            node[propertyName] = newValue;
         });
     }
-}
 
-function createEditorPropertyBoolean(propertyName, propertyValue, canEdit, propertyContainer) {
-    const propertyNameSpan = document.createElement("span");
-    propertyNameSpan.classList.add("property-name");
-    propertyNameSpan.innerHTML = propertyName;
-    propertyContainer.appendChild(propertyNameSpan);
-
-    const propertyValueElement = document.createElement("input");
-    propertyValueElement.type = "checkbox";
-    propertyValueElement.name = "property-input";
-    propertyValueElement.classList.add("property-value", "property-value-boolean");
-    propertyValueElement.checked = propertyValue;
-    if (!canEdit) propertyValueElement.disabled = true;
-
-    if (canEdit) propertyValueElement.onchange = () => propertyValueElementChangedBoolean(propertyName, propertyValueElement, selectedNodeIDList);
-    propertyContainer.appendChild(propertyValueElement);
-}
-
-function propertyValueElementChangedBoolean(propertyName, propertyValueElement, nodeIDList) {
-    const newValue = propertyValueElement.checked;
-
-    propertyValueElement.blur(); //deselect entry
-
-    nodeIDList.forEach(nodeID => {
-        const node = nodeIDTable[nodeID];
-
-        node[propertyName] = newValue;
-    });
-}
-
-function createEditorPropertyVectorEntry(vectorComponent, propertyName, propertyValue, canEdit, propertyValueContainer) {
-    const propertyValueElement = document.createElement("input");
-    propertyValueElement.type = "number";
-    propertyValueElement.name = "property-input";
-    propertyValueElement.classList.add("property-value", "property-value-number");
-    propertyValueElement.value = "" + propertyValue[vectorComponent];
-
-    if (!canEdit) propertyValueElement.disabled = true;
-    if (canEdit) propertyValueElement.onchange = () => propertyValueElementChangedVector3(propertyName, propertyValueElement, selectedNodeIDList, vectorComponent);
-
-    propertyValueContainer.appendChild(propertyValueElement);
-}
-
-function createEditorPropertyVector2(propertyName, propertyValue, canEdit, propertyContainer) {
-    const propertyNameSpan = document.createElement("span");
-    propertyNameSpan.classList.add("property-name");
-    propertyNameSpan.innerHTML = propertyName;
-    propertyContainer.appendChild(propertyNameSpan);
-
-    const propertyValueContainer = document.createElement("div");
-    propertyValueContainer.classList.add("property-value", "property-value-vector");
-
-    createEditorPropertyVectorEntry("x", propertyName, propertyValue, canEdit, propertyValueContainer);
-    createEditorPropertyVectorEntry("y", propertyName, propertyValue, canEdit, propertyValueContainer);
-
-    propertyContainer.appendChild(propertyValueContainer);
-}
-
-function propertyValueElementChangedVector2(propertyName, propertyValueElement, nodeIDList, vectorComponent) {
-    const newValue = parseFloat(propertyValueElement.value);
-
-    propertyValueElement.blur(); //deselect entry
-
-    nodeIDList.forEach(nodeID => {
-        const node = nodeIDTable[nodeID];
-
-        node[propertyName][vectorComponent] = newValue;
-    });
-}
-
-function createEditorPropertyVector3(propertyName, propertyValue, canEdit, propertyContainer) {
-    const propertyNameSpan = document.createElement("span");
-    propertyNameSpan.classList.add("property-name");
-    propertyNameSpan.innerHTML = propertyName;
-    propertyContainer.appendChild(propertyNameSpan);
-
-    const propertyValueContainer = document.createElement("div");
-    propertyValueContainer.classList.add("property-value", "property-value-vector");
-
-    createEditorPropertyVectorEntry("x", propertyName, propertyValue, canEdit, propertyValueContainer);
-    createEditorPropertyVectorEntry("y", propertyName, propertyValue, canEdit, propertyValueContainer);
-    createEditorPropertyVectorEntry("z", propertyName, propertyValue, canEdit, propertyValueContainer);
-
-    propertyContainer.appendChild(propertyValueContainer);
-}
-
-function propertyValueElementChangedVector3(propertyName, propertyValueElement, nodeIDList, vectorComponent) {
-    const newValue = parseFloat(propertyValueElement.value);
-
-    propertyValueElement.blur(); //deselect entry
-
-    nodeIDList.forEach(nodeID => {
-        const node = nodeIDTable[nodeID];
-
-        node[propertyName][vectorComponent] = newValue;
-    });
-}
-
-function createEditorPropertyFunctionEntry(argumentName, current) {
-
-}
-
-function createEditorPropertyFunction(propertyName, propertyValue, canEdit, propertyContainer, argumentList) {
-    const propertyNameSpan = document.createElement("span");
-    propertyNameSpan.classList.add("property-name");
-    propertyNameSpan.innerHTML = propertyName;
-    propertyContainer.appendChild(propertyNameSpan);
-
-    const propertyValueContainer = document.createElement("div");
-    propertyValueContainer.classList.add("property-value", "property-value-vector");
-
-    argumentList.forEach(argumentName => createEditorPropertyFunctionEntry(argumentName));
-
-    propertyContainer.appendChild(propertyValueContainer);
-}
-
-function propertyValueElementChangedFunction(propertyName, propertyValueElement, nodeIDList, vectorComponent) {
-    const newValue = parseFloat(propertyValueElement.value);
-
-    propertyValueElement.blur(); //deselect entry
-
-    nodeIDList.forEach(nodeID => {
-        const node = nodeIDTable[nodeID];
-
-        node[propertyName][vectorComponent] = newValue;
-    });
-}
-
-function createEditorPropertyContainer(editorProperty) {
-    const propertyContainer = document.createElement("div");
-    propertyContainer.classList.add("property-container");
-
-    const firstSelectedNode = getSelectedNodes()[0];
-
-    if (editorProperty[2] === "string") {
-        createEditorPropertyString(editorProperty[0], firstSelectedNode[editorProperty[0]], editorProperty[1], propertyContainer);
-    } else if (editorProperty[2] === "boolean") {
-        createEditorPropertyBoolean(editorProperty[0], firstSelectedNode[editorProperty[0]], editorProperty[1], propertyContainer);
-    } else if (editorProperty[2] === "vector2") {
-        createEditorPropertyVector2(editorProperty[0], firstSelectedNode[editorProperty[0]], editorProperty[1], propertyContainer);
-    } else if (editorProperty[2] === "vector3") {
-        createEditorPropertyVector3(editorProperty[0], firstSelectedNode[editorProperty[0]], editorProperty[1], propertyContainer);
-    } else if (editorProperty[2] === "function") {
-        createEditorPropertyFunction(editorProperty[0], firstSelectedNode[editorProperty[0]], editorProperty[1], propertyContainer, editorProperty[2]);
+    createEditorPropertyVectorEntry(vectorComponent, propertyName, propertyValue, canEdit, propertyValueContainer) {
+        const propertyValueElement = document.createElement("input");
+        propertyValueElement.type = "number";
+        propertyValueElement.name = "property-input";
+        propertyValueElement.classList.add("property-value", "property-value-number");
+        propertyValueElement.value = "" + propertyValue[vectorComponent];
+    
+        if (!canEdit) propertyValueElement.disabled = true;
+        if (canEdit) propertyValueElement.onchange = () => this.propertyValueElementChangedVector3(propertyName, propertyValueElement, this.editor.sceneManager.selectedNodeIDList, vectorComponent);
+    
+        propertyValueContainer.appendChild(propertyValueElement);
     }
 
-    propertyList.appendChild(propertyContainer);
+    createEditorPropertyVector2(propertyName, propertyValue, canEdit, propertyContainer) {
+        const propertyNameSpan = document.createElement("span");
+        propertyNameSpan.classList.add("property-name");
+        propertyNameSpan.innerHTML = propertyName;
+        propertyContainer.appendChild(propertyNameSpan);
+    
+        const propertyValueContainer = document.createElement("div");
+        propertyValueContainer.classList.add("property-value", "property-value-vector");
+    
+        this.createEditorPropertyVectorEntry("x", propertyName, propertyValue, canEdit, propertyValueContainer);
+        this.createEditorPropertyVectorEntry("y", propertyName, propertyValue, canEdit, propertyValueContainer);
+    
+        propertyContainer.appendChild(propertyValueContainer);
+    }
+
+    propertyValueElementChangedVector2(propertyName, propertyValueElement, nodeIDList, vectorComponent) {
+        const newValue = parseFloat(propertyValueElement.value);
+    
+        propertyValueElement.blur(); //deselect entry
+    
+        nodeIDList.forEach(nodeID => {
+            const node = this.editor.sceneManager.nodeIDTable[nodeID];
+    
+            node[propertyName][vectorComponent] = newValue;
+        });
+    }
+
+    createEditorPropertyVector3(propertyName, propertyValue, canEdit, propertyContainer) {
+        const propertyNameSpan = document.createElement("span");
+        propertyNameSpan.classList.add("property-name");
+        propertyNameSpan.innerHTML = propertyName;
+        propertyContainer.appendChild(propertyNameSpan);
+    
+        const propertyValueContainer = document.createElement("div");
+        propertyValueContainer.classList.add("property-value", "property-value-vector");
+    
+        this.createEditorPropertyVectorEntry("x", propertyName, propertyValue, canEdit, propertyValueContainer);
+        this.createEditorPropertyVectorEntry("y", propertyName, propertyValue, canEdit, propertyValueContainer);
+        this.createEditorPropertyVectorEntry("z", propertyName, propertyValue, canEdit, propertyValueContainer);
+    
+        propertyContainer.appendChild(propertyValueContainer);
+    }
+
+    propertyValueElementChangedVector3(propertyName, propertyValueElement, nodeIDList, vectorComponent) {
+        const newValue = parseFloat(propertyValueElement.value);
+    
+        propertyValueElement.blur(); //deselect entry
+    
+        nodeIDList.forEach(nodeID => {
+            const node = this.editor.sceneManager.nodeIDTable[nodeID];
+    
+            node[propertyName][vectorComponent] = newValue;
+        });
+    }
+
+    //TODO: i dont think we need any of this function stuff
+    createEditorPropertyFunctionEntry(argumentName, current) {
+
+    }
+
+    createEditorPropertyFunction(propertyName, propertyValue, canEdit, propertyContainer, argumentList) {
+        const propertyNameSpan = document.createElement("span");
+        propertyNameSpan.classList.add("property-name");
+        propertyNameSpan.innerHTML = propertyName;
+        propertyContainer.appendChild(propertyNameSpan);
+    
+        const propertyValueContainer = document.createElement("div");
+        propertyValueContainer.classList.add("property-value", "property-value-vector");
+    
+        argumentList.forEach(argumentName => this.createEditorPropertyFunctionEntry(argumentName));
+    
+        propertyContainer.appendChild(propertyValueContainer);
+    }
+
+    propertyValueElementChangedFunction(propertyName, propertyValueElement, nodeIDList, vectorComponent) {
+        const newValue = parseFloat(propertyValueElement.value);
+    
+        propertyValueElement.blur(); //deselect entry
+    
+        nodeIDList.forEach(nodeID => {
+            const node = this.editor.sceneManager.nodeIDTable[nodeID];
+    
+            node[propertyName][vectorComponent] = newValue;
+        });
+    }
+
+    createEditorPropertyContainer(editorProperty) {
+        const propertyContainer = document.createElement("div");
+        propertyContainer.classList.add("property-container");
+    
+        const firstSelectedNode = this.editor.sceneManager.getSelectedNodes()[0];
+    
+        if (editorProperty[2] === "string") {
+            this.createEditorPropertyString(editorProperty[0], firstSelectedNode[editorProperty[0]], editorProperty[1], propertyContainer);
+        } else if (editorProperty[2] === "boolean") {
+            this.createEditorPropertyBoolean(editorProperty[0], firstSelectedNode[editorProperty[0]], editorProperty[1], propertyContainer);
+        } else if (editorProperty[2] === "vector2") {
+            this.createEditorPropertyVector2(editorProperty[0], firstSelectedNode[editorProperty[0]], editorProperty[1], propertyContainer);
+        } else if (editorProperty[2] === "vector3") {
+            this.createEditorPropertyVector3(editorProperty[0], firstSelectedNode[editorProperty[0]], editorProperty[1], propertyContainer);
+        } else if (editorProperty[2] === "function") {
+            this.createEditorPropertyFunction(editorProperty[0], firstSelectedNode[editorProperty[0]], editorProperty[1], propertyContainer, editorProperty[2]);
+        }
+    
+        propertyList.appendChild(propertyContainer);
+    }
 }
 
+//TODO: never shoulda written this code
 function findCommonPrototype(classes) {
     let currentCommonPrototype = classes[0];
 
