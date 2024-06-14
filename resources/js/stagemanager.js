@@ -1,4 +1,5 @@
 import { Layer, Camera, Camera2D, Color } from "../oglsrc/index.mjs";
+import { InputManager } from "../oglsrc/core/InputManager.js";
 import { initTools } from "./initTools.js";
 
 const canvasContainer = document.getElementById("canvas-container");
@@ -11,6 +12,8 @@ export class StageManager {//TODO: why is this stuff in stagemanager
 
         this.editorCamera = new Camera();
         this.editorCamera2D = new Camera2D();
+
+        this.inputManager = new InputManager(canvasDocument);
     
         this.editorCamera.position.z = 10;
         this.editorCamera.type = "orthographic";
@@ -21,12 +24,22 @@ export class StageManager {//TODO: why is this stuff in stagemanager
         this.selectedTool = "pointer";
         this.selectedToolElement = document.getElementsByClassName("tool-img")[0];
 
-        const toolEventList = ["mousedown", "mousemove", "mouseup", "wheel"];
+        const toolEventList = [
+            "keyDown",
+            "keyUp", 
+            "keyPressed", 
+            "clicked", 
+            "mouseMoved", 
+            "mouseDragged", 
+            "mouseDown", 
+            "mouseUp",
+            "wheel"
+        ];
 
         toolEventList.forEach((eventName) => {
-            canvasDocument.addEventListener(eventName, (e) => {
-                this.tools["pan"].toolEvent(e);
-                this.tools[this.selectedTool].toolEvent(e);
+            this.inputManager[eventName].add((...args) => {
+                this.tools["pan"][eventName](...args);
+                this.tools[this.selectedTool][eventName](...args);
             });
         })
 
@@ -34,6 +47,7 @@ export class StageManager {//TODO: why is this stuff in stagemanager
             ["Create Node Here", (e) => {console.log(e);}]
         ];
         
+        //TODO: do context menu
         canvasDocument.addEventListener("click", (e) => hideContextMenu());
         canvasDocument.addEventListener("mousedown", (e) => {
             if (e.button === 1) e.preventDefault();
@@ -60,9 +74,9 @@ export class StageManager {//TODO: why is this stuff in stagemanager
         this.editor.sceneManager.game.activeCamera2D = this.editorCamera2D;
     
         this.editor.sceneManager.game.editorUpdate = () => {
-            this.tools["pan"].toolUpdate(); //this isnt even needed
-            this.tools[this.selectedTool].toolUpdate();
-            this.tools[this.selectedTool].toolDraw();
+            this.tools["pan"].update(); //this isnt even needed
+            this.tools[this.selectedTool].update();
+            this.tools[this.selectedTool].draw();
             //TODO: funny the gui layers being rendered with editor camera
         };
     

@@ -3,6 +3,9 @@ import { EditorGame } from "../oglsrc/editor/EditorGame.js";
 
 const modeElements = document.getElementsByClassName("mode");
 
+//TODO: rootNode doesnt have an id and therefore cannot be interacted with
+//TODO: in a selection rect, it goes in order of id instead of which was selected first (nonissue?)
+
 export class SceneManager {
     constructor(editor) {
         this.editor = editor;

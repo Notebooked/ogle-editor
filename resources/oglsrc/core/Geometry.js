@@ -30,7 +30,7 @@ let isBoundsWarned = false;
 
 export class Geometry {
     constructor(attributes = {}) {
-        if (getGlContext().canvas === null) console.error('gl not passed as first argument to Geometry');
+        if (getGlContext().canvas === null) console.error('gl context not initialized');
         this.gl = getGlContext();
         this.attributes = attributes;
         this.id = ID++;

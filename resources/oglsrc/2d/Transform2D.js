@@ -150,12 +150,15 @@ export class Transform2D extends Node {
         else this._matrix.copy(this._worldMatrix);
     }
 
+    //TODO: write localtoworld
     worldToLocal(p) {
+        const tempP = new Vec2();
+        tempP.copy(p);
         const transformationMat = new Mat3();
         transformationMat.inverse(this.worldMatrix);
-        p.applyMatrix3(transformationMat);
+        tempP.applyMatrix3(transformationMat);
 
-        return p;
+        return tempP;
     }
 
     /*

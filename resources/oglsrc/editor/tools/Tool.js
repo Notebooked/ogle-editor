@@ -1,4 +1,5 @@
 import { Layer } from "../../core/Layer.js";
+import { Vec2, Mat3 } from "../../index.mjs";
 
 // TODO: let tools define shortcuts using the shortcut manager and rewrite all the tools
 // to use it instead of HTML cursor events
@@ -12,10 +13,36 @@ export class Tool {
         this.layer = new Layer();
         this.layer.layerIdx = EDITOR_GUI_LAYER_INDEX;
     }
-    toolDraw() { //dont override
+    draw() { // dont override
         const scene = this.editor.sceneManager;
         scene.renderer.render({ scene: this.layer, camera2D: scene.game.activeCamera2D, clear: false });
     }
-    toolUpdate() {}
-    toolEvent(e) {}
+
+    // override the following
+    update() {}
+
+    keyDown(keyCode) {}
+    keyUp(keyCode) {}
+    keyPressed(keyCode) {}
+
+    clicked(button) {}
+    mouseMoved() {}
+    mouseDragged() {}
+    mouseDown(button) {}
+    mouseUp(button) {}
+    wheel(deltaY) {}
+
+    normalizeCanvasCoordinates(v) {
+        const canvas = this.editor.stageManager.gameCanvas;
+        return new Vec2((v.x / canvas.clientWidth - 0.5) * 2, ((1 - v.y / canvas.clientHeight) - 0.5) * 2);
+    }
+
+    canvasTo2DWorld(v) { //TODO: FIX THIS 
+        v = this.normalizeCanvasCoordinates(v); //putting in center
+        const m = new Mat3();
+        m.copy(this.editor.stageManager.editorCamera2D.projectionViewMatrix);
+        m.inverse();
+        v.applyMatrix3(m);
+        return v;
+    }
 }

@@ -8,7 +8,6 @@ export class Drawable2D extends Transform2D { //2d version of mesh
     constructor() {
         super();
 
-        //storing draw function calls by saving their geometries in this list instead of creating new geometries every update
         this.geometry = null;
         this.outlineGeometry = null;
         this.program = null;

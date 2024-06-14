@@ -1,6 +1,10 @@
 import * as Vec2Func from './functions/Vec2Func.js';
 import { Signal } from '../core/Signal.js';
 
+//TODO: all this non-operator-overloading stuff screws up everything
+// the chaining of functions like v.add().sub().normalize().whatever
+// should be replaced totally so that vectors are not updated in place all of the time
+
 export class Vec2 extends Array {
     constructor(x = 0, y = x) {
         super(x, y);

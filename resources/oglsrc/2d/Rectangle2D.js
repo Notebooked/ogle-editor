@@ -147,6 +147,6 @@ export class Rectangle2D extends Drawable2D {
     containsPoint(p) {
         p = this.worldToLocal(p);
 
-        return this.getLocalBounds().containsPoint(p);
+        return this.getLocalBounds().fix().containsPoint(p);
     }
 }

@@ -6,6 +6,11 @@ import { Euler } from '../math/Euler.js';
 
 //TODO: add directions, clean up visible, naming of functions and variables
 
+//TODO: once operator overloading is added to scripting
+// have assignment operator be overloadable
+// so math classes dont need to have a getter and setter each time
+// i.e. a vec2 class would have the assignment operator set to .set instead
+
 export class Transform extends Node {
     static editorProperties = [["visible",true,"boolean"],["position",true,"vector3"]];
 
@@ -200,6 +205,8 @@ export class Transform extends Node {
         this.matrix.getRotation(this.quaternion);
         this.rotation.fromQuaternion(this.quaternion); // is this line necessary
     }
+
+    //TODO: worldtolocal and localtoworld
 
     get matrix() {
         return this._matrix;

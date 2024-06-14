@@ -24,6 +24,8 @@ export class Rect {
         this.end = new Vec2(x2,y2);
 
         this.onChange.fire();
+
+        return this;
     }
 
     get size() {

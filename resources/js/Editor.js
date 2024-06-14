@@ -4,7 +4,7 @@ import { ProjectManager } from "./ProjectManager.js";
 import { PropertiesManager } from "./PropertiesManager.js";
 import { SceneManager } from "./SceneManager.js";
 import { StageManager } from "./StageManager.js";
-
+//TODO: make some singletons for these so you dont have to do this.editor.whatever
 export class Editor {
     constructor() {
         this.assetManager = new AssetManager(this);
