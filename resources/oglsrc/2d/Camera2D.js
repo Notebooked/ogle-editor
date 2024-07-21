@@ -23,7 +23,7 @@ export class Camera2D extends Transform2D {
         this.viewMatrix.inverse(this.worldMatrix);
 
         const canvas = getGlContext().canvas;
-        this.projectionMatrix.set(4 / canvas.width * this.zoom,0,0,0,4 / canvas.height * this.zoom,0,0,0,1);
+        this.projectionMatrix.set(this.game.renderer.dpr / canvas.width * this.zoom,0,0,0,this.game.renderer.dpr / canvas.height * this.zoom,0,0,0,1);
 
         this.projectionViewMatrix.multiply(this.projectionMatrix, this.viewMatrix);
     }

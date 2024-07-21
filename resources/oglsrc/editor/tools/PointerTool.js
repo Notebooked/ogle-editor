@@ -1,5 +1,5 @@
 import { Tool } from "./Tool.js";
-import { Rectangle2D, Vec2, Mat3, Color, Rect, Drawable2D } from "../../index.mjs";
+import { Rectangle2D, Color, Rect, Drawable2D } from "../../index.mjs";
 
 //TODO: move this into a mouse class
 let mousePos = null;
@@ -13,7 +13,7 @@ export class PointerTool extends Tool {
         this.rect.parent = this.layer;
 
         this.selectingCanvas = false;
-        this.draggingNode = false;
+        this.draggingNode = false; //mb1 held on node
 
         this.selectionStart = null;
 
@@ -23,16 +23,22 @@ export class PointerTool extends Tool {
     }
 
     mouseDown(button) {
-        if (button === 0) {
-            this.checkMousecastObject();
+        if (button !== 0) return;
 
-            if (this.editor.sceneManager.selectedNodeIDList.length === 0) {
-                this.selectingCanvas = true;
+        const res = this.checkMousecastObject();
 
-                this.selectionStart = this.canvasTo2DWorld(this.editor.stageManager.inputManager.mousePosition);
-            } else {
-                this.draggingNode = true;
-            }
+        if (res === null) this.editor.sceneManager.canvasDeselected(); //TODO: Maybe change deselected to selected([])
+
+        if (res && !this.editor.sceneManager.selectedNodeIDList.includes(res.nodeID)) {
+            this.editor.sceneManager.canvasSelectedNode([res.nodeID]);
+        }
+
+        if (this.editor.sceneManager.selectedNodeIDList.length === 0) {
+            this.selectingCanvas = true;
+
+            this.selectionStart = this.canvasTo2DWorld(this.editor.stageManager.inputManager.mousePosition);
+        } else {
+            this.draggingNode = true;
         }
     }
 
@@ -42,9 +48,18 @@ export class PointerTool extends Tool {
         if (this.selectingCanvas) {
             this.checkSelectionRect();
         }
+        else if (this.draggingNode) {
+            for (const node of this.editor.sceneManager.getSelectedNodes()) {
+                const cam2D = this.editor.stageManager.editorCamera2D;
+                node.position.x += dx / cam2D.zoom * 2;
+                node.position.y -= dy / cam2D.zoom * 2;
+            }
+        }
     }
 
     mouseUp(button) {
+        if (button !== 0) return;
+
         this.selectingCanvas = false;
         this.draggingNode = false;
     }
@@ -95,9 +110,6 @@ export class PointerTool extends Tool {
             if (drawable.containsPoint(coords)) res = drawable;
         });
     
-        if (res === null) this.editor.sceneManager.canvasDeselected();
-        else {
-            this.editor.sceneManager.canvasSelectedNode([res.nodeID]);
-        }
+        return res;
     }
 }

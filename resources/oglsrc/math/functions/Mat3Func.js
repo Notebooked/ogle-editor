@@ -1,5 +1,5 @@
 const EPSILON = 0.000001;
-
+// TODO: haha rotation is applied before scale (scale THEN rotate THEN location)
 /**
  * Copies the upper-left 3x3 values into the given mat3.
  *
@@ -519,17 +519,33 @@ export function fromPositionRotationScale(out, position, rotation, scale) {
     let sx = scale[0],
         sy = scale[1];
 
-    out[0] = c * sx;
-    out[1] = -s * sy;
+    // Apply scale first
+    out[0] = sx;
+    out[1] = 0;
     out[2] = 0;
 
-    out[3] = s * sx;
-    out[4] = c * sy;
+    out[3] = 0;
+    out[4] = sy;
     out[5] = 0;
 
-    out[6] = x;
-    out[7] = y;
+    out[6] = 0;
+    out[7] = 0;
     out[8] = 1;
+
+    // Apply rotation next
+    let a = out[0],
+        b = out[1];
+    out[0] = a * c - b * s;
+    out[1] = a * s + b * c;
+
+    let d = out[3],
+        e = out[4];
+    out[3] = d * c - e * s;
+    out[4] = d * s + e * c;
+
+    // Apply position last
+    out[6] += x;
+    out[7] += y;
 
     return out;
 }

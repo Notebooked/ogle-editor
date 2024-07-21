@@ -33,6 +33,7 @@ export class PanTool extends Tool {
     }
 
     wheel(deltaY) {
+        mousePos = this.canvasTo2DWorld(this.editor.stageManager.inputManager.mousePosition);
         const v = new Vec2();
         v.copy(mousePos);
 
@@ -49,8 +50,8 @@ export class PanTool extends Tool {
         mousePos = this.canvasTo2DWorld(this.editor.stageManager.inputManager.mousePosition);
 
         v.sub(mousePos);
-        // v.multiply(k);
-        //cam.position.add(v);
+        //v.multiply(k);
+        cam.position.add(v);
 
         cam.zoom = Math.max(Math.min(cam.zoom, this.scrollZoomMax), this.scrollZoomMin);
 
@@ -60,7 +61,7 @@ export class PanTool extends Tool {
 
     dragCanvas(dx, dy) {
         const cam = this.editor.stageManager.editorCamera2D;
-        cam.position.x -= dx / (cam.zoom);
-        cam.position.y += dy / (cam.zoom);
+        cam.position.x -= dx / (cam.zoom) * 2;
+        cam.position.y += dy / (cam.zoom) * 2;
     }
 }

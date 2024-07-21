@@ -72,6 +72,7 @@ export class StageManager {//TODO: why is this stuff in stagemanager
     initializeRenderer() {    
         this.editor.sceneManager.game.activeCamera = this.editorCamera;
         this.editor.sceneManager.game.activeCamera2D = this.editorCamera2D;
+        this.editorCamera2D._game = this.editor.sceneManager.game;
     
         this.editor.sceneManager.game.editorUpdate = () => {
             this.tools["pan"].update(); //this isnt even needed

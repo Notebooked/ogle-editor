@@ -120,6 +120,32 @@ export class PropertiesManager {
         propertyValueContainer.appendChild(propertyValueElement);
     }
 
+    createEditorPropertyNumber(propertyName, propertyValue, canEdit, propertyContainer) {
+        const propertyNameSpan = document.createElement("span");
+        propertyNameSpan.classList.add("property-name");
+        propertyNameSpan.innerHTML = propertyName;
+        propertyContainer.appendChild(propertyNameSpan);
+
+        const propertyValueElement = document.createElement("input");
+        propertyValueElement.type = "number";
+        propertyValueElement.name = "property-input";
+        propertyValueElement.classList.add("property-value", "property-value-number");
+        propertyValueElement.value = propertyValue;
+    
+        if (!canEdit) propertyValueElement.disabled = true;
+        if (canEdit) propertyValueElement.onchange = () => this.propertyValueElementChangedNumber(propertyName, propertyValueElement, this.editor.sceneManager.selectedNodeIDList);
+    
+        propertyContainer.appendChild(propertyValueElement);
+    }
+
+    propertyValueElementChangedNumber(propertyName, propertyValueElement, nodeIDList) {
+        nodeIDList.forEach(nodeID => {
+            const node = this.editor.sceneManager.nodeIDTable[nodeID];
+
+            node[propertyName] = parseFloat(propertyValueElement.value);
+        });
+    }
+
     createEditorPropertyVector2(propertyName, propertyValue, canEdit, propertyContainer) {
         const propertyNameSpan = document.createElement("span");
         propertyNameSpan.classList.add("property-name");
@@ -214,6 +240,8 @@ export class PropertiesManager {
     
         if (editorProperty[2] === "string") {
             this.createEditorPropertyString(editorProperty[0], firstSelectedNode[editorProperty[0]], editorProperty[1], propertyContainer);
+        } else if (editorProperty[2] === "number") {
+            this.createEditorPropertyNumber(editorProperty[0], firstSelectedNode[editorProperty[0]], editorProperty[1], propertyContainer);
         } else if (editorProperty[2] === "boolean") {
             this.createEditorPropertyBoolean(editorProperty[0], firstSelectedNode[editorProperty[0]], editorProperty[1], propertyContainer);
         } else if (editorProperty[2] === "vector2") {

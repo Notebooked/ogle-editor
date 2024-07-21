@@ -59,4 +59,11 @@ export class Rect {
         return (Math.min(this.end.x, r.end.x) - Math.max(this.position.x, r.position.x) > 0 &&
         Math.min(this.end.y, r.end.y) - Math.max(this.position.y, r.position.y) > 0)
     }
+
+    grow(amount) {
+        this.position.x -= amount;
+        this.position.y -= amount;
+        this.end.x += amount * 2;
+        this.end.x += amount * 2;
+    }
 }

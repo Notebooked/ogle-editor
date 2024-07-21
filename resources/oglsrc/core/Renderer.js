@@ -22,7 +22,7 @@ export class Renderer {
     constructor(game, {
         width = 300,
         height = 150,
-        dpr = 2,
+        dpr = 2, // TODO: 2 is one pixel per pixel or whatever
         alpha = false,
         depth = true,
         stencil = false,

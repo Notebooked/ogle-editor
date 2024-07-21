@@ -19,7 +19,7 @@
 			},
 			{
 				"name": "Child2",
-				"className": "Rectangle2D",
+				"className": "Circle2D",
 				"initProperties": {
 					"position": {
 						"className": "Vec2",
