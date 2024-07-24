@@ -87,4 +87,10 @@ export class Euler extends Array { // WHY CANT EURLER BE SUBCLAS VEC3
         a[o + 2] = this[2];
         return a;
     }
+
+    clone() {
+        const newObj = new Euler();
+        newObj.copy(this);
+        return newObj;
+    }
 }

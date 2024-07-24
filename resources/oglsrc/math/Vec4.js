@@ -78,4 +78,10 @@ export class Vec4 extends Array {
         a[o + 3] = this[3];
         return a;
     }
+
+    clone() {
+        const newObj = new Vec4();
+        newObj.copy(this);
+        return newObj;
+    }
 }

@@ -60,4 +60,10 @@ export class Color extends Array {
         this[3] = v[3];
         return this;
     }
+
+    clone() {
+        const newObj = new Color();
+        newObj.copy(this);
+        return newObj;
+    }
 }

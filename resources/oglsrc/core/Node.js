@@ -1,7 +1,8 @@
 import { Signal } from '../core/Signal.js';
+import { getGlContext } from './Canvas.js';
 
 export class Node {
-    static editorProperties = [["name",true,"string"], ["parent",false,"string"], ["bn",true,"boolean"]];
+    static editorProperties = [["name",true,"string"], ["parent",false,"string"]];
 
     constructor(name, parent = null) {
         this.name = name;
@@ -161,5 +162,35 @@ export class Node {
         this._children.forEach((child) => {
             child.broadcast(func, ...args);
         });
+    }
+
+    clone() {
+        const cloneObj = new this.constructor();
+
+        for (const key in this) {
+            if (!this[key]) continue;
+
+            if (["_parent", "_children", "_game"].includes(key)) continue;
+
+            if (this[key].clone) {
+                cloneObj[key] = this[key].clone();
+                continue;
+            }
+
+            // just pass original instead of cloning all this
+            cloneObj[key] = !["nodeClass", "geometry", "program"].includes(key) ? structuredClone(this[key]) : this[key];
+        }
+
+        return cloneObj;
+    }
+
+    cloneR() {
+        const newThis = this.clone();
+        for (const child of this._children) {
+            const newChild = child.cloneR();
+            
+            newChild.parent = newThis;
+        }
+        return newThis;
     }
 }

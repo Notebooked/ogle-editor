@@ -233,4 +233,10 @@ export class Mat4 extends Array {
         a[o + 15] = this[15];
         return a;
     }
+
+    clone() {
+        const newObj = new Mat4();
+        newObj.copy(this);
+        return newObj;
+    }
 }

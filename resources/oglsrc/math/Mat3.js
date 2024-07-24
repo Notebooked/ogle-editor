@@ -107,4 +107,10 @@ export class Mat3 extends Array {
         Mat3Func.normalFromMat4(this, m);
         return this;
     }
+
+    clone() {
+        const newObj = new Mat3();
+        newObj.copy(this);
+        return newObj;
+    }
 }

@@ -146,4 +146,8 @@ export class ProjectManager {
             }
         })
     }
+
+    async saveProject() { //TODO: change to saveScene
+        this.editor.sceneManager.saveScene();
+    }
 }

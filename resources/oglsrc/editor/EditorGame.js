@@ -16,6 +16,8 @@ export class EditorGame {
         this.editorUpdate = () => {};
 
         this.renderer = new Renderer(this, {alpha: false, premultipliedAlpha: false});
+
+        this.running = true;
     }
 
     get time() {
@@ -29,27 +31,7 @@ export class EditorGame {
 
         this.editorUpdate();
 
-        requestAnimationFrame((now) => {this.editorloop(now);});
-    }
-
-    mainloop() {
-        this.scene.broadcast('start');
-
-        requestAnimationFrame((now) => {this.loop(now);})
-    }
-
-    loop(now) {
-        now *= 0.001;
-        dt = now - then;
-        then = now;
-
-        this.#time += dt;
-
-        this.scene.broadcast('update',dt);
-
-        this.renderer.renderSceneCamera();
-        
-        requestAnimationFrame((now) => {this.loop(now);});
+        if (this.running) requestAnimationFrame((now) => {this.editorloop(now);});
     }
 
     get scene() {

@@ -153,4 +153,10 @@ export class Quat extends Array {
         a[o + 3] = this[3];
         return a;
     }
+
+    clone() {
+        const newObj = new Quat();
+        newObj.copy(this);
+        return newObj;
+    }
 }

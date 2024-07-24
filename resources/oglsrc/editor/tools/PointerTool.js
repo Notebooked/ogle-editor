@@ -76,7 +76,7 @@ export class PointerTool extends Tool {
     checkSelectionRect() {
         let nodes = [];
         function rec(o) {
-            if (o instanceof Drawable2D) nodes.push(o);
+            if (o instanceof Drawable2D && o.visible) nodes.push(o);
             o.children.forEach(rec);
         }
         const rootNode = this.editor.sceneManager.rootNode;
@@ -99,7 +99,7 @@ export class PointerTool extends Tool {
     
         let nodes = [];
         function rec(o) {
-            if (o instanceof Drawable2D) nodes.push(o);
+            if (o instanceof Drawable2D && o.visible) nodes.push(o);
             o.children.forEach(rec);
         }
         const rootNode = this.editor.sceneManager.rootNode;

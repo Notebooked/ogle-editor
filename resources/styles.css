@@ -292,6 +292,14 @@ button:hover {
     filter: invert(100%) brightness(80%);
 }
 
+.tool-img-right {
+    margin-left: auto;
+}
+
+.tool-img-hidden {
+    display: none !important;
+}
+
 .tool-img:hover {
     filter: invert(100%) brightness(100%);
 }

@@ -11,4 +11,7 @@ export class Signal {
             func(...args);
         })
     }
+    clone() {
+        return new Signal(this.#funcs);
+    }
 }

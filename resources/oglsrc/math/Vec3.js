@@ -200,4 +200,10 @@ export class Vec3 extends Array {
 
         return this.normalize(); // dont need onchange to fire because normalize calls it
     }
+
+    clone() {
+        const newObj = new Vec3();
+        newObj.copy(this);
+        return newObj;
+    }
 }

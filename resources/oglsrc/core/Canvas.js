@@ -11,7 +11,7 @@ export function isWebgl2() {
     return _isWebgl2;
 }
 
-export function createCanvas(renderer, { webgl, attributes }) {
+export function createCanvas(renderer, { webgl, attributes }) { //TODO: 😒
     let canvas = document.getElementById("canvas-container").contentWindow.document.getElementById("game-canvas");
     if (!canvas) {
         canvas = document.createElement('canvas');

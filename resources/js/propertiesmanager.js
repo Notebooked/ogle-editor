@@ -275,7 +275,7 @@ function findCommonPrototype(classes) {
 }
 
 // Helper function to get the prototype chain of a class
-function getPrototypeChain(cls) {
+export function getPrototypeChain(cls) {
     const prototypeChain = [cls];
     let currentPrototype = Object.getPrototypeOf(cls);
 

@@ -66,4 +66,8 @@ export class Rect {
         this.end.x += amount * 2;
         this.end.x += amount * 2;
     }
+
+    clone() {
+        return new Rect({start: this.position, end: this.end});
+    }
 }

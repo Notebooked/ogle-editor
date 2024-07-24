@@ -35,6 +35,8 @@
                     <img src="editorimg/select.png" class="tool-img tool-active" id="pointer-tool" alt="">
                     <img src="editorimg/translate.png" class="tool-img" id="translate-tool" alt="">
                     <img src="editorimg/rotate.png" class="tool-img" id="rotate-tool" alt="">
+                    <img src="editorimg/play.png" class="tool-img tool-img-right" id="play-btn" alt="">
+                    <img src="editorimg/pause.png" class="tool-img tool-img-right tool-img-hidden" id="pause-btn" alt="">
                 </div>
                 <iframe id="canvas-container" frameBorder="0" src="canvas-content.html" scrolling="no"></iframe>
             </div>
@@ -161,15 +163,28 @@
         const openProjectFolderButton = document.getElementById("open-project-folder-button");
 
         newProjectButton.onclick = () => editor.projectManager.newProject();
+        saveProjectButton.onclick = () => editor.projectManager.saveProject();
         openProjectFolderButton.onclick = () => editor.projectManager.openProjectFolder();
 
         const pointerTool = document.getElementById("pointer-tool");
         const translateTool = document.getElementById("translate-tool");
         const rotateTool = document.getElementById("rotate-tool");
+        const playBtn = document.getElementById("play-btn");
+        const pauseBtn = document.getElementById("pause-btn");
 
         pointerTool.onclick = () => editor.stageManager.setTool(pointerTool, "pointer");
         translateTool.onclick = () => editor.stageManager.setTool(translateTool, "translate");
         rotateTool.onclick = () => editor.stageManager.setTool(rotateTool, "rotate");
+        playBtn.onclick = () => {
+            pauseBtn.classList.remove("tool-img-hidden");
+            playBtn.classList.add("tool-img-hidden");
+            editor.stageManager.playtestScene();
+        }
+        pauseBtn.onclick = () => {
+            playBtn.classList.remove("tool-img-hidden");
+            pauseBtn.classList.add("tool-img-hidden");
+            editor.stageManager.stoptestScene();
+        }
 
         for (let i = 0; i < 2; i++) {
             const modeButton = document.getElementById("mode" + i);

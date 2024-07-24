@@ -163,4 +163,10 @@ export class Vec2 extends Array {
         a[o + 1] = this[1];
         return a;
     }
+
+    clone() {
+        const newObj = new Vec2();
+        newObj.copy(this);
+        return newObj;
+    }
 }

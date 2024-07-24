@@ -19,6 +19,8 @@ export class Game {
         this.renderer = new Renderer(this);
         this.physicsEngine2D = new PhysicsEngine2D(this);
         this.inputManager = new InputManager();
+
+        this.running = false;
     }
 
     get time() {
@@ -26,12 +28,16 @@ export class Game {
     }
 
     mainloop() {
+        this.running = true;
+
         this.scene.broadcast('start');
 
         requestAnimationFrame((now) => {this.loop(now);})
     }
 
     loop(now) {
+        if (!this.running) return;
+
         now *= 0.001;
         dt = now - then;
         then = now;

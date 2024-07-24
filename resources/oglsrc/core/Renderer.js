@@ -6,6 +6,7 @@ import { Layer } from './Layer.js';
 import { Drawable2D } from '../2d/Drawable2D.js';
 import { Transform } from './Transform.js';
 import { Transform2D } from '../2d/Transform2D.js';
+import { Game } from './Game.js';
 // TODO: Handle context loss https://www.khronos.org/webgl/wiki/HandlingContextLost
 
 // Not automatic - devs to use these methods manually
@@ -136,7 +137,7 @@ export class Renderer {
     }
 
     renderSceneCamera() {
-        let camera = this.game.activeCamera;
+        let camera = this.game.activeCamera; //TODO: fix fi x this pleasse
         let camera2D = this.game.activeCamera2D;
 
         this.resizeHandler();
@@ -477,6 +478,8 @@ export class Renderer {
         });
 
         const renderList2D = this.getRenderList2D({ scene, camera2D, frustumCull, sort });
+        console.log(scene, camera2D, frustumCull, sort);
+        if (this.game instanceof Game) throw new Error();
 
         renderList2D.forEach(layer => {
             layer.forEach(node => {

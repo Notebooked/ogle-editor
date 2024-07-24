@@ -11,7 +11,7 @@ export class Drawable2D extends Transform2D { //2d version of mesh
         this.geometry = null;
         this.outlineGeometry = null;
         this.program = null;
-        this.color = new Color(1, 1, 1, 1);
+        this.color = new Color(0.5, 0.5, 1, 1);
         this.zPosition = 0;
         this.frustumCulled = true;
 
