@@ -1,6 +1,6 @@
 import * as Vec4Func from './functions/Vec4Func.js';
 
-export class Vec4 extends Array {
+export class Vec4 extends Array { // TODO: make onchange
     constructor(x = 0, y = x, z = x, w = x) {
         super(x, y, z, w);
         return this;
@@ -82,6 +82,7 @@ export class Vec4 extends Array {
     clone() {
         const newObj = new Vec4();
         newObj.copy(this);
+        //newObj.onChange = this.onChange.clone();
         return newObj;
     }
 }

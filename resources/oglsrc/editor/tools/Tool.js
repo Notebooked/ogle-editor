@@ -14,8 +14,8 @@ export class Tool {
         this.layer.layerIdx = EDITOR_GUI_LAYER_INDEX;
     }
     draw() { // dont override
-        const scene = this.editor.sceneManager;
-        scene.renderer.render({ scene: this.layer, camera2D: scene.game.activeCamera2D, clear: false });
+        const stagem = this.editor.stageManager;
+        stagem.renderer.render({ scene: this.layer, camera2D: stagem.game.activeCamera2D, clear: false });
     }
 
     // override the following
@@ -33,7 +33,7 @@ export class Tool {
     wheel(deltaY) {}
 
     normalizeCanvasCoordinates(v) {
-        const canvas = this.editor.stageManager.gameCanvas;
+        const canvas = this.editor.stageManager.editorCanvas;
         return new Vec2((v.x / canvas.clientWidth - 0.5) * 2, ((1 - v.y / canvas.clientHeight) - 0.5) * 2);
     }
 

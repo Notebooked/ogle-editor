@@ -11,17 +11,16 @@ export function isWebgl2() {
     return _isWebgl2;
 }
 
-export function createCanvas(renderer, { webgl, attributes }) { //TODO: 😒
-    let canvas = document.getElementById("canvas-container").contentWindow.document.getElementById("game-canvas");
-    if (!canvas) {
-        canvas = document.createElement('canvas');
-        document.body.appendChild(canvas);
+export function createCanvas(renderer, { webgl, attributes }, canvasElement) { //TODO: 😒 literally every game needs a unique canvas, given something something universal gl
+    if (!canvasElement) {
+        canvasElement = document.createElement('canvas');
+        document.body.appendChild(canvasElement);
     }
 
     // Attempt WebGL2 unless forced to 1, if not supported fallback to WebGL1
-    if (webgl === 2) gl = canvas.getContext('webgl2', attributes);
+    if (webgl === 2) gl = canvasElement.getContext('webgl2', attributes);
     _isWebgl2 = !!gl;
-    if (!gl) gl = canvas.getContext('webgl', attributes);
+    if (!gl) gl = canvasElement.getContext('webgl', attributes);
     if (!gl) console.error('unable to create webgl context');
 
     // Attach renderer to gl so that all classes have access to internal state functions

@@ -157,6 +157,7 @@ export class Quat extends Array {
     clone() {
         const newObj = new Quat();
         newObj.copy(this);
+        newObj.onChange = this.onChange.clone();
         return newObj;
     }
 }

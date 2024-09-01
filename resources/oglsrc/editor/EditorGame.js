@@ -10,12 +10,12 @@ export class EditorGame {
     activeCamera = null;
     activeCamera2D = null;
 
-    constructor(scene = new Transform()) {
+    constructor({scene = new Transform(), canvas}) {
         this.setScene(scene);
 
         this.editorUpdate = () => {};
 
-        this.renderer = new Renderer(this, {alpha: false, premultipliedAlpha: false});
+        this.renderer = new Renderer(this, {alpha: false, premultipliedAlpha: false}, canvas);
 
         this.running = true;
     }

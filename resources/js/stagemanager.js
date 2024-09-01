@@ -1,16 +1,19 @@
 import { Layer, Camera, Camera2D, Color, Game } from "../oglsrc/index.mjs";
 import { InputManager } from "../oglsrc/core/InputManager.js";
 import { initTools } from "./initTools.js";
+import { EditorGame } from "../oglsrc/editor/EditorGame.js";
 
 const canvasContainer = document.getElementById("canvas-container");
 const canvasDocument = canvasContainer.contentWindow.document;
-const gameCanvas = canvasDocument.getElementById("game-canvas");
-
-let testGame, playtestScene;
+const editorCanvas = canvasDocument.getElementById("editor-canvas");
+//const testgameCanvas = canvasDocument.getElementById("testgame-canvas");
 
 export class StageManager {//TODO: why is this stuff in stagemanager
     constructor(editor) {
         this.editor = editor;
+
+        this.game = new EditorGame({canvas: editorCanvas});
+        this.renderer = this.game.renderer;
 
         this.editorCamera = new Camera();
         this.editorCamera2D = new Camera2D();
@@ -19,7 +22,8 @@ export class StageManager {//TODO: why is this stuff in stagemanager
 
         this.editorCamera.position.z = 10;
         this.editorCamera.type = "orthographic";
-        this.gameCanvas = gameCanvas;
+        this.editorCanvas = editorCanvas;
+        //this.testgameCanvas = testgameCanvas;
 
         this.tools = initTools(this.editor);
 
@@ -64,6 +68,10 @@ export class StageManager {//TODO: why is this stuff in stagemanager
 
             showContextMenu(e, canvas2dContextOptions, position);
         });
+
+        this.testGame = new Game({ canvas: editorCanvas });
+        window.testGame = this.testGame;
+        testGame.renderer = this.game.renderer;
     }
 
     setTool(element, toolName) {
@@ -76,37 +84,38 @@ export class StageManager {//TODO: why is this stuff in stagemanager
     }
 
     initializeRenderer() {
-        this.editor.sceneManager.game.activeCamera = this.editorCamera;
-        this.editor.sceneManager.game.activeCamera2D = this.editorCamera2D;
-        this.editorCamera2D._game = this.editor.sceneManager.game;
+        this.game.activeCamera = this.editorCamera;
+        this.game.activeCamera2D = this.editorCamera2D;
+        this.editorCamera2D._game = this.game;
 
-        this.editor.sceneManager.game.editorUpdate = () => {
+        this.game.editorUpdate = () => {
             this.tools["pan"].update(); //this isnt even needed
             this.tools[this.selectedTool].update();
             this.tools[this.selectedTool].draw();
             //TODO: funny the gui layers being rendered with editor camera
         };
 
-        this.editor.sceneManager.game.renderer.resizeHandler = () => {
-            this.editor.sceneManager.game.renderer.resizeSceneCamera(0, 0, false);
+        this.game.renderer.resizeHandler = () => {
+            this.game.renderer.resizeSceneCamera(0, 0, false);
 
             //TODO: this shouuuuld be done in renderer.resizeSceneCamera
             this.editorCamera2D.generateViewMatrix();
         }
-        this.editor.sceneManager.game.renderer.resizeHandler();
+        this.game.renderer.resizeHandler();
 
-        this.editor.sceneManager.game.renderer.clearColor = new Color(0.2, 0.2, 0.2, 1);
+        this.game.renderer.clearColor = new Color(0.2, 0.2, 0.2, 1);
 
-        this.editor.sceneManager.game.editorloop();
+        this.game.editorloop();
     }
 
     playtestScene() {
         this.editing = false;
-        this.editor.sceneManager.game.running = false;
+        this.game.running = false;
+
+        const testGame = this.testGame;
 
         // instantiating game is all done in here laughing emoji
-        testGame = new Game();
-        playtestScene = this.editor.sceneManager.rootNode.cloneR();
+        const playtestScene = this.editor.sceneManager.rootNode.cloneR();
         testGame.setScene(playtestScene);
         const r = obj => {
             obj._game = testGame;
@@ -115,17 +124,24 @@ export class StageManager {//TODO: why is this stuff in stagemanager
         r(playtestScene);
 
         testGame.activeCamera2D = testGame.scene.children[2];
-        window.testGame = testGame;
+        testGame.activeCamera2D.position = this.editorCamera2D.position;
+        testGame.activeCamera2D.zoom = this.editorCamera2D.zoom;
+        testGame.activeCamera2D.generateViewMatrix();
+        testGame.activeCamera = new Camera();
+        testGame.renderer.game = testGame; //both editorgame and testgame have renderer connected, but switching done in renderer.game
+        //throw new Error();
         testGame.mainloop();
 
         //TODO: handle having nothing in a scene in SceneManager
     }
     stoptestScene() {
-        testGame.running = false;
-        this.editor.sceneManager.openJSONScene(pretestScene);
+        this.testGame.running = false;
+        //this.editor.sceneManager.openJSONScene(pretestScene);
+
+        this.testGame.renderer.game = this.game;
 
         this.editing = true;
-        this.editor.sceneManager.game.running = true;
-        this.editor.sceneManager.game.editorloop();
+        this.game.running = true;
+        this.game.editorloop();
     }
 }

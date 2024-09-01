@@ -353,7 +353,7 @@ button:hover {
     z-index: 0;
 }
 
-#game-canvas {
+#editor-canvas, #testgame-canvas {
     width: 100%;
     height: 100%;
 }

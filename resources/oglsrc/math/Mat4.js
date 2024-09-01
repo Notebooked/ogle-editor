@@ -237,6 +237,7 @@ export class Mat4 extends Array {
     clone() {
         const newObj = new Mat4();
         newObj.copy(this);
+        newObj.onChange = this.onChange.clone();
         return newObj;
     }
 }

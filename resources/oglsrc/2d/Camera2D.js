@@ -11,7 +11,7 @@ export class Camera2D extends Transform2D {
 
         this.zoom = 1;
 
-        this.viewMatrix = new Mat3();
+        this.viewMatrix = new Mat3(); //TODO: put onchange on uhh zoom
 
         this.projectionMatrix = new Mat3();
 

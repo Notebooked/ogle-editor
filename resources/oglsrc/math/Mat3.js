@@ -111,6 +111,7 @@ export class Mat3 extends Array {
     clone() {
         const newObj = new Mat3();
         newObj.copy(this);
+        newObj.onChange = this.onChange.clone();
         return newObj;
     }
 }

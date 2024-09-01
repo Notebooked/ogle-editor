@@ -11,12 +11,13 @@ let dt = 0;
 export class Game {
     #time = 0.0;
     #scene = null;
-    #activeCamera = null;
+    activeCamera = null;
+    activeCamera2D = null;
 
-    constructor(scene = new Transform()) {
+    constructor({scene = new Transform(), canvas}) {
         this.setScene(scene);
 
-        this.renderer = new Renderer(this);
+        this.renderer = new Renderer(this, {alpha: false, premultipliedAlpha: false}, canvas);
         this.physicsEngine2D = new PhysicsEngine2D(this);
         this.inputManager = new InputManager();
 
@@ -28,6 +29,8 @@ export class Game {
     }
 
     mainloop() {
+        then = document.timeline.currentTime * 0.001;
+
         this.running = true;
 
         this.scene.broadcast('start');
@@ -57,14 +60,11 @@ export class Game {
         return this.#scene;
     }
     setScene(scene) {
-        this.#scene = scene;
-        this.#scene._game = this;
-    }
+        if (scene.parent !== null) throw new Error("Scene (root node) must not have parents");
 
-    get activeCamera() {
-        return this.#activeCamera;
-    }
-    set activeCamera(value) {
-        this.#activeCamera = value;
+        this.#scene = scene;
+        this.#scene.traverse(o => {
+            o._game = this;
+        })
     }
 }

@@ -10,7 +10,7 @@ import * as ColorFunc from './functions/ColorFunc.js';
 // new Color(0x4f27e8) - Number
 // new Color('red') - Color name string (short list in ColorFunc.js)
 
-export class Color extends Array {
+export class Color extends Array { //TODO: i swear to god make onchange
     constructor(color) {
         if (Array.isArray(color)) return super(...color);
         return super(...ColorFunc.parseColor(...arguments));

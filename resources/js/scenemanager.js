@@ -43,9 +43,6 @@ export class SceneManager {
         this.currentNodeID = 0; //variable for initializing id
 
         this.mode = "2D";
-
-        this.game = new EditorGame();
-        this.renderer = this.game.renderer;
     }
 
     getSelectedNodes() {
@@ -71,7 +68,7 @@ export class SceneManager {
         const newNode = this.initializeNodeJSON(nodeJSON, parentNode);
         if (parentNode === null) {
             this.rootNode = newNode;
-            this.game.setScene(this.rootNode);
+            this.editor.stageManager.game.setScene(this.rootNode);
         }
         this.nodeIDTable[this.currentNodeID] = newNode;
         this.currentNodeID++;

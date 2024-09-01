@@ -68,6 +68,8 @@ export class Rect {
     }
 
     clone() {
-        return new Rect({start: this.position, end: this.end});
+        const newObj = new Rect({start: this.position, end: this.end});
+        newObj.onChange = this.onChange.clone();
+        return newObj;
     }
 }

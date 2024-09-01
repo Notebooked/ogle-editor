@@ -43,12 +43,17 @@ export class Node {
                 if (this._game !== this._parent.game) { //we have a new game
                     this.gameTreeChanging.fire();
                     let oldGame = this._game;
+                    this.traverse(o => {
+                        o._game = parent.game;
+                    })
                     this._game = parent.game;
                     this.gameTreeChanged.fire(oldGame);
                 }
             }
             else if (this._parent === null) {
-                this._game = null;
+                this.traverse(o => {
+                    o._game = null;
+                })
             }
             else {throw new Error("Parent of Node object must be another Node or null.");}
 
@@ -147,7 +152,7 @@ export class Node {
         }
     }
 
-    traverse(callback) {
+    traverse(callback) { //TODO: replace every iteration through node family with traverse because its so cool
         // Return true in callback to stop traversing children
         if (callback(this)) return;
         for (let i = 0, l = this.children.length; i < l; i++) {
@@ -172,13 +177,18 @@ export class Node {
 
             if (["_parent", "_children", "_game"].includes(key)) continue;
 
+            if (this[key].set) { //this because onChange references this and we dont want to overwrite onChange
+                cloneObj[key].set(this[key]);
+                continue;
+            }
+            
             if (this[key].clone) {
                 cloneObj[key] = this[key].clone();
                 continue;
             }
 
             // just pass original instead of cloning all this
-            cloneObj[key] = !["nodeClass", "geometry", "program"].includes(key) ? structuredClone(this[key]) : this[key];
+            cloneObj[key] = !["nodeClass", "geometry", "program"].includes(key) ? myStructuredClone(this[key]) : this[key];
         }
 
         return cloneObj;
@@ -193,4 +203,30 @@ export class Node {
         }
         return newThis;
     }
+}
+
+function myStructuredClone(value) { //i swear to god TODO: put this replace above
+    if (value === null || typeof value !== 'object') {
+        // Handle primitive types and null
+        return value;
+    }
+
+    // Handle arrays
+    if (Array.isArray(value)) {
+        const arrayCopy = [];
+        for (let i = 0; i < value.length; i++) {
+            if (value[i].clone) arrayCopy[i] = value[i].clone();
+            else arrayCopy[i] = myStructuredClone(value[i]);
+        }
+        return arrayCopy;
+    }
+
+    // Handle objects
+    const objectCopy = {};
+    for (const key of Object.keys(value)) {
+        if (value[key].clone) objectCopy[key] = value[key].clone();
+        else objectCopy[key] = myStructuredClone(value[key]);
+    }
+
+    return objectCopy;
 }

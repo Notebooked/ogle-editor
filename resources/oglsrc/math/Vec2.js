@@ -167,6 +167,7 @@ export class Vec2 extends Array {
     clone() {
         const newObj = new Vec2();
         newObj.copy(this);
+        newObj.onChange = this.onChange.clone();
         return newObj;
     }
 }

@@ -204,6 +204,7 @@ export class Vec3 extends Array {
     clone() {
         const newObj = new Vec3();
         newObj.copy(this);
+        newObj.onChange = this.onChange.clone();
         return newObj;
     }
 }

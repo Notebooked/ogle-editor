@@ -7,6 +7,7 @@ import { Drawable2D } from '../2d/Drawable2D.js';
 import { Transform } from './Transform.js';
 import { Transform2D } from '../2d/Transform2D.js';
 import { Game } from './Game.js';
+import { EditorGame } from '../editor/EditorGame.js';
 // TODO: Handle context loss https://www.khronos.org/webgl/wiki/HandlingContextLost
 
 // Not automatic - devs to use these methods manually
@@ -33,13 +34,13 @@ export class Renderer {
         powerPreference = 'default',
         autoClear = true,
         webgl = 2,
-    } = {}) {
+    } = {}, canvas) {
         this.game = game;
         this.resizeHandler = () => {};
         document.addEventListener("resize", (e) => {this.resizeHandler()});
 
         const attributes = { alpha, depth, stencil, antialias, premultipliedAlpha, preserveDrawingBuffer, powerPreference };
-        createCanvas(this, {webgl, attributes});
+        createCanvas(this, {webgl, attributes}, canvas);
         this.dpr = dpr;
         this.alpha = alpha;
         this.color = true;
@@ -120,6 +121,8 @@ export class Renderer {
         const gl = this.gl;
 
         let camera = this.game.activeCamera;
+
+        if (!camera) return;
 
         if (resize) this.setSize(width, height);
         else this.setCanvasSizeAuto();
@@ -478,13 +481,11 @@ export class Renderer {
         });
 
         const renderList2D = this.getRenderList2D({ scene, camera2D, frustumCull, sort });
-        console.log(scene, camera2D, frustumCull, sort);
-        if (this.game instanceof Game) throw new Error();
 
         renderList2D.forEach(layer => {
             layer.forEach(node => {
                 const layerCamera2D = node.findClosestAncestor(null, Layer)?.useDefaultCamera;
-                node.draw({ camera2D: layerCamera2D ? layerCamera2D : camera2D });
+                node.draw({ camera2D: layerCamera2D ? layerCamera2D : camera2D }, this.game instanceof Game);
             })
             this.gl.clear(
                 (this.depth ? this.gl.DEPTH_BUFFER_BIT : 0)
