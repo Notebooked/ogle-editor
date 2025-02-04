@@ -54,7 +54,7 @@ export class StageManager {//TODO: why is this stuff in stagemanager
         });
 
         const canvas2dContextOptions = [
-            ["Create Node Here", (e) => { console.log(e); }]
+            ["Create Node Here", (e) => { this.createNode(); }]
         ];
 
         //TODO: do context menu
@@ -69,7 +69,7 @@ export class StageManager {//TODO: why is this stuff in stagemanager
             showContextMenu(e, canvas2dContextOptions, position);
         });
 
-        this.testGame = new Game({ canvas: editorCanvas });
+        this.testGame = new Game({ canvas: editorCanvas }); // there were never supposed to be two games but whatever
         window.testGame = this.testGame;
         testGame.renderer = this.game.renderer;
     }
@@ -97,9 +97,6 @@ export class StageManager {//TODO: why is this stuff in stagemanager
 
         this.game.renderer.resizeHandler = () => {
             this.game.renderer.resizeSceneCamera(0, 0, false);
-
-            //TODO: this shouuuuld be done in renderer.resizeSceneCamera
-            this.editorCamera2D.generateViewMatrix();
         }
         this.game.renderer.resizeHandler();
 
@@ -123,12 +120,12 @@ export class StageManager {//TODO: why is this stuff in stagemanager
         }
         r(playtestScene);
 
-        testGame.activeCamera2D = testGame.scene.children[2];
-        testGame.activeCamera2D.position = this.editorCamera2D.position;
-        testGame.activeCamera2D.zoom = this.editorCamera2D.zoom;
-        testGame.activeCamera2D.generateViewMatrix();
-        testGame.activeCamera = new Camera();
         testGame.renderer.game = testGame; //both editorgame and testgame have renderer connected, but switching done in renderer.game
+        testGame.activeCamera2D = testGame.scene.children[2];
+        // testGame.activeCamera2D.position = this.editorCamera2D.position;
+        // testGame.activeCamera2D.zoom = this.editorCamera2D.zoom;
+        // testGame.activeCamera2D.generateViewMatrix();
+        testGame.activeCamera = new Camera();
         //throw new Error();
         testGame.mainloop();
 
@@ -143,5 +140,11 @@ export class StageManager {//TODO: why is this stuff in stagemanager
         this.editing = true;
         this.game.running = true;
         this.game.editorloop();
+    }
+
+    createNode() {
+        const pos = this.editor.utils.worldMouse();
+
+        console.log(pos); //TODO: MAKE A NEW GUI HOORAY!!!
     }
 }

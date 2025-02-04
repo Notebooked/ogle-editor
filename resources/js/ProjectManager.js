@@ -61,7 +61,9 @@ export class ProjectManager {
     }
 
     async openProjectFolder() {
-        this.projectFolder = await Neutralino.os.showFolderDialog("PICK A FOLDER NOW!!!");
+        let folder = await Neutralino.os.showFolderDialog("PICK A FOLDER NOW!!!");
+        this.projectFolder = folder ? folder : null;
+        if (this.projectFolder === null) return;
     
         await this.loadProjectJSON();
     

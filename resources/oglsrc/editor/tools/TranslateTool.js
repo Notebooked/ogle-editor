@@ -39,7 +39,7 @@ export class TranslateTool extends Tool {
         if (button === 0) {
             let mouseFixed = new Vec2();
             mouseFixed.copy(this.editor.stageManager.inputManager.mousePosition);
-            mouseFixed = this.canvasTo2DWorld(mouseFixed);
+            mouseFixed = this.editor.utils.canvasTo2DWorld(mouseFixed);
             if (this.arrowX.containsPoint(mouseFixed)) this.arrowPressed = this.arrowX;
             else if (this.arrowY.containsPoint(mouseFixed)) this.arrowPressed = this.arrowY;
             else this.arrowPressed = true;
@@ -68,7 +68,7 @@ export class TranslateTool extends Tool {
         else {
             let mouseFixed = new Vec2();
             mouseFixed.copy(this.editor.stageManager.inputManager.mousePosition);
-            mouseFixed = this.canvasTo2DWorld(mouseFixed);
+            mouseFixed = this.editor.utils.canvasTo2DWorld(mouseFixed);
             if (test2(this.arrowX, mouseFixed)) {
                 this.arrowX.rectSize.x = SIZE1 + 4;
                 this.arrowX.rectSize.y = SIZE2 + 4;

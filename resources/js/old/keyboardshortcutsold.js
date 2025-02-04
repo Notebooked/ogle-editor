@@ -2,20 +2,6 @@ const shortcutMap = {};
 const unorderedShortcutMap = {};
 const currentPressed = [];
 
-export class KeyboardShortcuts {
-    constructor(editor) {
-        this.editor = editor;
-
-        defineShortcut(["control", "d"], {callback: () => {
-            //duplicate
-        }, ordered: true});
-        defineShortcut(["control", "s"], {callback: () => {
-            console.log("Saving");
-            this.editor.projectManager.saveProject();
-        }, ordered: true});
-    }
-}
-
 function generateMapKey(keyList=[], ordered = true) {
     keyList = Array.from(keyList);
     if (!ordered) keyList.sort();
@@ -29,6 +15,8 @@ function defineShortcut(keyList, {callback = () => {}, cond = () => true, presse
     const map = ordered ? shortcutMap : unorderedShortcutMap;
     map[mapKey] = [callback, cond, pressed];
 }
+
+defineShortcut(["control", "d"], {callback: () => console.log(true), ordered: true});
 
 const processShortcutKeydown = e => {
     const k = e.key.toLowerCase();

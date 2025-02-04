@@ -23,7 +23,7 @@ export class PanTool extends Tool {
     }
 
     mouseMoved(dx, dy) {
-        mousePos = this.canvasTo2DWorld(this.editor.stageManager.inputManager.mousePosition);
+        mousePos = this.editor.utils.worldMouse()
 
         if (this.draggingCanvas) this.dragCanvas(dx, dy);
     }
@@ -33,7 +33,7 @@ export class PanTool extends Tool {
     }
 
     wheel(deltaY) {
-        mousePos = this.canvasTo2DWorld(this.editor.stageManager.inputManager.mousePosition);
+        mousePos = this.editor.utils.worldMouse()
         const v = new Vec2();
         v.copy(mousePos);
 
@@ -47,7 +47,7 @@ export class PanTool extends Tool {
 
         //TODO:make !!! automattic (any changes to the camerica updates viewmatrix)
         cam.generateViewMatrix();
-        mousePos = this.canvasTo2DWorld(this.editor.stageManager.inputManager.mousePosition);
+        mousePos = this.editor.utils.worldMouse()
 
         v.sub(mousePos);
         //v.multiply(k);

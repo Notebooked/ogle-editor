@@ -35,7 +35,7 @@ export class InputManager {
         return this._mousePosition;
     } //no setter because may not change externally (outside of this class)
 
-    processKeyDown(event) { console.log(event.code); //TODO: figure out if we need to put preventdefault here
+    processKeyDown(event) { //TODO: figure out if we need to put preventdefault here
         this.#keys[event.code] = true;
         this.keyDown.fire(event.code);
     }

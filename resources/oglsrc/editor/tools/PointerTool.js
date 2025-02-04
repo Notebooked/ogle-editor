@@ -36,14 +36,14 @@ export class PointerTool extends Tool {
         if (this.editor.sceneManager.selectedNodeIDList.length === 0) {
             this.selectingCanvas = true;
 
-            this.selectionStart = this.canvasTo2DWorld(this.editor.stageManager.inputManager.mousePosition);
+            this.selectionStart = this.editor.utils.worldMouse()
         } else {
             this.draggingNode = true;
         }
     }
 
     mouseMoved(dx, dy) {
-        mousePos = this.canvasTo2DWorld(this.editor.stageManager.inputManager.mousePosition);
+        mousePos = this.editor.utils.worldMouse()
 
         if (this.selectingCanvas) {
             this.checkSelectionRect();
@@ -95,7 +95,7 @@ export class PointerTool extends Tool {
     
     //TODO: change to checkMouseoverObject
     checkMousecastObject() {
-        const coords = this.canvasTo2DWorld(this.editor.stageManager.inputManager.mousePosition);
+        const coords = this.editor.utils.worldMouse()
     
         let nodes = [];
         function rec(o) {

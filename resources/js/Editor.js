@@ -4,6 +4,9 @@ import { ProjectManager } from "./ProjectManager.js";
 import { PropertiesManager } from "./PropertiesManager.js";
 import { SceneManager } from "./SceneManager.js";
 import { StageManager } from "./StageManager.js";
+import { KeyboardShortcuts } from "./KeyboardShortcuts.js";
+import { Utils } from "../oglsrc/editor/Utils.js";
+
 //TODO: make some singletons for these so you dont have to do this.editor.whatever
 export class Editor {
     constructor() {
@@ -13,6 +16,9 @@ export class Editor {
         this.propertiesManager = new PropertiesManager(this);
         this.sceneManager = new SceneManager(this);
         this.stageManager = new StageManager(this);
+        this.keyboardShortcuts = new KeyboardShortcuts(this);
+
+        this.utils = new Utils(this);
     }
 
     start() {

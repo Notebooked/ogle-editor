@@ -1,5 +1,6 @@
 import { Signal } from '../core/Signal.js';
 import { getGlContext } from './Canvas.js';
+import { Texture } from './Texture.js';
 
 export class Node {
     static editorProperties = [["name",true,"string"], ["parent",false,"string"]];
@@ -188,7 +189,7 @@ export class Node {
             }
 
             // just pass original instead of cloning all this
-            cloneObj[key] = !["nodeClass", "geometry", "program"].includes(key) ? myStructuredClone(this[key]) : this[key];
+            cloneObj[key] = !["nodeClass", "geometry", "program", "drawableUniforms"].includes(key) ? myStructuredClone(this[key]) : this[key];
         }
 
         return cloneObj;
@@ -205,7 +206,8 @@ export class Node {
     }
 }
 
-function myStructuredClone(value) { //i swear to god TODO: put this replace above
+function myStructuredClone(value, v) { //i swear to god TODO: put this replace above
+    if (v) console.log(v);
     if (value === null || typeof value !== 'object') {
         // Handle primitive types and null
         return value;
@@ -215,6 +217,7 @@ function myStructuredClone(value) { //i swear to god TODO: put this replace abov
     if (Array.isArray(value)) {
         const arrayCopy = [];
         for (let i = 0; i < value.length; i++) {
+            if (value[i] instanceof Texture) objectCopy[i] = value[i];
             if (value[i].clone) arrayCopy[i] = value[i].clone();
             else arrayCopy[i] = myStructuredClone(value[i]);
         }
@@ -224,7 +227,8 @@ function myStructuredClone(value) { //i swear to god TODO: put this replace abov
     // Handle objects
     const objectCopy = {};
     for (const key of Object.keys(value)) {
-        if (value[key].clone) objectCopy[key] = value[key].clone();
+        if (value[key] instanceof Texture) objectCopy[key] = value[key];
+        if (value[key]?.clone) objectCopy[key] = value[key].clone();
         else objectCopy[key] = myStructuredClone(value[key]);
     }
 

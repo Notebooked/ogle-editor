@@ -10,7 +10,7 @@ const emptyPixel = new Uint8Array(4);
 function isPowerOf2(value) {
     return (value & (value - 1)) === 0;
 }
-
+// TODO: MAKE CLONE FUNCTION
 let ID = 1;
 
 export class Texture {

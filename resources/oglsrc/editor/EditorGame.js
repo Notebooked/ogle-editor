@@ -1,5 +1,6 @@
 import { Renderer } from '../core/Renderer.js';
 import { Transform } from '../core/Transform.js';
+import { Transform2D } from '../index.mjs';
 
 let then = 0;
 let dt = 0;
@@ -10,7 +11,7 @@ export class EditorGame {
     activeCamera = null;
     activeCamera2D = null;
 
-    constructor({scene = new Transform(), canvas}) {
+    constructor({scene = new Transform2D(), canvas}) { // TODO: have scene just be node and not transform
         this.setScene(scene);
 
         this.editorUpdate = () => {};

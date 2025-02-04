@@ -122,17 +122,22 @@ export class Renderer {
 
         let camera = this.game.activeCamera;
 
-        if (!camera) return;
+        if (camera) {
 
-        if (resize) this.setSize(width, height);
-        else this.setCanvasSizeAuto();
-        let aspect = gl.canvas.width / gl.canvas.height;
-        if (camera.type === "perspective") {
-            camera.perspective({ aspect });
+            if (resize) this.setSize(width, height);
+            else this.setCanvasSizeAuto();
+            let aspect = gl.canvas.width / gl.canvas.height;
+            if (camera.type === "perspective") {
+                camera.perspective({ aspect });
+            }
+            else {
+                camera.orthographic({ leftBound: -gl.canvas.width, rightBound: gl.canvas.width, top: gl.canvas.height, bottom: -gl.canvas.height, zoom: camera.zoom });
+            }
+
         }
-        else {
-            camera.orthographic({ leftBound: -gl.canvas.width, rightBound: gl.canvas.width, top: gl.canvas.height, bottom: -gl.canvas.height, zoom: camera.zoom });
-        }
+
+        if (this.game.activeCamera2D)
+            this.game.activeCamera2D.generateViewMatrix();
     }
 
     autoResizeToWindow() {

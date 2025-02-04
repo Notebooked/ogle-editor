@@ -6,24 +6,32 @@ import { getGlContext } from "../core/Canvas.js";
 
 //TODO: ZOOM DOESNT IMMEDIATELY UPDATE projectionMatrices
 export class Camera2D extends Transform2D {
+    static editorProperties = [
+        ["zoom",true,"number"]
+    ]
+
     constructor() {
         super();
 
-        this.zoom = 1;
+        this._zoom = 1;
 
         this.viewMatrix = new Mat3(); //TODO: put onchange on uhh zoom
 
         this.projectionMatrix = new Mat3();
 
         this.projectionViewMatrix = new Mat3();
+
+        this.matrix.onChange.add(() => {
+           this.generateViewMatrix();
+        })
     }
 
     generateViewMatrix() {
-        //WHY???? WHY 4???? TODO: FIX THIS IODIOT
         this.viewMatrix.inverse(this.worldMatrix);
 
         const canvas = getGlContext().canvas;
-        this.projectionMatrix.set(this.game.renderer.dpr / canvas.width * this.zoom,0,0,0,this.game.renderer.dpr / canvas.height * this.zoom,0,0,0,1);
+        const renderer = getGlContext().renderer; //this is weird ONLY BECAUSE this is supposed to be done in the renderer class oops
+        this.projectionMatrix.set(renderer.dpr / canvas.width * this.zoom,0,0,0, renderer.dpr / canvas.height * this.zoom,0,0,0,1);
 
         this.projectionViewMatrix.multiply(this.projectionMatrix, this.viewMatrix);
     }
@@ -44,6 +52,14 @@ export class Camera2D extends Transform2D {
 
     frustumIntersectsDrawable(node) {
         return this.getFrustumBounds().intersectsRect(node.getGlobalBounds());
+    }
+
+    get zoom() {
+        return this._zoom;
+    }
+    set zoom(value) {
+        this._zoom = value;
+        this.generateViewMatrix();
     }
 }
 
