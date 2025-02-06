@@ -4,60 +4,6 @@
         "className": "Transform",
         "children": [
             {
-                "name": "Child1",
-                "className": "Sprite2D",
-                "children": [],
-                "initSetProperties": {
-                    "rectSize": {
-                        "className": "Vec2",
-                        "initCallProperties": [
-                            100,
-                            100
-                        ]
-                    },
-                    "visible": true,
-                    "position": {
-                        "className": "Vec2",
-                        "initCallProperties": [
-                            -70,
-                            108
-                        ]
-                    },
-                    "rotation": 2.4,
-                    "scale": {
-                        "className": "Vec2",
-                        "initCallProperties": [
-                            1,
-                            1
-                        ]
-                    }
-                }
-            },
-            {
-                "name": "Child2",
-                "className": "Circle2D",
-                "children": [],
-                "initSetProperties": {
-                    "radius": 36,
-                    "visible": true,
-                    "position": {
-                        "className": "Vec2",
-                        "initCallProperties": [
-                            196,
-                            -136
-                        ]
-                    },
-                    "rotation": 0,
-                    "scale": {
-                        "className": "Vec2",
-                        "initCallProperties": [
-                            1,
-                            1
-                        ]
-                    }
-                }
-            },
-            {
                 "name": "Cam2D",
                 "className": "Camera2D",
                 "children": [],
@@ -80,6 +26,12 @@
                         ]
                     }
                 }
+            },
+            {
+                "name": "testline",
+                "className": "Rectangle2D",
+                "children": [],
+                "initSetProperties": {}
             }
         ],
         "initSetProperties": {

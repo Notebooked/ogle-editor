@@ -1,3 +1,6 @@
+TODO: add the tray
+TODO: make sure js @ thing fixes onchange and editor properties
+
 /*function setTray() {
     if(NL_MODE != "window") {
         console.log("INFO: Tray menu is only available in the window mode.");

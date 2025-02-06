@@ -1,4 +1,4 @@
-import { Plane2D } from "../extras/Plane2D.js";
+import { PlaneGeometry2D } from "../extras/PlaneGeometry2D.js";
 import { Rect } from "../math/Rect.js";
 import { Vec2 } from "../math/Vec2.js";
 import { Drawable2D } from "./Drawable2D.js";
@@ -84,7 +84,7 @@ export class Sprite2D extends Drawable2D {
     }
 
     updateGeometry() {
-        this.geometry = new Plane2D({ rect: new Rect({ start: new Vec2(0, 0), end: new Vec2(1, 1) }) });
+        this.geometry = new PlaneGeometry2D({ rect: new Rect({ start: new Vec2(0, 0), end: new Vec2(1, 1) }) });
     }
 
     updateDrawableUniforms() {

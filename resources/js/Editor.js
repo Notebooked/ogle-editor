@@ -6,6 +6,7 @@ import { SceneManager } from "./SceneManager.js";
 import { StageManager } from "./StageManager.js";
 import { KeyboardShortcuts } from "./KeyboardShortcuts.js";
 import { Utils } from "../oglsrc/editor/Utils.js";
+import { HMR } from "./HMR.js";
 
 //TODO: make some singletons for these so you dont have to do this.editor.whatever
 export class Editor {
@@ -19,6 +20,7 @@ export class Editor {
         this.keyboardShortcuts = new KeyboardShortcuts(this);
 
         this.utils = new Utils(this);
+        this.hmr = new HMR(this);
     }
 
     start() {

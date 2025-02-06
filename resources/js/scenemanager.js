@@ -43,6 +43,11 @@ export class SceneManager {
         this.currentNodeID = 0; //variable for initializing id
 
         this.mode = "2D";
+
+        for (const clsName in oglClasses) {
+            const cls = oglClasses[clsName];
+            window[clsName] = cls;
+        }
     }
 
     getSelectedNodes() {
@@ -119,7 +124,7 @@ export class SceneManager {
     }
 
     clearScene() {
-        //TODO: make this
+        this.initializeNode(this.sceneJSON.root, null);
     }
 
     reloadScene() {

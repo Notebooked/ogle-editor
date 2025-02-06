@@ -2,7 +2,7 @@ import { Geometry } from '../core/Geometry.js';
 
 // TODO: fix geometry not getting gl context
 
-export class Plane2D extends Geometry {
+export class PlaneGeometry2D extends Geometry {
     constructor({ rect, attributes = {} } = {}) {
         // Generate empty arrays once
         const position = new Float32Array(8);
@@ -10,7 +10,7 @@ export class Plane2D extends Geometry {
         const uv = new Float32Array(8);
         const index = new Uint16Array(6);
 
-        Plane2D.buildPlane(position, index, uv, rect);
+        PlaneGeometry2D.buildPlane(position, index, uv, rect);
 
         Object.assign(attributes, {
             position: { size: 2, data: position },

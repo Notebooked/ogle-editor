@@ -19,6 +19,7 @@ export { Camera2D } from './2d/Camera2D.js';
 export { Drawable2D } from './2d/Drawable2D.js';
 export { Rectangle2D } from './2d/Rectangle2D.js';
 export { Circle2D } from './2d/Circle2D.js';
+export { Line2D } from './2d/Line2D.js';
 export { Sprite2D } from './2d/Sprite2D.js';
 export { Transform2D } from './2d/Transform2D.js';
 

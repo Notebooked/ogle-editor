@@ -18,7 +18,7 @@ export class Drawable2D extends Transform2D { //2d version of mesh
         this.drawableUniforms = {};
     }
 
-    draw({ camera2D } = {}, flag) { //draw function called by the renderer
+    draw({ camera2D } = {}) { //draw function called by the renderer
         const c = new Mat3();
         c.copy(camera2D.viewMatrix);
         c.multiply(this.worldMatrix);

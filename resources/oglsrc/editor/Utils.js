@@ -22,4 +22,6 @@ export class Utils {
     worldMouse() {
         return this.canvasTo2DWorld(this.editor.stageManager.inputManager.mousePosition);
     }
+
+    
 }
