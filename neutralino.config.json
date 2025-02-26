@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/neutralinojs/neutralinojs/main/schemas/neutralino.config.schema.json",
-  "applicationId": "js.neutralino.sample",
+  "applicationId": "js.neutralino.ogle",
   "version": "1.0.0",
   "defaultMode": "window",
   "port": 0,
@@ -9,6 +9,14 @@
   "enableServer": true,
   "enableNativeAPI": true,
   "tokenSecurity": "one-time",
+  "exportAuthInfo": true,
+  "enableExtensions": true,
+  "extensions": [
+    {
+      "id": "js.neutralino.scriptcompiler",
+      "command": "node ${NL_PATH}/extensions/scriptcompiler/index.js"
+    }
+  ],
   "logging": {
     "enabled": true,
     "writeToLogFile": true
@@ -17,20 +25,10 @@
     "app.*",
     "os.*",
     "filesystem.*",
+    "extensions.*",
     "debug.log"
   ],
-  "globalVariables": {
-    "TEST1": "Hello",
-    "TEST2": [
-      2,
-      4,
-      5
-    ],
-    "TEST3": {
-      "value1": 10,
-      "value2": {}
-    }
-  },
+  "globalVariables": {},
   "modes": {
     "window": {
       "title": "OGLE Editor",
@@ -49,9 +47,7 @@
       "exitProcessOnClose": false
     },
     "browser": {
-      "globalVariables": {
-        "TEST": "Test value browser"
-      },
+      "globalVariables": {},
       "nativeBlockList": [
         "filesystem.*"
       ]
@@ -77,7 +73,7 @@
     "resourcesPath": "/resources/",
     "extensionsPath": "/extensions/",
     "clientLibrary": "/resources/js/neutralino.js",
-    "binaryVersion": "4.13.0",
-    "clientVersion": "3.11.0"
+    "binaryVersion": "5.6.0",
+    "clientVersion": "5.6.0"
   }
 }
