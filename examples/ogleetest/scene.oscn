@@ -30,7 +30,14 @@
             {
                 "name": "testline",
                 "className": "Rectangle2D",
-                "children": [],
+                "children": [
+                    {
+                        "name": "testline2",
+                        "className": "Rectangle2D",
+                        "children": [],
+                        "initSetProperties": {}
+                    }
+                ],
                 "initSetProperties": {}
             }
         ],

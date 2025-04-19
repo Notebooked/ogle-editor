@@ -14,8 +14,8 @@ export class Tool {
         this.layer.layerIdx = EDITOR_GUI_LAYER_INDEX;
     }
     draw() { // dont override
-        const stagem = this.editor.stageManager;
-        stagem.renderer.render({ scene: this.layer, camera2D: stagem.game.activeCamera2D, clear: false });
+        const stageManager = this.editor.stageManager;
+        stageManager.renderer.render({ scene: this.layer, camera2D: stageManager.game.activeCamera2D, clear: false });
     }
 
     // override the following

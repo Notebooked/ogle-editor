@@ -27,123 +27,93 @@ export class Transform extends Node {
         //LOCAL MATRIX
         this._matrix = new Mat4();
         this._matrix.onChange.add(() => {
-            if (this.shouldUpdateFromSignal) {
-                this.shouldUpdateFromSignal = false;
-
+            this.safeCall(() => {
                 this.decomposeLocal();
                 this.updateWorldMatrix();
-
-                this.shouldUpdateFromSignal = true;
-            }
+            });
         });
 
         this._position = new Vec3();
         this._position.onChange.add(() => {
-            if (this.shouldUpdateFromSignal) {
-                this.shouldUpdateFromSignal = false;
-
+            this.safeCall(() => {
                 this.composeMatrix();
-
-                this.shouldUpdateFromSignal = true;
-            }
+            });
         });
 
         this._rotation = new Euler();
         this._quaternion = new Quat();
         this._rotation.onChange.add(() => {
-            if (this.shouldUpdateFromSignal) {
-                this.shouldUpdateFromSignal = false;
-
+            this.safeCall(() => {
                 this._quaternion.fromEuler(this._rotation);
                 this.composeMatrix();
-
-                this.shouldUpdateFromSignal = true;
-            }
+            });
         });
         this._quaternion.onChange.add(() => {
-            if (this.shouldUpdateFromSignal) {
-                this.shouldUpdateFromSignal = false;
-
+            this.safeCall(() => {
                 this._rotation.fromQuaternion(this._quaternion); //yeah i dont know about this one (what is a full rotation) 2pi you idiot
                 this.composeMatrix();
-
-                this.shouldUpdateFromSignal = true;
-            }
+            });
         });
 
         this._scale = new Vec3(1);
         this._scale.onChange.add(() => {
-            if (this.shouldUpdateFromSignal) {
-                this.shouldUpdateFromSignal = false;
-
+            this.safeCall(() => {
                 this.composeMatrix();
-
-                this.shouldUpdateFromSignal = true;
-            }
+            });
         });
 
         // WORLD MATRIX
         this._worldMatrix = new Mat4();
         this._worldMatrix.onChange.add(() => {
-            if (this.shouldUpdateFromSignal) {
-                this.shouldUpdateFromSignal = false;
-
+            this.safeCall(() => {
                 //if (this.name == "test") debugger;
                 this.decomposeWorld();
                 this.updateLocalMatrix();
-
-                this.shouldUpdateFromSignal = true;
-            }
+            });
         });
 
         this._globalPosition = new Vec3();
         this._globalPosition.onChange.add(() => {
-            if (this.shouldUpdateFromSignal) {
-                this.shouldUpdateFromSignal = false;
-
+            this.safeCall(() => {
                 this.composeWorldMatrix();
                 this.updateLocalMatrix();
-
-                this.shouldUpdateFromSignal = true;
-            }
+            });
         });
 
         this._globalRotation = new Euler();
         this._globalQuaternion = new Quat();
         this._globalRotation.onChange.add(() => {
-            if (this.shouldUpdateFromSignal) {
-                this.shouldUpdateFromSignal = false;
-
+            this.safeCall(() => {
                 this._globalQuaternion.fromEuler(this._rotation);
                 this.composeWorldMatrix();
                 this.updateLocalMatrix();
-
-                this.shouldUpdateFromSignal = true;
-            }
+            });
         });
         this._globalQuaternion.onChange.add(() => {
-            if (this.shouldUpdateFromSignal) {
-                this.shouldUpdateFromSignal = false;
-
+            this.safeCall(() => {
                 this._globalRotation.fromQuaternion(this._quaternion); //yeah i dont know about this one (what is a full rotation) 2pi you idiot
                 this.composeWorldMatrix();
                 this.updateLocalMatrix();
-
-                this.shouldUpdateFromSignal = true;
-            }
+            });
         });
 
         this._globalScale = new Vec3(1);
         this._globalScale.onChange.add(() => {
-            if (this.shouldUpdateFromSignal) {
-                this.shouldUpdateFromSignal = false;
-
+            this.safeCall(() => {
                 this.composeWorldMatrix();
                 this.updateLocalMatrix();
-
-                this.shouldUpdateFromSignal = true;
-            }
+            });
         });
+    }
+
+    safeCall(f) {
+        if (this.shouldUpdateFromSignal) {
+            this.shouldUpdateFromSignal = false;
+
+            f();
+
+            this.shouldUpdateFromSignal = true;
+        }
     }
 
     composeMatrix() {
@@ -244,13 +214,9 @@ export class Transform extends Node {
     }
 
     get worldMatrix() {
-        if (this.shouldUpdateFromSignal) {
-            this.shouldUpdateFromSignal = false;
-
+        this.safeCall(() => {
             this.updateWorldMatrix();
-
-            this.shouldUpdateFromSignal = true;
-        }
+        });
         
         return this._worldMatrix;
     }
@@ -259,133 +225,89 @@ export class Transform extends Node {
     }
 
     get globalPosition() { //using standard naming, maybe change worldmatrix to globalmatrix
-        if (this.shouldUpdateFromSignal) {
-            this.shouldUpdateFromSignal = false;
-
+        this.safeCall(() => {
             this.updateWorldMatrix();
-
-            this.shouldUpdateFromSignal = true;
-        }
+        });
 
         return this._globalPosition;
     }
     set globalPosition(value) {
-        if (this.shouldUpdateFromSignal) {
-            this.shouldUpdateFromSignal = false;
-
+        this.safeCall(() => {
             this.updateWorldMatrix();
-
-            this.shouldUpdateFromSignal = true;
-        }
+        });
 
         this._globalPosition.set(value);
     }
 
     get globalRotation() { //using standard naming, maybe change worldmatrix to globalmtx
-        if (this.shouldUpdateFromSignal) {
-            this.shouldUpdateFromSignal = false;
-
+        this.safeCall(() => {
             this.updateWorldMatrix();
-
-            this.shouldUpdateFromSignal = true;
-        }
+        });
 
         return this._globalRotation;
     }
     set globalRotation(value) {
-        if (this.shouldUpdateFromSignal) {
-            this.shouldUpdateFromSignal = false;
-
+        this.safeCall(() => {
             this.updateWorldMatrix();
-
-            this.shouldUpdateFromSignal = true;
-        }
+        });
 
         this._globalRotation.set(value);
     }
 
     get globalQuaternion() { //using standard naming, maybe change worldmatrix to globalmtx
-        if (this.shouldUpdateFromSignal) {
-            this.shouldUpdateFromSignal = false;
-
+        this.safeCall(() => {
             this.updateWorldMatrix();
-
-            this.shouldUpdateFromSignal = true;
-        }
+        });
 
         return this._globalQuaternion;
     }
     set globalQuaternion(value) {
-        if (this.shouldUpdateFromSignal) {
-            this.shouldUpdateFromSignal = false;
-
+        this.safeCall(() => {
             this.updateWorldMatrix();
-
-            this.shouldUpdateFromSignal = true;
-        }
+        });
 
         this._globalQuaternion.set(value);
     }
 
     get globalScale() { //using standard naming, maybe change worldmatrix to globalmtx
-        if (this.shouldUpdateFromSignal) {
-            this.shouldUpdateFromSignal = false;
-
+        this.safeCall(() => {
             this.updateWorldMatrix();
-
-            this.shouldUpdateFromSignal = true;
-        }
+        });
 
         return this._globalScale;
     }
     set globalScale(value) {
-        if (this.shouldUpdateFromSignal) {
-            this.shouldUpdateFromSignal = false;
-
+        this.safeCall(() => {
             this.updateWorldMatrix();
-
-            this.shouldUpdateFromSignal = true;
-        }
+        });
 
         this._globalScale.set(value);
     }
 
     get forward() {
-        if (this.shouldUpdateFromSignal) {
-            this.shouldUpdateFromSignal = false;
-
+        this.safeCall(() => {
             this.updateWorldMatrix();
+        });
 
-            this.shouldUpdateFromSignal = true;
-        }
-
-        var forward = new Vec3(0, 0, 1);
+        let forward = new Vec3(0, 0, 1);
         forward.applyQuaternion(this._globalQuaternion);
         return forward;
     }
 
-    get rightd() {
-        if (this.shouldUpdateFromSignal) {
-            this.shouldUpdateFromSignal = false;
-
+    get right() {
+        this.safeCall(() => {
             this.updateWorldMatrix();
+        });
 
-            this.shouldUpdateFromSignal = true;
-        }
-
-        var right = new Vec3(1, 0, 0);
+        let right = new Vec3(1, 0, 0);
         right.applyQuaternion(this._globalQuaternion);
         return right;
     }
 
     get up() {
-        if (this.shouldUpdateFromSignal) {
-            this.shouldUpdateFromSignal = false;
-
+        this.safeCall(() => {
             this.updateWorldMatrix();
-
-            this.shouldUpdateFromSignal = true;
-        }
+        });
 
         var up = new Vec3(0, 1, 0);
         up.applyQuaternion(this._globalQuaternion);

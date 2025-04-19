@@ -26,13 +26,21 @@ export class InputManager {
         this.mouseUp = new Signal();
         this.wheel = new Signal();
 
-        // TODO: mouse buttons currently pressed array
+        this._mousePressed = [false, false, false];
 
         this._mousePosition = new Vec2();
     }
 
+    get mousePressed() {
+        const arr = Array.from(this._mousePressed);
+        Object.freeze(arr);
+        return arr;
+    }
+
     get mousePosition() {
-        return this._mousePosition;
+        const frozen = (new Vec2()).copy(this._mousePosition);
+        Object.freeze(frozen);
+        return frozen;
     } //no setter because may not change externally (outside of this class)
 
     processKeyDown(event) { //TODO: figure out if we need to put preventdefault here
@@ -62,9 +70,11 @@ export class InputManager {
         throw new Error("something got dragged");
     }
     processMouseDown(event) {
+        this._mousePressed[event.button] = true;
         this.mouseDown.fire(event.button);
     }
     processMouseUp(event) {
+        this._mousePressed[event.button] = false;
         this.mouseUp.fire(event.button);
     }
     processWheel(event) {

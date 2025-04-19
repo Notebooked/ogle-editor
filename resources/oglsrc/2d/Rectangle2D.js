@@ -103,6 +103,13 @@ export class Rectangle2D extends Drawable2D {
         this.rectSize = rect.size;
     }
 
+    extendToPoints(p1, p2) {
+        this.position.set(p1);
+        const delta = (new Vec2()).copy(p2).sub(p1);
+        this.rotation = Math.atan2(delta.y, delta.x);
+        this.rectSize.x = Math.sqrt(delta.x**2 + delta.y**2);
+    }
+
     getLocalBounds() {
         let minX = Infinity;
         let maxX = -Infinity;

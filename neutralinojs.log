@@ -2505,3 +2505,57 @@ INFO 2025-02-26 01:25:53,929 Auth info was exported to ./.tmp/auth_info.json api
 ERROR 2025-02-26 01:25:58,017 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 eoinm@DESKTOP-UL8SM8K
 INFO 2025-02-26 09:23:59,412 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 eoinm@DESKTOP-UL8SM8K
 ERROR 2025-02-26 09:24:02,194 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 eoinm@DESKTOP-UL8SM8K
+INFO 2025-02-27 16:14:04,445 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 eoinm@DESKTOP-UL8SM8K
+ERROR 2025-02-27 16:14:07,195 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 eoinm@DESKTOP-UL8SM8K
+INFO 2025-02-27 16:15:56,023 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 eoinm@DESKTOP-UL8SM8K
+ERROR 2025-02-27 16:15:58,152 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 eoinm@DESKTOP-UL8SM8K
+INFO 2025-02-27 16:17:34,331 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 eoinm@DESKTOP-UL8SM8K
+ERROR 2025-02-27 16:17:36,378 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 eoinm@DESKTOP-UL8SM8K
+INFO 2025-02-27 22:06:30,491 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 eoinm@DESKTOP-UL8SM8K
+ERROR 2025-02-27 22:06:34,184 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 eoinm@DESKTOP-UL8SM8K
+INFO 2025-02-27 22:17:37,827 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 eoinm@DESKTOP-UL8SM8K
+ERROR 2025-02-27 22:17:39,621 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 eoinm@DESKTOP-UL8SM8K
+INFO 2025-02-27 22:20:07,326 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 eoinm@DESKTOP-UL8SM8K
+ERROR 2025-02-27 22:20:09,136 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 eoinm@DESKTOP-UL8SM8K
+INFO 2025-02-27 22:21:22,742 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 eoinm@DESKTOP-UL8SM8K
+ERROR 2025-02-27 22:21:24,562 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 eoinm@DESKTOP-UL8SM8K
+INFO 2025-03-03 00:25:44,886 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 eoinm@DESKTOP-UL8SM8K
+ERROR 2025-03-03 00:25:51,284 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 eoinm@DESKTOP-UL8SM8K
+INFO 2025-03-03 00:26:05,322 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 eoinm@DESKTOP-UL8SM8K
+ERROR 2025-03-03 00:26:09,644 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 eoinm@DESKTOP-UL8SM8K
+INFO 2025-03-03 00:27:49,302 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 eoinm@DESKTOP-UL8SM8K
+ERROR 2025-03-03 00:27:53,490 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 eoinm@DESKTOP-UL8SM8K
+INFO 2025-03-03 00:28:42,007 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 eoinm@DESKTOP-UL8SM8K
+ERROR 2025-03-03 00:28:46,239 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 eoinm@DESKTOP-UL8SM8K
+INFO 2025-03-03 00:29:56,575 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 eoinm@DESKTOP-UL8SM8K
+ERROR 2025-03-03 00:30:01,292 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 eoinm@DESKTOP-UL8SM8K
+INFO 2025-03-03 00:30:47,881 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 eoinm@DESKTOP-UL8SM8K
+ERROR 2025-03-03 00:30:52,297 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 eoinm@DESKTOP-UL8SM8K
+INFO 2025-03-03 10:29:27,870 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 eoinm@DESKTOP-UL8SM8K
+ERROR 2025-03-03 10:29:30,701 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 eoinm@DESKTOP-UL8SM8K
+INFO 2025-03-03 10:30:35,891 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 eoinm@DESKTOP-UL8SM8K
+ERROR 2025-03-03 10:30:37,741 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 eoinm@DESKTOP-UL8SM8K
+INFO 2025-03-03 10:32:13,910 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 eoinm@DESKTOP-UL8SM8K
+ERROR 2025-03-03 10:32:15,949 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 eoinm@DESKTOP-UL8SM8K
+INFO 2025-03-03 10:34:33,177 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 eoinm@DESKTOP-UL8SM8K
+ERROR 2025-03-03 10:34:35,210 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 eoinm@DESKTOP-UL8SM8K
+INFO 2025-03-03 10:35:48,329 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 eoinm@DESKTOP-UL8SM8K
+ERROR 2025-03-03 10:35:50,436 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 eoinm@DESKTOP-UL8SM8K
+INFO 2025-03-03 10:37:52,504 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 eoinm@DESKTOP-UL8SM8K
+ERROR 2025-03-03 10:37:54,507 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 eoinm@DESKTOP-UL8SM8K
+INFO 2025-03-03 10:39:46,776 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 eoinm@DESKTOP-UL8SM8K
+ERROR 2025-03-03 10:39:48,703 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 eoinm@DESKTOP-UL8SM8K
+INFO 2025-03-25 00:25:33,741 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 eoinm@DESKTOP-UL8SM8K
+ERROR 2025-03-25 00:25:36,317 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 eoinm@DESKTOP-UL8SM8K
+INFO 2025-03-25 00:26:17,701 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 eoinm@DESKTOP-UL8SM8K
+ERROR 2025-03-25 00:26:19,528 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 eoinm@DESKTOP-UL8SM8K
+INFO 2025-03-25 00:30:08,947 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 eoinm@DESKTOP-UL8SM8K
+ERROR 2025-03-25 00:30:10,345 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 eoinm@DESKTOP-UL8SM8K
+INFO 2025-03-25 00:31:11,702 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 eoinm@DESKTOP-UL8SM8K
+ERROR 2025-03-25 00:31:13,901 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 eoinm@DESKTOP-UL8SM8K
+INFO 2025-03-25 00:36:28,318 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 eoinm@DESKTOP-UL8SM8K
+ERROR 2025-03-25 00:36:29,670 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 eoinm@DESKTOP-UL8SM8K
+INFO 2025-04-05 14:27:44,135 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 eoinm@DESKTOP-UL8SM8K
+ERROR 2025-04-05 14:27:45,913 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 eoinm@DESKTOP-UL8SM8K
+INFO 2025-04-19 10:48:36,748 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 eoinm@DESKTOP-UL8SM8K
+ERROR 2025-04-19 10:48:41,812 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 eoinm@DESKTOP-UL8SM8K

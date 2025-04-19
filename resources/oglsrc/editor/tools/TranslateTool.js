@@ -4,17 +4,6 @@ import { Tool } from "./Tool.js";
 const SIZE1 = 100
 const SIZE2 = 8
 
-function test2(rect2d, p) {
-    const transformedPoint = new Vec2();
-    transformedPoint.copy(p);
-    // transformedPoint is in worldspace
-
-    const testRect = rect2d.getGlobalBounds();
-    // testRect in worldspace
-
-    return testRect.containsPoint(transformedPoint);
-}
-
 export class TranslateTool extends Tool {
     constructor(...args) {
         super("translate", ...args);

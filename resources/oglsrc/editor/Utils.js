@@ -16,12 +16,10 @@ export class Utils {
         m.copy(this.editor.stageManager.editorCamera2D.projectionViewMatrix);
         m.inverse();
         v.applyMatrix3(m);
-        return v;
+        return v; // TODO: put all this is inputmanager
     }
 
     worldMouse() {
         return this.canvasTo2DWorld(this.editor.stageManager.inputManager.mousePosition);
     }
-
-    
 }
