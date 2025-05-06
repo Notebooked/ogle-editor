@@ -2,9 +2,9 @@ import { Signal } from "../core/Signal.js";
 import { Vec2 } from "./Vec2.js";
 
 export class Rect {
-    constructor({start, end, x, y, width, height}) {
-        this.position = start ? start : new Vec2(x, y); //TODO: getters and setters for these
-        this.end = end ? end : new Vec2(x + width, y + height);
+    constructor(a, b, width, height) { // pos, end OR x,y,w,h
+        this._position = (new Vec2()).copy(width ? new Vec2(x, y) : a);
+        this._end = (new Vec2()).copy(width ? new Vec2(x + width, y + height) : b);
 
         this._size = new Vec2();
         this._size.onChange.add(() => {
@@ -12,6 +12,8 @@ export class Rect {
         });
 
         this.onChange = new Signal();
+        this._position.onChange.add(() => this.onChange.fire()); // TODO: change size
+        this._end.onChange.add(() => this.onChange.fire());
     }
 
     fix() {
@@ -26,6 +28,27 @@ export class Rect {
         this.onChange.fire();
 
         return this;
+    }
+
+    get position() {
+        return this._position;
+    }
+    set position(value) {
+        this._position.set(value);
+    }
+
+    get end() {
+        return this._end;
+    }
+    set end(value) {
+        this._end.set(value);
+    }
+
+    get start() {
+        return this.position;
+    }
+    set start(value) {
+        this.position.set(value);
     }
 
     get size() {
@@ -64,11 +87,11 @@ export class Rect {
         this.position.x -= amount;
         this.position.y -= amount;
         this.end.x += amount * 2;
-        this.end.x += amount * 2;
+        this.end.y += amount * 2;
     }
 
     clone() {
-        const newObj = new Rect({start: this.position, end: this.end});
+        const newObj = new Rect(this.position, this.end);
         newObj.onChange = this.onChange.clone();
         return newObj;
     }

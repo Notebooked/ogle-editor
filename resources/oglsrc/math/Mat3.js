@@ -71,6 +71,7 @@ export class Mat3 extends Array {
         return this;
     }
 
+    // TODO: change to compose like in Mat4
     fromPositionRotationScale(pos, rot, scale) {
         Mat3Func.fromPositionRotationScale(this, pos, rot, scale);
         this.onChange.fire();

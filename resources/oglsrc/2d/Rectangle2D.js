@@ -75,7 +75,7 @@ export class Rectangle2D extends Drawable2D {
     }
 
     updateGeometry() {
-        this.geometry = new PlaneGeometry2D({ rect: new Rect({ start: new Vec2(0, 0), end: new Vec2(1, 1) }) });
+        this.geometry = new PlaneGeometry2D({ rect: new Rect(new Vec2(0, 0), new Vec2(1, 1)) });
     }
 
     updateDrawableUniforms() {
@@ -127,7 +127,7 @@ export class Rectangle2D extends Drawable2D {
             }
         }
 
-        return new Rect({ start: new Vec2(minX, minY), end: new Vec2(maxX, maxY) });
+        return new Rect(new Vec2(minX, minY), new Vec2(maxX, maxY));
     }
 
     getGlobalBounds() {
@@ -148,7 +148,7 @@ export class Rectangle2D extends Drawable2D {
             }
         }
 
-        return new Rect({ start: new Vec2(minX, minY), end: new Vec2(maxX, maxY) });
+        return new Rect(new Vec2(minX, minY), new Vec2(maxX, maxY));
     }
 
     containsPoint(p) {

@@ -15,10 +15,10 @@ export class Game {
     activeCamera = null;
     activeCamera2D = null;
 
-    constructor({scene = new Transform2D(), canvas}) {
+    constructor({scene = new Transform2D(), canvas, autoCreateRenderer = true }) {
         this.setScene(scene);
 
-        this.renderer = new Renderer(this, {alpha: false, premultipliedAlpha: false}, canvas);
+        this.renderer = autoCreateRenderer ? new Renderer(this, {alpha: false, premultipliedAlpha: false}, canvas) : null;
         this.physicsEngine2D = new PhysicsEngine2D(this);
         this.inputManager = new InputManager();
 

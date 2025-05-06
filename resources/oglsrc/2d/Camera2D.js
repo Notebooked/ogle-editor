@@ -31,7 +31,8 @@ export class Camera2D extends Transform2D {
 
         const canvas = getGlContext().canvas;
         const renderer = getGlContext().renderer; //this is weird ONLY BECAUSE this is supposed to be done in the renderer class oops
-        this.projectionMatrix.set(renderer.dpr / canvas.width * this.zoom,0,0,0, renderer.dpr / canvas.height * this.zoom,0,0,0,1);
+
+        this.projectionMatrix.set(1 / renderer.width * this.zoom,0,0,0, 1 / renderer.height * this.zoom,0,0,0,1);
 
         this.projectionViewMatrix.multiply(this.projectionMatrix, this.viewMatrix);
     }
@@ -47,7 +48,7 @@ export class Camera2D extends Transform2D {
         const v2 = new Vec2(1);
         v2.applyMatrix3(m);
 
-        return new Rect({start: v1, end: v2});
+        return new Rect(v1, v2);
     }
 
     frustumIntersectsDrawable(node) {

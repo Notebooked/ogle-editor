@@ -1,12 +1,12 @@
-import { Rectangle2D, Transform2D, Vec2, Color, Rect } from "../../index.mjs";
+import { Rectangle2D, Transform2D, Vec2, Color, Mat3, Rect } from "../../index.mjs";
 import { Tool } from "./Tool.js";
 
 const SIZE1 = 100
 const SIZE2 = 8
 
-export class TranslateTool extends Tool {
+export class ScaleTool extends Tool {
     constructor(...args) {
-        super("translate", ...args);
+        super("scale", ...args);
 
         this.arrows = new Transform2D();
         this.arrows.parent = this.layer;
@@ -38,21 +38,30 @@ export class TranslateTool extends Tool {
     }
 
     mouseMoved(dx, dy) {
+        let mouseFixed = new Vec2();
+        mouseFixed.copy(this.editor.stageManager.inputManager.mousePosition);
+        mouseFixed = this.editor.utils.canvasTo2DWorld(mouseFixed);
+
+        const refNode = this.editor.sceneManager.getSelectedNodes()[0];
+        const bounds = refNode.getLocalBounds ? refNode.getLocalBounds() : new Rect(0, 0, 100, 100);
+
         if (this.arrowPressed !== null) {
             const cam2D = this.editor.stageManager.editorCamera2D;
-            const mul = 2 / cam2D.zoom; // TODO: Make arrows point in rotation
+            const zoomAdjustedDx = dx / cam2D.zoom * 2; // TODO: WHY 2
+            const zoomAdjustedDy = dy / cam2D.zoom * 2; // TODO: Make arrows point in rotation
+
             if (this.arrowPressed === this.arrowX) {
                 for (const node of this.editor.sceneManager.getSelectedNodes()) {
-                    node.position.x += dx * mul;
+                    node.scale.x += zoomAdjustedDx / bounds.size.x;
                 }
             } else if (this.arrowPressed === this.arrowY) {
                 for (const node of this.editor.sceneManager.getSelectedNodes()) {
-                    node.position.y -= dy * mul;
+                    node.scale.y -= zoomAdjustedDy / bounds.size.y;
                 }
             } else /*arrowpressed === true*/ {
                 for (const node of this.editor.sceneManager.getSelectedNodes()) {
-                    node.position.x += dx * mul;
-                    node.position.y -= dy * mul;
+                    node.scale.x += zoomAdjustedDx / bounds.size.x;
+                    node.scale.y -= zoomAdjustedDy / bounds.size.y;
                 }
             }
         }
@@ -60,7 +69,6 @@ export class TranslateTool extends Tool {
             let mouseFixed = new Vec2();
             mouseFixed.copy(this.editor.stageManager.inputManager.mousePosition);
             mouseFixed = this.editor.utils.canvasTo2DWorld(mouseFixed);
-
             if (this.arrowX.containsPoint(mouseFixed)) {
                 this.arrowX.rectSize.x = SIZE1 + 4;
                 this.arrowX.rectSize.y = SIZE2 + 4;

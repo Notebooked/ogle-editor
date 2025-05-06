@@ -5,6 +5,8 @@ import { Signal } from '../core/Signal.js';
 // the chaining of functions like v.add().sub().normalize().whatever
 // should be replaced totally so that vectors are not updated in place all of the time
 
+// ALSO replace all this (new Vec2()).copy(v)
+
 export class Vec2 extends Array {
     constructor(x = 0, y = x) {
         super(x, y);

@@ -98,7 +98,7 @@ export class Line2D extends Drawable2D {
             }
         }
 
-        return new Rect({ start: new Vec2(minX, minY), end: new Vec2(maxX, maxY) });
+        return new Rect(new Vec2(minX, minY), new Vec2(maxX, maxY));
     }
 
     getGlobalBounds() {
@@ -118,7 +118,7 @@ export class Line2D extends Drawable2D {
             }
         }
 
-        return new Rect({ start: new Vec2(minX, minY), end: new Vec2(maxX, maxY) });
+        return new Rect(new Vec2(minX, minY), new Vec2(maxX, maxY));
     }
 
     containsPoint(p) {

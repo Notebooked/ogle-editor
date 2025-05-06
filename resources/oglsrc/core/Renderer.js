@@ -448,7 +448,7 @@ export class Renderer {
         return renderList;
     }
 
-    render({ scene, camera, camera2D, target = null, update = true, sort = true, frustumCull = true, clear }) {
+    render({ scene, camera, camera2D, target = null, sort = true, frustumCull = true, clear }) {
         if (target === null) {
             // make sure no render target bound so draws to canvas
             this.bindFramebuffer();
@@ -471,12 +471,6 @@ export class Renderer {
                     (this.stencil ? this.gl.STENCIL_BUFFER_BIT : 0)
             );
         }
-
-        // updates all scene graph matrices
-        //if (update) scene.updateMatrixWorld();
-
-        // Update camera separately, in case not in scene graph
-        //if (camera) camera.updateMatrixWorld();
 
         // Get render list - entails culling and sorting
         const renderList = this.getRenderList({ scene, camera, frustumCull, sort });

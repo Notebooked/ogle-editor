@@ -95,6 +95,7 @@ export class Circle2D extends Drawable2D {
         this._anchorPosition.set(value);
     }
 
+    // TODO: change to be like an actual circle (use radius instead of vertices)
     getLocalBounds() {
         let minX = Infinity;
         let maxX = -Infinity;
@@ -112,7 +113,7 @@ export class Circle2D extends Drawable2D {
             }
         }
 
-        return new Rect({ start: new Vec2(minX, minY), end: new Vec2(maxX, maxY) });
+        return new Rect(new Vec2(minX, minY), new Vec2(maxX, maxY));
     }
 
     getGlobalBounds() {
@@ -133,7 +134,7 @@ export class Circle2D extends Drawable2D {
             }
         }
 
-        return new Rect({ start: new Vec2(minX, minY), end: new Vec2(maxX, maxY) });
+        return new Rect(new Vec2(minX, minY), new Vec2(maxX, maxY));
     }
 
     containsPoint(p) {

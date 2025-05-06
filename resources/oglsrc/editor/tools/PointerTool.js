@@ -1,5 +1,5 @@
 import { Tool } from "./Tool.js";
-import { Rectangle2D, Color, Rect, Drawable2D } from "../../index.mjs";
+import { Rectangle2D, Color, Rect, Drawable2D, Vec2 } from "../../index.mjs";
 
 //TODO: move this into a mouse class
 let mousePos = null;
@@ -35,16 +35,15 @@ export class PointerTool extends Tool {
 
         if (this.editor.sceneManager.selectedNodeIDList.length === 0) {
             this.selectingCanvas = true;
-
-            this.selectionStart = this.editor.utils.worldMouse()
+            this.selectionStart = (new Vec2()).copy(this.editor.utils.worldMouse());        
         } else {
             this.draggingNode = true;
         }
     }
 
     mouseMoved(dx, dy) {
-        mousePos = this.editor.utils.worldMouse()
-
+        mousePos = this.editor.utils.worldMouse();
+        
         if (this.selectingCanvas) {
             this.checkSelectionRect();
         }
@@ -66,7 +65,7 @@ export class PointerTool extends Tool {
 
     update() {
         if (this.selectingCanvas) {
-            const r = new Rect({start: mousePos, end: this.selectionStart});
+            const r = new Rect(mousePos, this.selectionStart);
             r.fix();
             this.rect.setByRect(r);
             this.rect.visible = true;
@@ -84,7 +83,7 @@ export class PointerTool extends Tool {
     
         let res = [];
     
-        const selectionRect = new Rect({start: this.selectionStart, end: mousePos});
+        const selectionRect = new Rect(this.selectionStart, mousePos);
         selectionRect.fix();
         nodes.forEach(node => {
             if (selectionRect.containsRect(node.getGlobalBounds())) res.push(node.nodeID);

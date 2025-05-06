@@ -76,6 +76,7 @@ export class Transform2D extends Node {
             }
         });
 
+        // TODO: change global to world (same in Transform)
         this._globalPosition = new Vec2();
         this._globalPosition.onChange.add(() => {
             if (this.shouldUpdateFromSignal) {

@@ -32,9 +32,11 @@
             </div>
             <div id="stage-container">
                 <div class="toolbar">
-                    <img src="editorimg/select.png" class="tool-img tool-active" id="pointer-tool" alt="">
-                    <img src="editorimg/translate.png" class="tool-img" id="translate-tool" alt="">
-                    <img src="editorimg/rotate.png" class="tool-img" id="rotate-tool" alt="">
+                    <!--TODO: Make images better resolution-->
+                    <img src="editorimg/select.png" class="tool-sel tool-img tool-active" id="pointer" alt="">
+                    <img src="editorimg/translate.png" class="tool-sel tool-img" id="translate" alt="">
+                    <img src="editorimg/rotate.png" class="tool-sel tool-img" id="rotate" alt="">
+                    <img src="editorimg/scale.png" class="tool-sel tool-img" id="scale" alt="">
                     <img src="editorimg/play.png" class="tool-img tool-img-right" id="play-btn" alt="">
                     <img src="editorimg/pause.png" class="tool-img tool-img-right tool-img-hidden" id="pause-btn" alt="">
                 </div>
@@ -165,15 +167,14 @@
         saveProjectButton.onclick = () => editor.projectManager.saveProject();
         openProjectFolderButton.onclick = () => editor.projectManager.openProjectFolder();
 
-        const pointerTool = document.getElementById("pointer-tool");
-        const translateTool = document.getElementById("translate-tool");
-        const rotateTool = document.getElementById("rotate-tool");
+        const toolSels = document.querySelectorAll(".tool-sel");
+        toolSels.forEach(sel => {
+            const toolName = sel.id;
+            sel.onclick = () => editor.stageManager.setTool(sel, toolName);
+        });
+
         const playBtn = document.getElementById("play-btn");
         const pauseBtn = document.getElementById("pause-btn");
-
-        pointerTool.onclick = () => editor.stageManager.setTool(pointerTool, "pointer");
-        translateTool.onclick = () => editor.stageManager.setTool(translateTool, "translate");
-        rotateTool.onclick = () => editor.stageManager.setTool(rotateTool, "rotate");
         playBtn.onclick = () => {
             pauseBtn.classList.remove("tool-img-hidden");
             playBtn.classList.add("tool-img-hidden");

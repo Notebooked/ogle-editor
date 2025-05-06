@@ -76,7 +76,7 @@ export class Drawable2D extends Transform2D { //2d version of mesh
             });
         });
         
-        return new Rect({start: new Vec2(lowX, lowY), end: new Vec2(highX, highY)});
+        return new Rect(new Vec2(lowX, lowY), new Vec2(highX, highY));
     }
 
     getGlobalBounds() {
@@ -106,7 +106,7 @@ export class Drawable2D extends Transform2D { //2d version of mesh
             });
         });
         
-        return new Rect({start: new Vec2(lowX, lowY), end: new Vec2(highX, highY)});
+        return new Rect(new Vec2(lowX, lowY), new Vec2(highX, highY));
     }
 
     drawRectangle(rect, color) {

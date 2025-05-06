@@ -69,7 +69,7 @@ export class StageManager {//TODO: why is this stuff in stagemanager
             showContextMenu(e, canvas2dContextOptions, position);
         });
 
-        this.testGame = new Game({ canvas: editorCanvas }); // there were never supposed to be two games but whatever
+        this.testGame = new Game({ canvas: editorCanvas, autoCreateRenderer: false }); // TODO: the whole renderer gl canvas connection sucks
         window.testGame = this.testGame;
         testGame.renderer = this.game.renderer;
     }

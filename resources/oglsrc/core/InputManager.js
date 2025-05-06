@@ -29,9 +29,12 @@ export class InputManager {
         this._mousePressed = [false, false, false];
 
         this._mousePosition = new Vec2();
+        // TODO: change to canvasMousePosition
+        // TODO: add world2DMousePosition
     }
 
     get mousePressed() {
+        // TODO: change this once transpiling is done
         const arr = Array.from(this._mousePressed);
         Object.freeze(arr);
         return arr;
